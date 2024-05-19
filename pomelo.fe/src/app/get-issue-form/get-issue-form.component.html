@@ -7,17 +7,14 @@
   </p>
 
   <p>
-    <label for="api-key">API Key</label>
-    <input type="text" id="api-key" name="api-key" ngModel>
-  </p>
-
-  <p>
     <label for="issue">Numer historyjki</label>
     <input type="text" id="issue" name="issue" ngModel>
   </p>
 
   <button type="submit">Wyświetl szczegóły historyjki</button>
 </form>
+
+<br><br>
 
 <div *ngIf="issue">
   {{issue}}

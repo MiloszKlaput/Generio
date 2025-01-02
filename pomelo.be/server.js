@@ -16,9 +16,11 @@ const apiKeyValue = process.env.API_KEY_VALUE;
 
 const authorization = btoa(`${apiUserName}:${apiKeyValue}`);
 
+console.log(authorization);
+
 app.get('/api', async (req, res) => {
   try {
-    const config = {
+    const params = {
       method: 'get',
       url: `${apiBaseUrl}/issue/SCRUM-1`,
       headers: {
@@ -27,7 +29,26 @@ app.get('/api', async (req, res) => {
       }
     };
 
-    const response = await axios.request(config);
+    const response = await axios.request(params);
+
+    res.json({ data: response.data });
+  } catch (error) {
+    res.status(500).json({ error })
+  }
+});
+
+app.get('/metadata', async (req, res) => {
+  try {
+    const params = {
+      method: 'get',
+      url: `${apiBaseUrl}/issue/createmeta`,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${authorization}`
+      }
+    };
+
+    const response = await axios.request(params);
 
     res.json({ data: response.data });
   } catch (error) {

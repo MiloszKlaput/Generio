@@ -1,5 +1,5 @@
-import { Fields } from "./fields.model";
+import { IssueFields } from "./issue-fields.model";
 
 export interface Issue {
-  fields: Fields;
+  fields: IssueFields;
 }

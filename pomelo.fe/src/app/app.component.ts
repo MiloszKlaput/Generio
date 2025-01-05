@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { JiraApiService } from './services/jira-api.service';
-import { IssueType } from './models/issue/enums/issue-type.enum';
 import { Issue } from './models/issue/issue.model';
+import { issues, project, sprints } from './data/static-data';
+import { Sprint } from './models/sprint/sprint.model';
+import { Project } from './models/project/project.model';
 
 @Component({
   selector: 'app-root',
@@ -13,47 +15,49 @@ import { Issue } from './models/issue/issue.model';
 })
 export class AppComponent {
   private jiraApiService = inject(JiraApiService);
-  issue: any;
-  meta: any;
-  issuesPackage: Issue[] = [
-    {
-      fields: {
-        project: { key: "KIWI" },
-        summary: "Story założone przez API",
-        description: "Przykładowe zadanie założone przez API",
-        issuetype: { id: IssueType.Story }
-      }
-    },
-    {
-      fields: {
-        project: { key: "KIWI" },
-        summary: "Bug założony przez API2",
-        description: "Przykładowe zadanie założone przez API2",
-        issuetype: { id: IssueType.Bug }
-      }
-    }
-  ];
 
-  sendIssues(): void {
-    this.jiraApiService.sendIssues(this.issuesPackage)
+  issue: any;
+  sprintZero: any;
+  projectData: Project = project;
+  sprintsData: Sprint[] = sprints;
+  issuesData: Issue[] = issues;
+
+  getSprintZero(): void {
+    this.jiraApiService.getSprintZero()
       .subscribe(result => {
         console.log(result);
-      })
+        this.sprintZero = result;
+      });
   }
 
-  testApi() {
+  createProject(): void {
+    this.jiraApiService.createProject(this.projectData)
+      .subscribe(result => {
+        console.log(result);
+      });
+  }
+
+  createSprint(): void {
+    for (const sprint of this.sprintsData) {
+      this.jiraApiService.createSprint(sprint)
+        .subscribe(result => {
+          console.log(result)
+        });
+    }
+  }
+
+  createIssues(): void {
+    this.jiraApiService.createIssues(this.issuesData)
+      .subscribe(result => {
+        console.log(result);
+      });
+  }
+
+  testApi(): void {
     this.jiraApiService.testApi()
-      .subscribe((result: { data: object }) => {
+      .subscribe(result => {
         this.issue = result.data;
         console.log(result)
       });
   }
-
-  // getMetadata() {
-  //   this.jiraApiService.getMetadata()
-  //     .subscribe((result: { data: object }) => {
-  //       this.meta = result.data;
-  //       console.log(result)
-  //     });
-  // }
 }

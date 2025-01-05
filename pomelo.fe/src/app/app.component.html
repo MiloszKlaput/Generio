@@ -2,12 +2,15 @@
 <pre *ngIf="issue">
   {{ issue | json }}
 </pre>
-
 <br><br>
-
-<button (click)="sendIssues()">Send issues</button>
-
-<!-- <button (click)="getMetadata()">Metadata for creating issues</button>
-<pre *ngIf="meta">
-  {{ meta | json }}
-</pre> -->
+<button (click)="getSprintZero()">Get sprint 0</button>
+<pre *ngIf="sprintZero">
+  {{ sprintZero | json }}
+</pre>
+<br><br>
+<button (click)="createProject()">Create project</button>
+<br><br>
+<button (click)="createSprint()">Create sprints</button>
+<br><br>
+<button (click)="createIssues()">Create issues</button>
+<br><br>

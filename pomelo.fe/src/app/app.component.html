@@ -1,15 +1,15 @@
-<button (click)="showApiCalls = !showApiCalls">Show API</button>
+<button mat-raised-button (click)="showApiCalls = !showApiCalls">Show API</button>
 
 <div *ngIf="showApiCalls">
   <br>
-  <button (click)="testApi()">Test API</button>
+  <button mat-raised-button (click)="testApi()">Test API</button>
   <br><br>
-  <button (click)="getSprintZero()">Get sprint 0</button>
+  <button mat-raised-button (click)="getSprintZero()">Get sprint 0</button>
   <br><br>
-  <button (click)="createProject()">Create project</button>
+  <button mat-raised-button (click)="createProject()">Create project</button>
   <br><br>
-  <button (click)="createSprint()">Create sprints</button>
+  <button mat-raised-button (click)="createSprint()">Create sprints</button>
   <br><br>
-  <button (click)="createIssues()">Create issues</button>
+  <button mat-raised-button (click)="createIssues()">Create issues</button>
   <br><br>
 </div>

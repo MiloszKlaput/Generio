@@ -5,12 +5,16 @@ import { Issue } from './models/issue/issue.model';
 import { issues, project, sprints } from './data/static-data';
 import { Sprint } from './models/sprint/sprint.model';
 import { Project } from './models/project/project.model';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-    selector: 'app-root',
-    imports: [CommonModule],
-    templateUrl: './app.component.html',
-    styleUrl: './app.component.scss'
+  selector: 'app-root',
+  imports: [
+    CommonModule,
+    MatButtonModule
+  ],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss'
 })
 export class AppComponent {
   private jiraApiService = inject(JiraApiService);

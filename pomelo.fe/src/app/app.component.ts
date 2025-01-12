@@ -7,11 +7,10 @@ import { Sprint } from './models/sprint/sprint.model';
 import { Project } from './models/project/project.model';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+    selector: 'app-root',
+    imports: [CommonModule],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent {
   private jiraApiService = inject(JiraApiService);

@@ -1,3 +1,4 @@
+import { IssuePriority } from "../models/issue/enums/issue-priority.enum";
 import { IssueType } from "../models/issue/enums/issue-type.enum";
 import { Issue } from "../models/issue/issue.model";
 import { Project } from "../models/project/project.model";
@@ -34,6 +35,7 @@ export const sprints: Sprint[] = [
 export const issues: Issue[] = [
   {
     fields: {
+      priority: IssuePriority.Lowest,
       project: { key: 'KIWI' },
       summary: 'Story założone przez API',
       description: {
@@ -56,6 +58,7 @@ export const issues: Issue[] = [
   },
   {
     fields: {
+      priority: IssuePriority.Low,
       project: { key: 'KIWI' },
       summary: 'Bug założony przez API2',
       description: {

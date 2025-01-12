@@ -42,4 +42,25 @@ export class JiraApiService {
 
     return this.http.post(url, data);
   }
+
+  createEpics(epics: Issue[]): Observable<any> {
+    const url = this.baseUrl + 'create-issues';
+    const data = epics;
+
+    return this.http.post(url, data);
+  }
+
+  // moveIssuesToEpic(issues: Issue[]): Observable<any> {
+  //   const url = this.baseUrl + 'create-issues';
+  //   const data = issues;
+
+  //   return this.http.post(url, data);
+  // }
+
+  // moveIssuesToSprint(issues: Issue[]): Observable<any> {
+  //   const url = this.baseUrl + 'create-issues';
+  //   const data = issues;
+
+  //   return this.http.post(url, data);
+  // }
 }

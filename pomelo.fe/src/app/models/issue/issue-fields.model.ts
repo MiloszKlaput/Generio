@@ -1,7 +1,10 @@
+import { IssuePriority } from "./enums/issue-priority.enum";
 import { IssueProject } from "./issue-project.model";
 import { IssueType } from "./issue-type.model";
 
 export interface IssueFields {
+  id?: string;
+  key?: string;
   description: {
     content: [
       {
@@ -20,4 +23,5 @@ export interface IssueFields {
   issuetype: IssueType;
   project: IssueProject;
   summary: string;
+  priority: IssuePriority;
 }

@@ -13,7 +13,7 @@ const auth = {
 
 async function testApi(req, res) {
   try {
-    const url = `${apiRestUrl}/issue/createmeta/KIWI/issuetypes/10003`;
+    const url = `${apiRestUrl}/issue/KIWI-1`;
     const config = {
       headers: { 'Content-Type': 'application/json' },
       auth: auth

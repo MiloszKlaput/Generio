@@ -15,18 +15,16 @@ import { Project } from './models/project/project.model';
 })
 export class AppComponent {
   private jiraApiService = inject(JiraApiService);
-
-  issue: any;
-  sprintZero: any;
   projectData: Project = project;
   sprintsData: Sprint[] = sprints;
   issuesData: Issue[] = issues;
+
+  showApiCalls = false;
 
   getSprintZero(): void {
     this.jiraApiService.getSprintZero()
       .subscribe(result => {
         console.log(result);
-        this.sprintZero = result;
       });
   }
 
@@ -56,7 +54,6 @@ export class AppComponent {
   testApi(): void {
     this.jiraApiService.testApi()
       .subscribe(result => {
-        this.issue = result.data;
         console.log(result)
       });
   }

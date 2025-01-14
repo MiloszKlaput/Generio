@@ -6,12 +6,14 @@ import { issues, project, sprints } from './data/static-data';
 import { Sprint } from './models/sprint/sprint.model';
 import { Project } from './models/project/project.model';
 import { MatButtonModule } from '@angular/material/button';
+import { JiraFormComponent } from './components/jira-form/jira-form.component';
 
 @Component({
   selector: 'app-root',
   imports: [
     CommonModule,
-    MatButtonModule
+    MatButtonModule,
+    JiraFormComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

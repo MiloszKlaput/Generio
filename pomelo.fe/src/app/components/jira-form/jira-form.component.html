@@ -1,11 +1,93 @@
 <h1>Pomelo</h1>
+<mat-divider></mat-divider>
 
 <form [formGroup]="form">
   <div class="form-container">
-    <mat-checkbox>Czy chcesz założyć nowy projekt?</mat-checkbox>
-    <mat-form-field>
-      <mat-label>Projekt</mat-label>
-      <input matInput />
-    </mat-form-field>
+    <div class="form-section">
+      <h2>Projekt</h2>
+
+      <mat-label>Czy chcesz założyć nowy projekt?</mat-label>
+      <mat-button-toggle-group name="isProjectNeeded" aria-label="Is project needed">
+        <mat-button-toggle value="yes">Tak</mat-button-toggle>
+        <mat-button-toggle value="no">Nie</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <mat-form-field>
+        <mat-label>Nazwa</mat-label>
+        <input matInput />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Opis</mat-label>
+        <input matInput />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Unikalny klucz np. KIWI</mat-label>
+        <input matInput />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Id użytkownika Atlassian</mat-label>
+        <input matInput />
+      </mat-form-field>
+
+      <mat-divider></mat-divider>
+    </div>
+
+
+    <div class="form-section">
+      <h2>Sprinty</h2>
+
+      <mat-form-field>
+        <mat-label>Ilość sprintów</mat-label>
+        <input type="number" matInput />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Ile trwa sprint (zwykle od 7 do 30 dni)</mat-label>
+        <input type="number" matInput />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Data startu pierwszego sprintu</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="projectStartDate">
+        <mat-hint>dzień.miesiąc.rok</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-divider></mat-divider>
+    </div>
+    <div class="form-section">
+      <h2>Epiki</h2>
+
+      <mat-label>Czy chcesz aby projekt zawierał epiki?</mat-label>
+      <mat-button-toggle-group name="epics" aria-label="Epics">
+        <mat-button-toggle value="yes">Tak</mat-button-toggle>
+        <mat-button-toggle value="no">Nie</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <mat-form-field>
+        <mat-label>Ilość epik</mat-label>
+        <input type="number" matInput />
+      </mat-form-field>
+    </div>
+
+    <div class="form-section">
+      <h2>Zadania</h2>
+
+      <mat-form-field>
+        <mat-label>Ilość zadań</mat-label>
+        <input type="number" matInput />
+      </mat-form-field>
+    </div>
+
+    <div class="form-section">
+      <mat-label>Rodzaj zadań (przynajmniej jedno musi być zaznaczone)</mat-label>
+      <mat-checkbox class="example-margin">Story</mat-checkbox>
+      <mat-checkbox class="example-margin">Bug</mat-checkbox>
+      <mat-checkbox class="example-margin">Task</mat-checkbox>
+    </div>
   </div>
 </form>

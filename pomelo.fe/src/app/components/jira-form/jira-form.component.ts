@@ -2,7 +2,7 @@ import { Component, inject, type OnInit } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
-import { NativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, NativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
@@ -31,7 +31,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatButtonToggleModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatNativeDateModule
   ],
   templateUrl: './jira-form.component.html',
   styleUrls: ['./jira-form.component.scss'],
@@ -51,7 +52,8 @@ export class JiraFormComponent implements OnInit {
   private initForm(): void {
     this.form = this.fb.group({
       isProjectNeeded: [false],
-      project: ['']
+      project: [''],
+      projectStartDate: Date.UTC(2025, 0, 10)
     });
   }
 }

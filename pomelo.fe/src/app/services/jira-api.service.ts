@@ -50,6 +50,8 @@ export class JiraApiService {
     return this.http.post(url, data);
   }
 
+  // getUserAtlassianId
+
   // moveIssuesToEpic(issues: Issue[]): Observable<any> {
   //   const url = this.baseUrl + 'create-issues';
   //   const data = issues;

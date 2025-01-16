@@ -1,5 +1,5 @@
 import { Component, inject, type OnInit } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatNativeDateModule, NativeDateModule } from '@angular/material/core';
@@ -39,7 +39,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 })
 export class JiraFormComponent implements OnInit {
   private fb = inject(FormBuilder);
-  form!: UntypedFormGroup;
+  form!: FormGroup;
 
   get f(): any {
     return this.form.controls;
@@ -51,9 +51,27 @@ export class JiraFormComponent implements OnInit {
 
   private initForm(): void {
     this.form = this.fb.group({
-      isProjectNeeded: [false],
-      project: [''],
-      projectStartDate: Date.UTC(2025, 0, 10)
+      isProjectNeeded: ['no', [Validators.required]],
+      existingProjectKey: [''],
+      projectName: [''],
+      projectDescription: [''],
+      projectKey: [''],
+      atlassianId: [''],
+      sprintsCount: [0, [Validators.required, Validators.min(0)]],
+      sprintDuration: [1, [Validators.required, Validators.min(1)]],
+      projectStartDate: [new Date(Date.now()), [Validators.required]],
+      isEpicNeeded: ['no', [Validators.required]],
+      EpicsCount: [0, [Validators.min(0)]],
+      IssuesCount: [0, [Validators.required, Validators.min(0)]],
+      issuesTypes: this.fb.group({
+        story: [true, [Validators.required]],
+        bug: [false, [Validators.required]],
+        task: [false, [Validators.required]]
+      })
     });
+  }
+
+  onSubmit(): void {
+    console.log(this.form.value);
   }
 }

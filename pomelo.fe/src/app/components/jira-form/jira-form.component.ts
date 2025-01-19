@@ -13,10 +13,11 @@ import { MatProgressBarModule } from '@angular/material/progress-bar'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { atLeastOneCheckboxRequired } from './validators/at-least-one-checkbox-required.validator';
 import { IsProjectNeeded } from './enums/is-project-needed.enum';
 import { JiraFormControls } from './types/jira-form-controls.type';
 import { Subscription } from 'rxjs';
+import { atLeastOneChecked } from './validators/at-least-one-checked.validator';
+import { onlyLettersValidator } from './validators/only-letters.validator';
 
 
 @Component({
@@ -65,11 +66,11 @@ export class JiraFormComponent implements OnInit, OnDestroy {
   private initForm(): void {
     this.form = this.fb.group({
       isProjectNeeded: [IsProjectNeeded.No, [Validators.required]],
-      existingProjectKey: ['', [Validators.required]],
-      projectName: ['', [Validators.required]],
-      projectDescription: ['', [Validators.required]],
-      projectKey: ['', [Validators.required]],
-      atlassianId: ['', [Validators.required]],
+      existingProjectKey: ['', [Validators.required, Validators.minLength(2), onlyLettersValidator()]],
+      projectName: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]],
+      projectDescription: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]],
+      projectKey: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(2), onlyLettersValidator()]],
+      atlassianId: [{ value: '', disabled: true }, [Validators.required]],
       sprintsCount: [0, [Validators.required, Validators.min(0)]],
       sprintDuration: [1, [Validators.required, Validators.min(1)]],
       projectStartDate: [new Date(Date.now()), [Validators.required]],
@@ -79,7 +80,7 @@ export class JiraFormComponent implements OnInit, OnDestroy {
         story: false,
         bug: false,
         task: false
-      }, atLeastOneCheckboxRequired())
+      }, { validators: atLeastOneChecked() })
     });
   }
 

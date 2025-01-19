@@ -8,36 +8,38 @@
 
       <mat-label>Czy chcesz założyć nowy projekt?</mat-label>
       <mat-button-toggle-group formControlName="isProjectNeeded" name="isProjectNeeded" aria-label="Is project needed">
-        <mat-button-toggle value="yes">Tak</mat-button-toggle>
-        <mat-button-toggle value="no">Nie</mat-button-toggle>
+        <mat-button-toggle [value]="IsProjectNeeded.Yes">Tak</mat-button-toggle>
+        <mat-button-toggle [value]="IsProjectNeeded.No">Nie</mat-button-toggle>
       </mat-button-toggle-group>
 
-      <mat-form-field>
-        <mat-label>Unikalny klucz twojego projektu np. KIWI</mat-label>
-        <input formControlName="existingProjectKey" matInput />
-      </mat-form-field>
+      @if (f.isProjectNeeded.value === IsProjectNeeded.No) {
+        <mat-form-field>
+          <mat-label>Unikalny klucz twojego projektu np. KIWI</mat-label>
+          <input formControlName="existingProjectKey" matInput />
+        </mat-form-field>
+      }
 
-      <mat-form-field>
-        <mat-label>Nazwa</mat-label>
-        <input formControlName="projectName" matInput />
-      </mat-form-field>
+      @if (f.isProjectNeeded.value === IsProjectNeeded.Yes) {
+        <mat-form-field>
+          <mat-label>Nazwa</mat-label>
+          <input formControlName="projectName" matInput />
+        </mat-form-field>
 
-      <mat-form-field>
-        <mat-label>Opis</mat-label>
-        <input formControlName="projectDescription" matInput />
-      </mat-form-field>
+        <mat-form-field>
+          <mat-label>Opis</mat-label>
+          <input formControlName="projectDescription" matInput />
+        </mat-form-field>
 
-      <mat-form-field>
-        <mat-label>Unikalny klucz np. KIWI</mat-label>
-        <input formControlName="projectKey" matInput />
-      </mat-form-field>
+        <mat-form-field>
+          <mat-label>Unikalny klucz np. KIWI</mat-label>
+          <input formControlName="projectKey" matInput />
+        </mat-form-field>
 
-      <mat-form-field>
-        <mat-label>Id użytkownika Atlassian</mat-label>
-        <input formControlName="atlassianId" matInput />
-      </mat-form-field>
-
-      <mat-divider></mat-divider>
+        <mat-form-field>
+          <mat-label>Id użytkownika Atlassian</mat-label>
+          <input formControlName="atlassianId" matInput />
+        </mat-form-field>
+      }
     </div>
 
 
@@ -67,15 +69,9 @@
     <div class="form-section">
       <h2>Epiki</h2>
 
-      <mat-label>Czy chcesz aby projekt zawierał epiki?</mat-label>
-      <mat-button-toggle-group formControlName="isEpicNeeded" name="epics" aria-label="Epics">
-        <mat-button-toggle value="yes">Tak</mat-button-toggle>
-        <mat-button-toggle value="no">Nie</mat-button-toggle>
-      </mat-button-toggle-group>
-
       <mat-form-field>
         <mat-label>Ilość epik</mat-label>
-        <input type="number" formControlName="EpicsCount" min="0" matInput />
+        <input type="number" formControlName="epicsCount" min="0" matInput />
       </mat-form-field>
     </div>
 
@@ -84,7 +80,7 @@
 
       <mat-form-field>
         <mat-label>Ilość zadań</mat-label>
-        <input type="number" formControlName="IssuesCount" min="0" matInput />
+        <input type="number" formControlName="issuesCount" min="0" matInput />
       </mat-form-field>
     </div>
 

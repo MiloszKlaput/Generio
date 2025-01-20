@@ -1,0 +1,25 @@
+:host {
+  display: flex;
+  flex-direction: column;
+
+  .top-menu {
+    padding: 1.5rem;
+    background-color: #abc7ff;
+
+    .title {
+      font-size: 2rem;
+      font-weight: 600;
+    }
+  }
+
+  .content {
+    flex: 1;
+    background-color: #f7f8fb;
+  }
+
+  .footer {
+    padding: 1.5rem;
+    background-color: #abc7ff;
+    text-align: center;
+  }
+}

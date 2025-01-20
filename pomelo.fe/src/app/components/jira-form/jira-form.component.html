@@ -1,159 +1,170 @@
-<h1>Pomelo</h1>
-<mat-divider></mat-divider>
-
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div class="form-container">
-    <div class="form-section">
+<mat-horizontal-stepper [linear]="true" #stepper>
+  <!-- Step 1: Projekt -->
+  <mat-step [stepControl]="projectForm" label="Projekt">
+    <form [formGroup]="projectForm">
       <h2>Projekt</h2>
 
       <mat-label>Czy chcesz założyć nowy projekt?</mat-label>
-      <mat-button-toggle-group formControlName="isProjectNeeded" name="isProjectNeeded" aria-label="Is project needed">
+      <mat-button-toggle-group formControlName="isProjectNeeded" aria-label="Is project needed">
         <mat-button-toggle [value]="IsProjectNeeded.Yes">Tak</mat-button-toggle>
         <mat-button-toggle [value]="IsProjectNeeded.No">Nie</mat-button-toggle>
       </mat-button-toggle-group>
 
-      @if (f.isProjectNeeded.value === IsProjectNeeded.No) {
-      <mat-form-field>
-        <mat-label>Unikalny klucz twojego projektu np. KIWI</mat-label>
-        <input formControlName="existingProjectKey" matInput />
-      </mat-form-field>
-      @if (f.existingProjectKey.errors?.['required'] && f.existingProjectKey.touched) {
-      <mat-error>Uzupełnij pole</mat-error>
-      }
-      @if (f.existingProjectKey.errors?.['onlyLetters'] && f.existingProjectKey.touched) {
-      <mat-error>Dozwolone są jedynie litery</mat-error>
-      }
-      @if (f.existingProjectKey.errors?.['minLength'] && f.existingProjectKey.touched) {
-      <mat-error>Wymagane przynajmniej 2 znaki</mat-error>
-      }
+      @if (fp.isProjectNeeded.value === IsProjectNeeded.No) {
+        <mat-form-field>
+          <mat-label>Unikalny klucz twojego projektu np. KIWI</mat-label>
+          <input formControlName="existingProjectKey" matInput />
+          @if (fp.existingProjectKey.errors?.['required'] && fp.existingProjectKey.touched) {
+            <mat-error>Uzupełnij pole</mat-error>
+          }
+          @if (fp.existingProjectKey.errors?.['onlyLetters'] && fp.existingProjectKey.touched) {
+            <mat-error>Dozwolone są jedynie litery</mat-error>
+          }
+          @if (fp.existingProjectKey.errors?.['minLength'] && fp.existingProjectKey.touched) {
+            <mat-error>Wymagane przynajmniej 2 znaki</mat-error>
+          }
+        </mat-form-field>
+      } @else if (fp.isProjectNeeded.value === IsProjectNeeded.Yes) {
+        <mat-form-field>
+          <mat-label>Nazwa</mat-label>
+          <input formControlName="projectName" matInput />
+          @if (fp.projectName.errors?.['required'] && fp.projectName.touched) {
+            <mat-error>Uzupełnij pole</mat-error>
+          }
+          @if (fp.projectName.errors?.['minLength'] && fp.projectName.touched) {
+            <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Opis</mat-label>
+          <input formControlName="projectDescription" matInput />
+          @if (fp.projectDescription.errors?.['required'] && fp.projectDescription.touched) {
+            <mat-error>Uzupełnij pole</mat-error>
+          }
+          @if (fp.projectDescription.errors?.['minLength'] && fp.projectDescription.touched) {
+            <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Unikalny klucz np. KIWI</mat-label>
+          <input formControlName="projectKey" matInput />
+          @if (fp.projectKey.errors?.['required'] && fp.projectKey.touched) {
+            <mat-error>Uzupełnij pole</mat-error>
+          }
+          @if (fp.projectKey.errors?.['onlyLetters'] && fp.projectKey.touched) {
+            <mat-error>Dozwolone są jedynie litery</mat-error>
+          }
+          @if (fp.projectKey.errors?.['minLength'] && fp.projectKey.touched) {
+            <mat-error>Wymagane przynajmniej 2 znaki</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Id użytkownika Atlassian</mat-label>
+          <input formControlName="atlassianId" matInput />
+          @if (fp.atlassianId.errors?.['required'] && fp.atlassianId.touched) {
+            <mat-error>Uzupełnij pole</mat-error>
+          }
+        </mat-form-field>
       }
 
-      @if (f.isProjectNeeded.value === IsProjectNeeded.Yes) {
-      <mat-form-field>
-        <mat-label>Nazwa</mat-label>
-        <input formControlName="projectName" matInput />
-      </mat-form-field>
-      @if (f.projectName.errors?.['required'] && f.projectName.touched) {
-      <mat-error>Uzupełnij pole</mat-error>
-      }
-      @if (f.projectName.errors?.['minLength'] && f.projectName.touched) {
-      <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
-      }
+      <button mat-raised-button matStepperNext [disabled]="!projectForm.valid">Dalej</button>
+    </form>
+  </mat-step>
 
-      <mat-form-field>
-        <mat-label>Opis</mat-label>
-        <input formControlName="projectDescription" matInput />
-      </mat-form-field>
-      @if (f.projectDescription.errors?.['required'] && f.projectDescription.touched) {
-      <mat-error>Uzupełnij pole</mat-error>
-      }
-      @if (f.projectDescription.errors?.['minLength'] && f.projectDescription.touched) {
-      <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
-      }
-
-      <mat-form-field>
-        <mat-label>Unikalny klucz np. KIWI</mat-label>
-        <input formControlName="projectKey" matInput />
-      </mat-form-field>
-      @if (f.projectKey.errors?.['required'] && f.projectKey.touched) {
-      <mat-error>Uzupełnij pole</mat-error>
-      }
-      @if (f.projectKey.errors?.['onlyLetters'] && f.projectKey.touched) {
-      <mat-error>Dozwolone są jedynie litery</mat-error>
-      }
-      @if (f.projectKey.errors?.['minLength'] && f.projectKey.touched) {
-      <mat-error>Wymagane przynajmniej 2 znaki</mat-error>
-      }
-
-      <mat-form-field>
-        <mat-label>Id użytkownika Atlassian</mat-label>
-        <input formControlName="atlassianId" matInput />
-      </mat-form-field>
-      @if (f.atlassianId.errors?.['required'] && f.atlassianId.touched) {
-      <mat-error>Uzupełnij pole</mat-error>
-      }
-
-      }
-    </div>
-
-
-    <div class="form-section">
+  <!-- Step 2: Sprinty -->
+  <mat-step [stepControl]="sprintsForm" label="Sprinty">
+    <form [formGroup]="sprintsForm">
       <h2>Sprinty</h2>
 
       <mat-form-field>
         <mat-label>Ilość sprintów</mat-label>
         <input type="number" formControlName="sprintsCount" min="0" matInput />
+        @if (fs.sprintsCount.errors?.['required'] && fs.sprintsCount.touched) {
+          <mat-error>Uzupełnij pole</mat-error>
+        }
+        @if (fs.sprintsCount.errors?.['min'] && fs.sprintsCount.touched) {
+          <mat-error>Minimalna wartość to 0</mat-error>
+        }
       </mat-form-field>
-      @if (f.sprintsCount.errors?.['required'] && f.sprintsCount.touched) {
-      <mat-error>Uzupełnij pole</mat-error>
-      }
-      @if (f.sprintsCount.errors?.['min'] && f.sprintsCount.touched) {
-      <mat-error>Minimalna wartość to 0</mat-error>
-      }
 
       <mat-form-field>
         <mat-label>Ile trwa sprint (zwykle od 7 do 30 dni)</mat-label>
         <input type="number" formControlName="sprintDuration" min="1" matInput />
+        @if (fs.sprintDuration.errors?.['required'] && fs.sprintDuration.touched) {
+          <mat-error>Uzupełnij pole</mat-error>
+        }
+        @if (fs.sprintDuration.errors?.['min'] && fs.sprintDuration.touched) {
+          <mat-error>Minimalna wartość to 1</mat-error>
+        }
       </mat-form-field>
-      @if (f.sprintDuration.errors?.['required'] && f.sprintDuration.touched) {
-      <mat-error>Uzupełnij pole</mat-error>
-      }
-      @if (f.sprintDuration.errors?.['min'] && f.sprintDuration.touched) {
-      <mat-error>Minimalna wartość to 1</mat-error>
-      }
 
       <mat-form-field>
         <mat-label>Data startu pierwszego sprintu</mat-label>
         <input matInput [matDatepicker]="picker" formControlName="projectStartDate">
-        <mat-hint>dzień.miesiąc.rok</mat-hint>
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
+        @if (fs.projectStartDate.errors?.['required'] && fs.projectStartDate.touched) {
+          <mat-error>Uzupełnij pole</mat-error>
+        }
+        @if (fs.projectStartDate.invalid && fs.projectStartDate.touched) {
+          <mat-error>Nieprawidłowa data</mat-error>
+        }
       </mat-form-field>
-      @if (f.projectStartDate.errors?.['required'] && f.projectStartDate.touched) {
-      <mat-error>Uzupełnij pole</mat-error>
-      }
-      @if (f.projectStartDate.invalid && f.projectStartDate.touched) {
-      <mat-error>Nieprawidłowa data</mat-error>
-      }
 
-    </div>
-    <div class="form-section">
+      <button mat-raised-button matStepperNext [disabled]="!sprintsForm.valid">Dalej</button>
+    </form>
+  </mat-step>
+
+  <!-- Step 3: Epiki -->
+  <mat-step [stepControl]="epicsForm" label="Epiki">
+    <form [formGroup]="epicsForm">
       <h2>Epiki</h2>
 
       <mat-form-field>
         <mat-label>Ilość epik</mat-label>
         <input type="number" formControlName="epicsCount" min="0" matInput />
+        @if (fe.epicsCount.errors?.['required'] && fe.epicsCount.touched) {
+          <mat-error>Uzupełnij pole</mat-error>
+        }
+        @if (fe.epicsCount.errors?.['min'] && fe.epicsCount.touched) {
+          <mat-error>Minimalna wartość to 0</mat-error>
+        }
       </mat-form-field>
-      @if (f.epicsCount.errors?.['required'] && f.epicsCount.touched) {
-      <mat-error>Uzupełnij pole</mat-error>
-      }
-      @if (f.epicsCount.errors?.['min'] && f.epicsCount.touched) {
-      <mat-error>Minimalna wartość to 0</mat-error>
-      }
-    </div>
 
-    <div class="form-section">
+      <button mat-raised-button matStepperNext [disabled]="!epicsForm.valid">Dalej</button>
+    </form>
+  </mat-step>
+
+  <!-- Step 4: Zadania -->
+  <mat-step [stepControl]="issuesForm" label="Zadania">
+    <form [formGroup]="issuesForm">
       <h2>Zadania</h2>
 
       <mat-form-field>
         <mat-label>Ilość zadań</mat-label>
         <input type="number" formControlName="issuesCount" min="0" matInput />
+        @if (fi.issuesCount.errors?.['required'] && fi.issuesCount.touched) {
+          <mat-error>Uzupełnij pole</mat-error>
+        }
+        @if (fi.issuesCount.errors?.['min'] && fi.issuesCount.touched) {
+          <mat-error>Minimalna wartość to 0</mat-error>
+        }
       </mat-form-field>
-      @if (f.issuesCount.errors?.['required'] && f.issuesCount.touched) {
-      <mat-error>Uzupełnij pole</mat-error>
-      }
-      @if (f.issuesCount.errors?.['min'] && f.issuesCount.touched) {
-      <mat-error>Minimalna wartość to 0</mat-error>
-      }
-    </div>
 
-    <div class="form-section" formGroupName="issuesTypes">
       <mat-label>Rodzaj zadań (przynajmniej jedno musi być zaznaczone)</mat-label>
-      <mat-checkbox formControlName="story">Story</mat-checkbox>
-      <mat-checkbox formControlName="bug">Bug</mat-checkbox>
-      <mat-checkbox formControlName="task">Task</mat-checkbox>
-    </div>
+      <div formGroupName="issuesTypes">
+        <mat-checkbox formControlName="story">Story</mat-checkbox>
+        <mat-checkbox formControlName="bug">Bug</mat-checkbox>
+        <mat-checkbox formControlName="task">Task</mat-checkbox>
+      </div>
+      @if (fi.issuesTypes.errors?.['atLeastOneChecked']) {
+        <mat-error>Przynajmniej jedno zadanie musi być zaznaczone</mat-error>
+      }
 
-    <button mat-raised-button type="submit" [disabled]="!form.valid">Rozpocznij</button>
-  </div>
-</form>
+      <button (click)="onSubmit()" mat-raised-button type="submit" [disabled]="!issuesForm.valid">Zakończ</button>
+    </form>
+  </mat-step>
+</mat-horizontal-stepper>

@@ -1,4 +1,5 @@
-<button mat-raised-button (click)="showApiCalls = !showApiCalls">Show API</button>
+<!-- TO DO usunąć na koniec testów -->
+<button hidden mat-raised-button (click)="showApiCalls = !showApiCalls">Show API</button>
 
 <div *ngIf="showApiCalls">
   <br>
@@ -14,4 +15,10 @@
   <br><br>
 </div>
 
-<jira-form></jira-form>
+<nav class="top-menu">
+  <div class="title">Pomelo</div>
+</nav>
+<main class="content">
+  <router-outlet></router-outlet>
+</main>
+<footer class="footer">&copy;{{ currentYear }} Politechnika Warszawska</footer>

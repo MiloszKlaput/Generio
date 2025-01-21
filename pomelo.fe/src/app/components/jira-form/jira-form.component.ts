@@ -1,5 +1,5 @@
 import { Component, OnDestroy, type OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatNativeDateModule, NativeDateModule } from '@angular/material/core';
@@ -15,15 +15,15 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { IsProjectNeeded } from '../../enums/is-project-needed.enum';
 import { Subscription } from 'rxjs';
-import { atLeastOneChecked } from '../../validators/at-least-one-checked.validator';
-import { onlyLettersValidator } from '../../validators/only-letters.validator';
 import { MatStepperModule } from '@angular/material/stepper';
 import { EpicsFormControls, IssuesFormControls, JiraFormControls, ProjectFormControls, SprintsFormControls } from '../../types/jira-form-controls.type';
 import { InitFormsHelper } from '../../helpers/init-forms.helper';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'jira-form',
   imports: [
+    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule,
@@ -72,7 +72,7 @@ export class JiraFormComponent implements OnInit, OnDestroy {
     this.sprintsForm = InitFormsHelper.initSprintsForm();
     this.epicsForm = InitFormsHelper.initEpicsForm();
     this.issuesForm = InitFormsHelper.initIssuesForm();
-    this.mainForm = InitFormsHelper.initMainForm(this.fp, this.fs, this.fe, this.fi);
+    this.mainForm = InitFormsHelper.initMainForm();
   }
 
   private updateProjectForm(value: IsProjectNeeded): void {

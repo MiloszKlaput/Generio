@@ -1,5 +1,5 @@
-import { Component, inject, OnDestroy, type OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnDestroy, type OnInit } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatNativeDateModule, NativeDateModule } from '@angular/material/core';
@@ -13,12 +13,13 @@ import { MatProgressBarModule } from '@angular/material/progress-bar'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { IsProjectNeeded } from './enums/is-project-needed.enum';
+import { IsProjectNeeded } from '../../enums/is-project-needed.enum';
 import { Subscription } from 'rxjs';
-import { atLeastOneChecked } from './validators/at-least-one-checked.validator';
-import { onlyLettersValidator } from './validators/only-letters.validator';
+import { atLeastOneChecked } from '../../validators/at-least-one-checked.validator';
+import { onlyLettersValidator } from '../../validators/only-letters.validator';
 import { MatStepperModule } from '@angular/material/stepper';
-import { EpicsFormControls, IssuesFormControls, ProjectFormControls, SprintsFormControls } from './types/jira-form-controls.type';
+import { EpicsFormControls, IssuesFormControls, JiraFormControls, ProjectFormControls, SprintsFormControls } from '../../types/jira-form-controls.type';
+import { InitFormsHelper } from '../../helpers/init-forms.helper';
 
 @Component({
   selector: 'jira-form',
@@ -45,12 +46,11 @@ import { EpicsFormControls, IssuesFormControls, ProjectFormControls, SprintsForm
   styleUrls: ['./jira-form.component.scss'],
 })
 export class JiraFormComponent implements OnInit, OnDestroy {
-  private fb = inject(FormBuilder);
   projectForm!: FormGroup<ProjectFormControls>;
   sprintsForm!: FormGroup<SprintsFormControls>;
   epicsForm!: FormGroup<EpicsFormControls>;
   issuesForm!: FormGroup<IssuesFormControls>;
-
+  mainForm!: FormGroup<JiraFormControls>;
   IsProjectNeeded = IsProjectNeeded;
 
   subscriptions: Subscription[] = [];
@@ -68,49 +68,14 @@ export class JiraFormComponent implements OnInit, OnDestroy {
   }
 
   private initForms(): void {
-    this.initProjectForm();
-    this.initSprintsForm();
-    this.initEpicsForm();
-    this.initIssuesForm();
+    this.projectForm = InitFormsHelper.initProjectForm();
+    this.sprintsForm = InitFormsHelper.initSprintsForm();
+    this.epicsForm = InitFormsHelper.initEpicsForm();
+    this.issuesForm = InitFormsHelper.initIssuesForm();
+    this.mainForm = InitFormsHelper.initMainForm(this.fp, this.fs, this.fe, this.fi);
   }
 
-  private initProjectForm(): void {
-    this.projectForm = new FormGroup({
-      isProjectNeeded: new FormControl<IsProjectNeeded>(IsProjectNeeded.No, [Validators.required]),
-      existingProjectKey: new FormControl<string>('', [Validators.required, Validators.minLength(2), onlyLettersValidator()]),
-      projectName: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]),
-      projectDescription: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]),
-      projectKey: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(2), onlyLettersValidator()]),
-      atlassianId: new FormControl<string>({ value: '', disabled: true }, [Validators.required])
-    });
-  }
-
-  private initSprintsForm(): void {
-    this.sprintsForm = new FormGroup({
-      sprintsCount: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
-      sprintDuration: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
-      projectStartDate: new FormControl<Date>(new Date(Date.now()), [Validators.required]),
-    });
-  }
-
-  private initEpicsForm(): void {
-    this.epicsForm = new FormGroup({
-      epicsCount: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
-    });
-  }
-
-  private initIssuesForm(): void {
-    this.issuesForm = new FormGroup({
-      issuesCount: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
-      issuesTypes: new FormGroup({
-        story: new FormControl<boolean>(false),
-        bug: new FormControl<boolean>(false),
-        task: new FormControl<boolean>(false)
-      }, { validators: atLeastOneChecked() })
-    });
-  }
-
-  private updateProjectForm(value: IsProjectNeeded | null): void {
+  private updateProjectForm(value: IsProjectNeeded): void {
     if (!value) {
       return;
     }
@@ -136,14 +101,17 @@ export class JiraFormComponent implements OnInit, OnDestroy {
 
   private getUpdateForm(): Subscription {
     return this.fp.isProjectNeeded.valueChanges
-      .subscribe(value => this.updateProjectForm(value));
+      .subscribe(value => {
+        if (!value) {
+          return;
+        }
+
+        this.updateProjectForm(value);
+      });
   }
 
   onSubmit(): void {
-    console.log(this.projectForm);
-    console.log(this.sprintsForm);
-    console.log(this.epicsForm);
-    console.log(this.issuesForm);
+    console.log(this.mainForm);
   }
 
   ngOnDestroy(): void {

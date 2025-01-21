@@ -1,25 +1,14 @@
-:host {
-  display: block;
-  margin: 1rem;
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: 2rem;
 
-  .form-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    row-gap: 0.5rem;
+  mat-button-toggle-group {
+    align-self: flex-start;
+  }
 
-    .form-section {
-      display: flex;
-      flex-direction: column;
-      row-gap: 0.5rem;
-
-      mat-button-toggle-group {
-        align-self: flex-start;
-      }
-
-      mat-form-field {
-        min-width: 20rem;
-      }
-    }
+  mat-form-field {
+    min-width: 25rem;
   }
 }

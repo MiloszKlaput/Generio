@@ -1,13 +1,21 @@
 import { FormControl, FormGroup } from "@angular/forms";
 import { IsProjectNeeded } from "../enums/is-project-needed.enum";
 
-export type ProjectFormControls = {
-  isProjectNeeded: FormControl<IsProjectNeeded | null>;
+export type ExistingProjectFormControls = {
   existingProjectKey: FormControl<string | null>;
+};
+
+export type NewProjectFormControls = {
   projectName: FormControl<string | null>;
   projectDescription: FormControl<string | null>;
   projectKey: FormControl<string | null>;
   atlassianId: FormControl<string | null>;
+};
+
+export type ProjectFormControls = {
+  isNewProjectNeeded: FormControl<IsProjectNeeded | null>;
+  existingProject: FormGroup<ExistingProjectFormControls>;
+  newProject: FormGroup<NewProjectFormControls>;
 };
 
 export type SprintsFormControls = {
@@ -29,7 +37,7 @@ export type IssuesFormControls = {
   }>;
 };
 
-export type JiraFormControls = {
+export type MainFormControls = {
   isProjectNeeded: FormControl<IsProjectNeeded | null>;
   existingProjectKey: FormControl<string | null>;
   projectName: FormControl<string | null>;

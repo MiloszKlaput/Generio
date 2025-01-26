@@ -1,4 +1,4 @@
-import { Component, OnDestroy, type OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, type OnInit } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -14,14 +14,24 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { IsProjectNeeded } from '../../enums/is-project-needed.enum';
-import { Subscription } from 'rxjs';
-import { MatStepperModule } from '@angular/material/stepper';
-import { EpicsFormControls, IssuesFormControls, JiraFormControls, ProjectFormControls, SprintsFormControls } from '../../types/jira-form-controls.type';
-import { InitFormsHelper } from '../../helpers/init-forms.helper';
+import { map, Observable, Subscription } from 'rxjs';
+import { MatStepperModule, StepperOrientation } from '@angular/material/stepper';
+import {
+  EpicsFormControls,
+  ExistingProjectFormControls,
+  IssuesFormControls,
+  MainFormControls,
+  NewProjectFormControls,
+  ProjectFormControls,
+  SprintsFormControls
+} from '../../types/main-form-controls.type';
+import { FormsHelper } from '../../helpers/forms.helper';
 import { CommonModule } from '@angular/common';
+import { BreakpointObserver } from '@angular/cdk/layout';
+
 
 @Component({
-  selector: 'jira-form',
+  selector: 'main-form',
   imports: [
     CommonModule,
     FormsModule,
@@ -42,23 +52,36 @@ import { CommonModule } from '@angular/common';
     MatNativeDateModule,
     MatStepperModule,
   ],
-  templateUrl: './jira-form.component.html',
-  styleUrls: ['./jira-form.component.scss'],
+  templateUrl: './main-form.component.html',
+  styleUrls: ['./main-form.component.scss'],
 })
-export class JiraFormComponent implements OnInit, OnDestroy {
+export class MainFormComponent implements OnInit, OnDestroy {
   projectForm!: FormGroup<ProjectFormControls>;
   sprintsForm!: FormGroup<SprintsFormControls>;
   epicsForm!: FormGroup<EpicsFormControls>;
   issuesForm!: FormGroup<IssuesFormControls>;
-  mainForm!: FormGroup<JiraFormControls>;
+  mainForm!: FormGroup<MainFormControls>;
+
+  stepperOrientation$!: Observable<StepperOrientation>;
+
   IsProjectNeeded = IsProjectNeeded;
 
   subscriptions: Subscription[] = [];
 
+  get fpe(): ExistingProjectFormControls { return this.projectForm.controls.existingProject.controls }
+  get fpn(): NewProjectFormControls { return this.projectForm.controls.newProject.controls; }
   get fp(): ProjectFormControls { return this.projectForm.controls; }
   get fs(): SprintsFormControls { return this.sprintsForm.controls; }
   get fe(): EpicsFormControls { return this.epicsForm.controls; }
   get fi(): IssuesFormControls { return this.issuesForm.controls; }
+
+  constructor() {
+    const breakpointObserver = inject(BreakpointObserver);
+    // TO DO dodać breakpointy w RWD
+    this.stepperOrientation$ = breakpointObserver
+      .observe('(min-width: 800px)')
+      .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
+  }
 
   ngOnInit(): void {
     this.initForms();
@@ -68,39 +91,15 @@ export class JiraFormComponent implements OnInit, OnDestroy {
   }
 
   private initForms(): void {
-    this.projectForm = InitFormsHelper.initProjectForm();
-    this.sprintsForm = InitFormsHelper.initSprintsForm();
-    this.epicsForm = InitFormsHelper.initEpicsForm();
-    this.issuesForm = InitFormsHelper.initIssuesForm();
-    this.mainForm = InitFormsHelper.initMainForm();
-  }
-
-  private updateProjectForm(value: IsProjectNeeded): void {
-    if (!value) {
-      return;
-    }
-
-    switch (value) {
-      case IsProjectNeeded.Yes:
-        this.fp.existingProjectKey.disable();
-        this.fp.projectName.enable();
-        this.fp.projectDescription.enable();
-        this.fp.projectKey.enable();
-        this.fp.atlassianId.enable();
-        break;
-
-      case IsProjectNeeded.No:
-        this.fp.existingProjectKey.enable();
-        this.fp.projectName.disable();
-        this.fp.projectDescription.disable();
-        this.fp.projectKey.disable();
-        this.fp.atlassianId.disable();
-        break;
-    }
+    this.projectForm = FormsHelper.initProjectForm();
+    this.sprintsForm = FormsHelper.initSprintsForm();
+    this.epicsForm = FormsHelper.initEpicsForm();
+    this.issuesForm = FormsHelper.initIssuesForm();
+    this.mainForm = FormsHelper.initMainForm();
   }
 
   private getUpdateForm(): Subscription {
-    return this.fp.isProjectNeeded.valueChanges
+    return this.fp.isNewProjectNeeded.valueChanges
       .subscribe(value => {
         if (!value) {
           return;
@@ -110,7 +109,33 @@ export class JiraFormComponent implements OnInit, OnDestroy {
       });
   }
 
+  private updateProjectForm(value: IsProjectNeeded): void {
+    if (!value) {
+      return;
+    }
+
+    switch (value) {
+      case IsProjectNeeded.Yes:
+        this.projectForm.controls.existingProject.disable();
+        this.projectForm.controls.newProject.enable();
+        break;
+
+      case IsProjectNeeded.No:
+        this.projectForm.controls.existingProject.enable();
+        this.projectForm.controls.newProject.disable();
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  debug() {
+    console.log(this.projectForm);
+  }
+
   onSubmit(): void {
+    FormsHelper.mapToMainForm(this.projectForm, this.sprintsForm, this.epicsForm, this.issuesForm, this.mainForm);
     console.log(this.mainForm);
   }
 

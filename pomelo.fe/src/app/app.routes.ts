@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { JiraFormComponent } from './components/jira-form/jira-form.component';
+import { MainFormComponent } from './components/main-form/main-form.component';
 
 export const routes: Routes = [
-  { path: 'Form', component: JiraFormComponent },
+  { path: 'Form', component: MainFormComponent },
   { path: '**', redirectTo: '' }
 ];

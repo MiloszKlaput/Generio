@@ -1,0 +1,195 @@
+<mat-horizontal-stepper [orientation]="(stepperOrientation$ | async)!" [linear]="true" #stepper>
+  <!-- Step 1: Projekt -->
+  <mat-step [stepControl]="projectForm" label="Projekt">
+    <form class="form-container" [formGroup]="projectForm">
+      <h2>Projekt</h2>
+
+      <mat-label>Czy chcesz założyć nowy projekt?</mat-label>
+      <mat-button-toggle-group formControlName="isNewProjectNeeded" aria-label="Is project needed">
+        <mat-button-toggle [value]="IsProjectNeeded.Yes">Tak</mat-button-toggle>
+        <mat-button-toggle [value]="IsProjectNeeded.No">Nie</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      @if (fp.isNewProjectNeeded.value === IsProjectNeeded.No) {
+      <div class="form-group-container" formGroupName="existingProject">
+        <mat-form-field>
+          <mat-label>Unikalny klucz twojego projektu np. KIWI</mat-label>
+          <input formControlName="existingProjectKey" matInput />
+          @if (fpe.existingProjectKey.errors?.['required'] && fpe.existingProjectKey.touched) {
+          <mat-error>Uzupełnij pole</mat-error>
+          }
+          @if (fpe.existingProjectKey.errors?.['onlyLetters'] && fpe.existingProjectKey.touched) {
+          <mat-error>Dozwolone są jedynie litery</mat-error>
+          }
+          @if (fpe.existingProjectKey.errors?.['minLength'] && fpe.existingProjectKey.touched) {
+          <mat-error>Wymagane przynajmniej 2 znaki</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      }
+      @if (fp.isNewProjectNeeded.value === IsProjectNeeded.Yes) {
+      <div class="form-group-container" formGroupName="newProject">
+        <mat-form-field>
+          <mat-label>Nazwa</mat-label>
+          <input formControlName="projectName" matInput />
+          @if (fpn.projectName.errors?.['required'] && fpn.projectName.touched) {
+          <mat-error>Uzupełnij pole</mat-error>
+          }
+          @if (fpn.projectName.errors?.['minLength'] && fpn.projectName.touched) {
+          <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Opis</mat-label>
+          <input formControlName="projectDescription" matInput />
+          @if (fpn.projectDescription.errors?.['required'] && fpn.projectDescription.touched) {
+          <mat-error>Uzupełnij pole</mat-error>
+          }
+          @if (fpn.projectDescription.errors?.['minLength'] && fpn.projectDescription.touched) {
+          <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Unikalny klucz np. KIWI</mat-label>
+          <input formControlName="projectKey" matInput />
+          @if (fpn.projectKey.errors?.['required'] && fpn.projectKey.touched) {
+          <mat-error>Uzupełnij pole</mat-error>
+          }
+          @if (fpn.projectKey.errors?.['onlyLetters'] && fpn.projectKey.touched) {
+          <mat-error>Dozwolone są jedynie litery</mat-error>
+          }
+          @if (fpn.projectKey.errors?.['minLength'] && fpn.projectKey.touched) {
+          <mat-error>Wymagane przynajmniej 2 znaki</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Id użytkownika Atlassian</mat-label>
+          <input formControlName="atlassianId" matInput />
+          @if (fpn.atlassianId.errors?.['required'] && fpn.atlassianId.touched) {
+          <mat-error>Uzupełnij pole</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      }
+
+      <div class="stepper-actions">
+        <button mat-raised-button matStepperNext (click)="debug()" [disabled]="!projectForm.valid">Dalej</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <!-- Step 2: Sprinty -->
+  <mat-step [stepControl]="sprintsForm" label="Sprinty">
+    <form class="form-container" [formGroup]="sprintsForm">
+      <h2>Sprinty</h2>
+
+      <mat-form-field>
+        <mat-label>Ilość sprintów</mat-label>
+        <input type="number" formControlName="sprintsCount" min="0" matInput />
+        @if (fs.sprintsCount.errors?.['required'] && fs.sprintsCount.touched) {
+        <mat-error>Uzupełnij pole</mat-error>
+        }
+        @if (fs.sprintsCount.errors?.['min'] && fs.sprintsCount.touched) {
+        <mat-error>Minimalna wartość to 0</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Ile trwa sprint (zwykle od 7 do 30 dni)</mat-label>
+        <input type="number" formControlName="sprintDuration" min="1" matInput />
+        @if (fs.sprintDuration.errors?.['required'] && fs.sprintDuration.touched) {
+        <mat-error>Uzupełnij pole</mat-error>
+        }
+        @if (fs.sprintDuration.errors?.['min'] && fs.sprintDuration.touched) {
+        <mat-error>Minimalna wartość to 1</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Data startu pierwszego sprintu</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="projectStartDate">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        @if (fs.projectStartDate.errors?.['required'] && fs.projectStartDate.touched) {
+        <mat-error>Uzupełnij pole</mat-error>
+        }
+        @if (fs.projectStartDate.invalid && fs.projectStartDate.touched) {
+        <mat-error>Nieprawidłowa data</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="stepper-actions">
+        <button mat-raised-button matStepperPrevious>Wróć</button>
+        <button mat-raised-button matStepperNext (click)="debug()" [disabled]="!sprintsForm.valid">Dalej</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <!-- Step 3: Epiki -->
+  <mat-step [stepControl]="epicsForm" label="Epiki">
+    <form class="form-container" [formGroup]="epicsForm">
+      <h2>Epiki</h2>
+
+      <mat-form-field>
+        <mat-label>Ilość epik</mat-label>
+        <input type="number" formControlName="epicsCount" min="0" matInput />
+        @if (fe.epicsCount.errors?.['required'] && fe.epicsCount.touched) {
+        <mat-error>Uzupełnij pole</mat-error>
+        }
+        @if (fe.epicsCount.errors?.['min'] && fe.epicsCount.touched) {
+        <mat-error>Minimalna wartość to 0</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="stepper-actions">
+        <button mat-raised-button matStepperPrevious>Wróć</button>
+        <button mat-raised-button matStepperNext (click)="debug()" [disabled]="!epicsForm.valid">Dalej</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <!-- Step 4: Zadania -->
+  <mat-step [stepControl]="issuesForm" label="Zadania">
+    <form class="form-container" [formGroup]="issuesForm">
+      <h2>Zadania</h2>
+
+      <mat-form-field>
+        <mat-label>Ilość zadań</mat-label>
+        <input type="number" formControlName="issuesCount" min="0" matInput />
+        @if (fi.issuesCount.errors?.['required'] && fi.issuesCount.touched) {
+        <mat-error>Uzupełnij pole</mat-error>
+        }
+        @if (fi.issuesCount.errors?.['min'] && fi.issuesCount.touched) {
+        <mat-error>Minimalna wartość to 0</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-label>Rodzaj zadań (przynajmniej jedno musi być zaznaczone)</mat-label>
+      <div formGroupName="issuesTypes">
+        <mat-checkbox formControlName="story">Story</mat-checkbox>
+        <mat-checkbox formControlName="bug">Bug</mat-checkbox>
+        <mat-checkbox formControlName="task">Task</mat-checkbox>
+      </div>
+      @if (fi.issuesTypes.errors?.['atLeastOneChecked']) {
+      <mat-error>Przynajmniej jedno zadanie musi być zaznaczone</mat-error>
+      }
+
+      <div class="stepper-actions">
+        <button mat-raised-button matStepperPrevious>Wróć</button>
+        <button mat-raised-button matStepperNext (click)="debug()" [disabled]="!issuesForm.valid">Dalej</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="mainForm" label="Podsumowanie">
+    <form class="form-container" [formGroup]="mainForm">
+      <div class="summary-actions">
+        <button (click)="onSubmit()" mat-raised-button (click)="stepper.reset()">Zacznij od nowa</button>
+        <button (click)="onSubmit()" mat-raised-button type="submit" [disabled]="!issuesForm.valid">Rozpocznij</button>
+      </div>
+    </form>
+  </mat-step>
+</mat-horizontal-stepper>

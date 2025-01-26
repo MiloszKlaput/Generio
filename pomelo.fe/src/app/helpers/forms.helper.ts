@@ -1,18 +1,38 @@
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { IsProjectNeeded } from "../enums/is-project-needed.enum";
 import { onlyLettersValidator } from "../validators/only-letters.validator";
-import { EpicsFormControls, IssuesFormControls, JiraFormControls, ProjectFormControls, SprintsFormControls } from "../types/jira-form-controls.type";
+import {
+  ExistingProjectFormControls,
+  NewProjectFormControls,
+  EpicsFormControls,
+  IssuesFormControls,
+  MainFormControls,
+  SprintsFormControls,
+  ProjectFormControls
+} from "../types/main-form-controls.type";
 import { atLeastOneChecked } from "../validators/at-least-one-checked.validator";
 
-export class InitFormsHelper {
-  public static initProjectForm(): FormGroup<ProjectFormControls> {
-    return new FormGroup<ProjectFormControls>({
-      isProjectNeeded: new FormControl<IsProjectNeeded>(IsProjectNeeded.No, [Validators.required]),
-      existingProjectKey: new FormControl<string>('', [Validators.required, Validators.minLength(2), onlyLettersValidator()]),
+export class FormsHelper {
+  public static initExistingProjectForm(): FormGroup<ExistingProjectFormControls> {
+    return new FormGroup<ExistingProjectFormControls>({
+      existingProjectKey: new FormControl<string>('', [Validators.required, Validators.minLength(2), onlyLettersValidator()])
+    });
+  }
+
+  public static initNewProjectForm(): FormGroup<NewProjectFormControls> {
+    return new FormGroup<NewProjectFormControls>({
       projectName: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]),
       projectDescription: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]),
       projectKey: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(2), onlyLettersValidator()]),
       atlassianId: new FormControl<string>({ value: '', disabled: true }, [Validators.required])
+    });
+  }
+
+  public static initProjectForm(): FormGroup<ProjectFormControls> {
+    return new FormGroup<ProjectFormControls>({
+      isNewProjectNeeded: new FormControl<IsProjectNeeded>(IsProjectNeeded.No),
+      existingProject: FormsHelper.initExistingProjectForm(),
+      newProject: FormsHelper.initNewProjectForm()
     });
   }
 
@@ -41,8 +61,8 @@ export class InitFormsHelper {
     });
   }
 
-  public static initMainForm(): FormGroup<JiraFormControls> {
-    return new FormGroup<JiraFormControls>({
+  public static initMainForm(): FormGroup<MainFormControls> {
+    return new FormGroup<MainFormControls>({
       isProjectNeeded: new FormControl<IsProjectNeeded>(IsProjectNeeded.No, [Validators.required]),
       existingProjectKey: new FormControl<string>('', [Validators.required, Validators.minLength(2), onlyLettersValidator()]),
       projectName: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]),
@@ -59,6 +79,27 @@ export class InitFormsHelper {
         bug: new FormControl<boolean>(false),
         task: new FormControl<boolean>(false)
       }, { validators: atLeastOneChecked() })
+    });
+  }
+
+  public static mapToMainForm(
+    projectForm: FormGroup<ProjectFormControls>,
+    sprintsForm: FormGroup<SprintsFormControls>,
+    epicsForm: FormGroup<EpicsFormControls>,
+    issuesForm: FormGroup<IssuesFormControls>,
+    mainForm: FormGroup<MainFormControls>) {
+    mainForm.patchValue({
+      existingProjectKey: projectForm.controls.existingProject.value.existingProjectKey,
+      projectName: projectForm.controls.newProject.value.projectName,
+      projectKey: projectForm.controls.newProject.value.projectKey,
+      projectDescription: projectForm.controls.newProject.value.projectDescription,
+      atlassianId: projectForm.controls.newProject.value.atlassianId,
+      sprintsCount: sprintsForm.value.sprintsCount,
+      sprintDuration: sprintsForm.value.sprintDuration,
+      projectStartDate: sprintsForm.value.projectStartDate,
+      epicsCount: epicsForm.value.epicsCount,
+      issuesCount: issuesForm.value.issuesCount,
+      issuesTypes: issuesForm.value.issuesTypes
     });
   }
 }

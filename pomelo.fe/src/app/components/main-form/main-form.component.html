@@ -263,7 +263,7 @@
       </mat-card>
 
       <div class="summary-actions">
-        <button mat-raised-button (click)="stepper.reset()">Zacznij od nowa</button>
+        <button mat-raised-button (click)="onReset()">Zacznij od nowa</button>
         <button (click)="onSubmit()" mat-flat-button type="submit" [disabled]="!issuesForm.valid">Rozpocznij</button>
       </div>
     </form>

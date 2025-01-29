@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, type OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, ViewChild, type OnInit } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -15,7 +15,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { IsProjectNeeded } from '../../enums/is-project-needed.enum';
 import { map, Observable, Subscription } from 'rxjs';
-import { MatStepperModule, StepperOrientation } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule, StepperOrientation } from '@angular/material/stepper';
 import { MatGridListModule } from '@angular/material/grid-list';
 import {
   EpicsFormControls,
@@ -59,6 +59,8 @@ import { BreakpointObserver } from '@angular/cdk/layout';
   styleUrls: ['./main-form.component.scss'],
 })
 export class MainFormComponent implements OnInit, OnDestroy {
+  @ViewChild('stepper') stepper!: MatStepper;
+
   projectForm!: FormGroup<ProjectFormControls>;
   sprintsForm!: FormGroup<SprintsFormControls>;
   epicsForm!: FormGroup<EpicsFormControls>;
@@ -90,6 +92,11 @@ export class MainFormComponent implements OnInit, OnDestroy {
     const updateFormSub = this.getUpdateForm();
 
     this.subscriptions.push(updateFormSub);
+  }
+
+  onReset(): void {
+    this.initForms();
+    this.stepper.reset();
   }
 
   private initForms(): void {

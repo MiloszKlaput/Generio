@@ -76,7 +76,7 @@
       }
 
       <div class="stepper-actions">
-        <button mat-raised-button matStepperNext (click)="debug()" [disabled]="!projectForm.valid">Dalej</button>
+        <button mat-raised-button matStepperNext [disabled]="!projectForm.valid">Dalej</button>
       </div>
     </form>
   </mat-step>
@@ -123,7 +123,7 @@
 
       <div class="stepper-actions">
         <button mat-raised-button matStepperPrevious>Wróć</button>
-        <button mat-raised-button matStepperNext (click)="debug()" [disabled]="!sprintsForm.valid">Dalej</button>
+        <button mat-raised-button matStepperNext [disabled]="!sprintsForm.valid">Dalej</button>
       </div>
     </form>
   </mat-step>
@@ -146,7 +146,7 @@
 
       <div class="stepper-actions">
         <button mat-raised-button matStepperPrevious>Wróć</button>
-        <button mat-raised-button matStepperNext (click)="debug()" [disabled]="!epicsForm.valid">Dalej</button>
+        <button mat-raised-button matStepperNext [disabled]="!epicsForm.valid">Dalej</button>
       </div>
     </form>
   </mat-step>
@@ -179,16 +179,92 @@
 
       <div class="stepper-actions">
         <button mat-raised-button matStepperPrevious>Wróć</button>
-        <button mat-raised-button matStepperNext (click)="debug()" [disabled]="!issuesForm.valid">Dalej</button>
+        <button mat-raised-button matStepperNext [disabled]="!issuesForm.valid">Dalej</button>
       </div>
     </form>
   </mat-step>
 
   <mat-step [stepControl]="mainForm" label="Podsumowanie">
     <form class="form-container" [formGroup]="mainForm">
+      <h2>Podsumowanie</h2>
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          @if (fp.isNewProjectNeeded.value === IsProjectNeeded.No) {
+            <div class="summary-section">
+              <div class="summary-item">
+                <div>Klucz twojego projektu</div>
+                <div class="summary-value">{{ fpe.existingProjectKey.value }}</div>
+              </div>
+            </div>
+          }
+          @if (fp.isNewProjectNeeded.value === IsProjectNeeded.Yes) {
+            <div class="summary-section">
+              <div class="summary-item">
+                <div>Nowy projekt zostanie założony</div>
+              </div>
+              <div class="summary-item">
+                <div>Klucz nowego projektu</div>
+                <div class="summary-value">{{ fpn.projectKey.value }}</div>
+              </div>
+              <div class="summary-item">
+                <div>Nazwa projektu</div>
+                <div class="summary-value">{{ fpn.projectName.value }}</div>
+              </div>
+              <div class="summary-item">
+                <div>Opis projektu</div>
+                <div class="summary-value">{{ fpn.projectDescription.value }}</div>
+              </div>
+            </div>
+          }
+          <mat-divider></mat-divider>
+          <div class="summary-section">
+            <div class="summary-item">
+              <div>Data rozpoczęcia projektu</div>
+              <div class="summary-value">{{ fs.projectStartDate.value | date: 'dd MMM yyyy' }}</div>
+            </div>
+            <div class="summary-item">
+              <div>Ilość sprintów</div>
+              <div class="summary-value">{{ fs.sprintsCount.value }}</div>
+            </div>
+            <div class="summary-item">
+              <div>Długość trwania sprintów w dniach</div>
+              <div class="summary-value">{{ fs.sprintDuration.value }}</div>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="summary-section">
+            <div class="summary-item">
+              <div>Ilość epik</div>
+              <div class="summary-value">{{ fe.epicsCount.value }}</div>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="summary-section">
+            <div class="summary-item">
+              <div>Ilość zadań</div>
+              <div class="summary-value">{{ fi.issuesCount.value }}</div>
+            </div>
+            <div class="summary-item">
+              <div>Rodzaje zadań:</div>
+              <div class="summary-value">
+                  @if (fi.issuesTypes.value.story) {
+                    Story
+                  }
+                  @if (fi.issuesTypes.value.bug) {
+                    Bug
+                  }
+                  @if (fi.issuesTypes.value.task) {
+                    Task
+                  }
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
       <div class="summary-actions">
-        <button (click)="onSubmit()" mat-raised-button (click)="stepper.reset()">Zacznij od nowa</button>
-        <button (click)="onSubmit()" mat-raised-button type="submit" [disabled]="!issuesForm.valid">Rozpocznij</button>
+        <button mat-raised-button (click)="stepper.reset()">Zacznij od nowa</button>
+        <button (click)="onSubmit()" mat-flat-button type="submit" [disabled]="!issuesForm.valid">Rozpocznij</button>
       </div>
     </form>
   </mat-step>

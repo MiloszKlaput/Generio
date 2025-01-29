@@ -1,7 +1,6 @@
 .form-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   row-gap: 2rem;
   margin: 4rem 14rem;
 
@@ -28,6 +27,28 @@
 
     mat-form-field {
       width: 100%;
+    }
+  }
+
+  mat-card {
+    mat-divider {
+      border-top-style: dashed;
+      opacity: 0.5;
+    }
+  }
+
+  .summary-section {
+    padding: 1.25rem 0;
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 1rem 0;
+
+      .summary-value {
+        font-weight: 600;
+        color: #005cbb;
+      }
     }
   }
 }

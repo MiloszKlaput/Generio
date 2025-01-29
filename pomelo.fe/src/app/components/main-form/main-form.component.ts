@@ -16,6 +16,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { IsProjectNeeded } from '../../enums/is-project-needed.enum';
 import { map, Observable, Subscription } from 'rxjs';
 import { MatStepperModule, StepperOrientation } from '@angular/material/stepper';
+import { MatGridListModule } from '@angular/material/grid-list';
 import {
   EpicsFormControls,
   ExistingProjectFormControls,
@@ -51,6 +52,8 @@ import { BreakpointObserver } from '@angular/cdk/layout';
     MatCheckboxModule,
     MatNativeDateModule,
     MatStepperModule,
+    MatCardModule,
+    MatGridListModule
   ],
   templateUrl: './main-form.component.html',
   styleUrls: ['./main-form.component.scss'],
@@ -77,9 +80,8 @@ export class MainFormComponent implements OnInit, OnDestroy {
 
   constructor() {
     const breakpointObserver = inject(BreakpointObserver);
-    // TO DO dodać breakpointy w RWD
     this.stepperOrientation$ = breakpointObserver
-      .observe('(min-width: 800px)')
+      .observe('(min-width: 1023px)')
       .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
   }
 
@@ -130,13 +132,8 @@ export class MainFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  debug() {
-    console.log(this.projectForm);
-  }
-
   onSubmit(): void {
     FormsHelper.mapToMainForm(this.projectForm, this.sprintsForm, this.epicsForm, this.issuesForm, this.mainForm);
-    console.log(this.mainForm);
   }
 
   ngOnDestroy(): void {

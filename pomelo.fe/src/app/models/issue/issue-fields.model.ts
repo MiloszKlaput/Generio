@@ -23,5 +23,5 @@ export interface IssueFields {
   issuetype: IssueType;
   project: IssueProject;
   summary: string;
-  priority: IssuePriority;
+  priority: IssuePriority | null;
 }

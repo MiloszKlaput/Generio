@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { JiraApiService } from './services/jira-api.service';
-import { Issue } from './models/issue/issue.model';
+import { IssuesRequest } from './models/issue/issue.model';
 import { issues, project, sprints } from './data/static-data';
-import { Sprint } from './models/sprint/sprint.model';
-import { Project } from './models/project/project.model';
+import { SprintRequest } from './models/sprint/sprint.model';
+import { ProjectRequest } from './models/project/project.model';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 
@@ -21,9 +21,9 @@ import { RouterModule } from '@angular/router';
 export class AppComponent {
   currentYear = new Date(Date.now()).getFullYear();
   private jiraApiService = inject(JiraApiService);
-  projectData: Project = project;
-  sprintsData: Sprint[] = sprints;
-  issuesData: Issue[] = issues;
+  projectData: ProjectRequest = project;
+  sprintsData: SprintRequest[] = sprints;
+  issuesData: IssuesRequest[] = issues;
 
   showApiCalls = false;
 

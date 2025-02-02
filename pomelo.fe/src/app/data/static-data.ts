@@ -1,10 +1,10 @@
 import { IssuePriority } from "../models/issue/enums/issue-priority.enum";
 import { IssueType } from "../models/issue/enums/issue-type.enum";
-import { Issue } from "../models/issue/issue.model";
-import { Project } from "../models/project/project.model";
-import { Sprint } from "../models/sprint/sprint.model";
+import { IssuesRequest } from "../models/issue/issue.model";
+import { ProjectRequest } from "../models/project/project.model";
+import { SprintRequest } from "../models/sprint/sprint.model";
 
-export const project: Project = {
+export const project: ProjectRequest = {
   assigneeType: 'PROJECT_LEAD',
   description: 'Project Created By API Description',
   key: 'CHERRY',
@@ -15,24 +15,16 @@ export const project: Project = {
   url: 'http://atlassian.com'
 };
 
-export const sprints: Sprint[] = [
+export const sprints: SprintRequest =
   {
     endDate: '2025-01-30T15:22:00.000+10:00',
     goal: 'Sprint 1 goal',
     name: 'Sprint 1',
     originBoardId: 1,
     startDate: '2025-01-01T15:22:00.000+10:00'
-  },
-  {
-    endDate: '2025-02-14T15:22:00.000+10:00',
-    goal: 'Sprint 2 goal',
-    name: 'Sprint 2',
-    originBoardId: 1,
-    startDate: '2025-01-31T15:22:00.000+10:00'
-  }
-];
+  };
 
-export const issues: Issue[] = [
+export const issues: IssuesRequest[] = [
   {
     fields: {
       priority: IssuePriority.Lowest,

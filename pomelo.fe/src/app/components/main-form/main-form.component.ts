@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, ViewChild, type OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, ViewChild, ViewEncapsulation, type OnInit } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -29,6 +29,12 @@ import {
 import { FormsHelper } from '../../helpers/forms.helper';
 import { CommonModule } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { MatRadioModule } from '@angular/material/radio';
+import { JiraApiService } from '../../services/jira-api.service';
+import { ProjectRequest } from '../../models/project/project.model';
+import { RequestBuilder } from '../../logic/request-builder.logic';
+import { SprintRequest } from '../../models/sprint/sprint.model';
+import { IssuesRequest } from '../../models/issue/issue.model';
 
 
 @Component({
@@ -53,14 +59,16 @@ import { BreakpointObserver } from '@angular/cdk/layout';
     MatNativeDateModule,
     MatStepperModule,
     MatCardModule,
-    MatGridListModule
+    MatGridListModule,
+    MatRadioModule
   ],
   templateUrl: './main-form.component.html',
-  styleUrls: ['./main-form.component.scss'],
+  styleUrls: ['./main-form.component.scss']
 })
 export class MainFormComponent implements OnInit, OnDestroy {
-  @ViewChild('stepper') stepper!: MatStepper;
+  private apiService = inject(JiraApiService);
 
+  @ViewChild('stepper') stepper!: MatStepper;
   projectForm!: FormGroup<ProjectFormControls>;
   sprintsForm!: FormGroup<SprintsFormControls>;
   epicsForm!: FormGroup<EpicsFormControls>;
@@ -79,6 +87,7 @@ export class MainFormComponent implements OnInit, OnDestroy {
   get fs(): SprintsFormControls { return this.sprintsForm.controls; }
   get fe(): EpicsFormControls { return this.epicsForm.controls; }
   get fi(): IssuesFormControls { return this.issuesForm.controls; }
+  get fM(): MainFormControls { return this.mainForm.controls; }
 
   constructor() {
     const breakpointObserver = inject(BreakpointObserver);
@@ -97,9 +106,12 @@ export class MainFormComponent implements OnInit, OnDestroy {
   onReset(): void {
     this.initForms();
     this.stepper.reset();
+
+    // przy resetowaniu jest problem z blokowaniem pól na projekcie
   }
 
   private initForms(): void {
+    // rozszerzyć walidacje?
     this.projectForm = FormsHelper.initProjectForm();
     this.sprintsForm = FormsHelper.initSprintsForm();
     this.epicsForm = FormsHelper.initEpicsForm();
@@ -141,6 +153,33 @@ export class MainFormComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     FormsHelper.mapToMainForm(this.projectForm, this.sprintsForm, this.epicsForm, this.issuesForm, this.mainForm);
+    console.log(this.mainForm);
+
+    const isNewProjectNeeded = this.projectForm.value.isNewProjectNeeded;
+
+    // 1. Projekt
+    if (isNewProjectNeeded) {
+      const newProjectData: ProjectRequest = RequestBuilder.buildProjectRequest(this.fM);
+      this.apiService.createProject(newProjectData);
+    }
+
+    // 2. Pobierz sprint 0
+    this.apiService.getSprintZero(); // zwraca originBoardId, sam sprint 0 niepotrzebny
+
+    // 3. Sprinty
+    const sprintsData: SprintRequest[] = RequestBuilder.buildSprintsRequest(this.fM);
+    for (const sprintData of sprintsData) {
+      this.apiService.createSprint(sprintData);
+    }
+
+    // 4. Epiki + zadania
+    const issuesData: IssuesRequest[] = RequestBuilder.buildIssuesRequest(this.fM);
+    this.apiService.createIssues(issuesData);
+
+    // if project >= Date.now -> complete
+    // else change issues dates (created/resolved) logic tbc && change sprints dates (start/end)
+    //
+    // new helper -> create output file with past project, saveToFile, redirect user
   }
 
   ngOnDestroy(): void {

@@ -1,4 +1,4 @@
-export interface Project {
+export interface ProjectRequest {
   assigneeType: string;
   description: string;
   key: string;
@@ -7,4 +7,10 @@ export interface Project {
   projectTemplateKey: string;
   projectTypeKey: string;
   url: string;
+}
+
+export interface ProjectResponse {
+  id: string,
+  key: string,
+  self: string;
 }

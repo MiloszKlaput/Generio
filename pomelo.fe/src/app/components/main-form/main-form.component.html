@@ -88,25 +88,22 @@
 
       <mat-form-field>
         <mat-label>Ilość sprintów</mat-label>
-        <input type="number" formControlName="sprintsCount" min="0" matInput />
+        <input type="number" formControlName="sprintsCount" min="1" matInput />
         @if (fs.sprintsCount.errors?.['required'] && fs.sprintsCount.touched) {
         <mat-error>Uzupełnij pole</mat-error>
         }
         @if (fs.sprintsCount.errors?.['min'] && fs.sprintsCount.touched) {
-        <mat-error>Minimalna wartość to 0</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Ile trwa sprint (zwykle od 7 do 30 dni)</mat-label>
-        <input type="number" formControlName="sprintDuration" min="1" matInput />
-        @if (fs.sprintDuration.errors?.['required'] && fs.sprintDuration.touched) {
-        <mat-error>Uzupełnij pole</mat-error>
-        }
-        @if (fs.sprintDuration.errors?.['min'] && fs.sprintDuration.touched) {
         <mat-error>Minimalna wartość to 1</mat-error>
         }
       </mat-form-field>
+
+      <mat-radio-group formControlName="sprintDuration" class="sprints-duration" aria-label="Wybierz długość sprintu">
+        <label>Ile trwa sprint (zwykle od 7 do 30 dni)</label>
+        <mat-radio-button [value]="1">1 tydzień</mat-radio-button>
+        <mat-radio-button [value]="2">2 tygodnie</mat-radio-button>
+        <mat-radio-button [value]="3">3 tygodnie</mat-radio-button>
+        <mat-radio-button [value]="4">4 tygodnie</mat-radio-button>
+      </mat-radio-group>
 
       <mat-form-field>
         <mat-label>Data startu pierwszego sprintu</mat-label>
@@ -227,7 +224,7 @@
               <div class="summary-value">{{ fs.sprintsCount.value }}</div>
             </div>
             <div class="summary-item">
-              <div>Długość trwania sprintów w dniach</div>
+              <div>Ile tygodni trwa sprint</div>
               <div class="summary-value">{{ fs.sprintDuration.value }}</div>
             </div>
           </div>

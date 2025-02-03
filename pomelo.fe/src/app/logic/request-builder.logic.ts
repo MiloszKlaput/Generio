@@ -7,10 +7,6 @@ import { MainFormControls } from "../types/main-form-controls.type";
 import { DateTime } from 'luxon';
 
 export class RequestBuilder {
-  // SP estimation?
-  // move issues to epics
-  // move issues to sprint
-
   static buildProjectRequest(f: MainFormControls): ProjectRequest {
     return {
       assigneeType: 'PROJECT_LEAD',
@@ -80,6 +76,10 @@ export class RequestBuilder {
 
     return result;
   }
+
+  static buildMoveToEpicRequest() { }
+
+  static buildMoveToSprintRequest() { }
 
   private static createIssue(summary: string, issueType: IssueType, priority: IssuePriority | null): IssuesRequest {
     return {

@@ -35,6 +35,7 @@ import { ProjectRequest } from '../../models/project/project.model';
 import { RequestBuilder } from '../../logic/request-builder.logic';
 import { SprintRequest } from '../../models/sprint/sprint.model';
 import { IssuesRequest } from '../../models/issue/issue.model';
+import { DateTime } from 'luxon';
 
 
 @Component({
@@ -106,12 +107,9 @@ export class MainFormComponent implements OnInit, OnDestroy {
   onReset(): void {
     this.initForms();
     this.stepper.reset();
-
-    // przy resetowaniu jest problem z blokowaniem pól na projekcie
   }
 
   private initForms(): void {
-    // rozszerzyć walidacje?
     this.projectForm = FormsHelper.initProjectForm();
     this.sprintsForm = FormsHelper.initSprintsForm();
     this.epicsForm = FormsHelper.initEpicsForm();
@@ -153,7 +151,6 @@ export class MainFormComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     FormsHelper.mapToMainForm(this.projectForm, this.sprintsForm, this.epicsForm, this.issuesForm, this.mainForm);
-    console.log(this.mainForm);
 
     const isNewProjectNeeded = this.projectForm.value.isNewProjectNeeded;
 
@@ -163,8 +160,8 @@ export class MainFormComponent implements OnInit, OnDestroy {
       this.apiService.createProject(newProjectData);
     }
 
-    // 2. Pobierz sprint 0
-    this.apiService.getBoardId(); // zwraca originBoardId, sam sprint 0 niepotrzebny
+    // 2. Pobierz boardId
+    this.apiService.getBoardId();
 
     // 3. Sprinty
     const sprintsData: SprintRequest[] = RequestBuilder.buildSprintsRequest(this.fM);
@@ -176,10 +173,21 @@ export class MainFormComponent implements OnInit, OnDestroy {
     const issuesData: IssuesRequest[] = RequestBuilder.buildIssuesRequest(this.fM);
     this.apiService.createIssues(issuesData);
 
-    // if project >= Date.now -> complete
-    // else change issues dates (created/resolved) logic tbc && change sprints dates (start/end)
-    //
-    // new helper -> create output file with past project, saveToFile, redirect user
+    // 5. Przenieś zadania do epik
+    const moveToEpicData = RequestBuilder.buildMoveToEpicRequest();
+    const epicsIds = 0; // Zwrotka z createIssues
+
+    // 6. Przenieś zadania do sprintów
+    const moveToSprintData = RequestBuilder.buildMoveToSprintRequest();
+    const sprintsIds = 0; // Zwrotka z createSprint
+
+    // Jeżeli projekt z dzisiaj lub przyszły -> END
+
+    if (DateTime.fromJSDate(this.fM.projectStartDate.value!).startOf('day') < DateTime.now().startOf('day')) {
+
+    }
+
+    // TO DO - obsługa projektu w przeszłości
   }
 
   ngOnDestroy(): void {

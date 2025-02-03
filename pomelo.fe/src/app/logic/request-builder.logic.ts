@@ -20,7 +20,7 @@ export class RequestBuilder {
     }
   }
 
-  static buildSprintsRequest(f: MainFormControls): SprintRequest[] {
+  static buildSprintsRequest(f: MainFormControls, boardId: number): SprintRequest[] {
     const result: SprintRequest[] = [];
     const sprintsCount = f.sprintsCount.value!;
     const duration = f.sprintDuration.value!;
@@ -28,7 +28,7 @@ export class RequestBuilder {
 
     for (let index = 1; index <= sprintsCount; index++) {
       const sprintData: SprintRequest = {
-        originBoardId: 1,
+        originBoardId: boardId,
         name: `Sprint ${index}`,
         goal: `Cel sprintu ${index}`,
         startDate: DateTime.fromJSDate(f.projectStartDate.value!).plus({ days: sprintStartDate }).toISO()!,
@@ -43,9 +43,19 @@ export class RequestBuilder {
     return result;
   }
 
-  static buildIssuesRequest(f: MainFormControls): IssuesRequest[] {
+  static buildEpicsRequest(f: MainFormControls, projectKey: string): IssuesRequest[] {
     const result: IssuesRequest[] = [];
     const epicsCount = f.epicsCount.value!;
+
+    for (let i = 1; i <= epicsCount; i++) {
+      result.push(this.createIssue(projectKey, `Tytuł epiki ${i}`, IssueType.Epik, null));
+    }
+
+    return result;
+  }
+
+  static buildIssuesRequest(f: MainFormControls, projectKey: string): IssuesRequest[] {
+    const result: IssuesRequest[] = [];
     const issuesCount = f.issuesCount.value!;
     const issuesPriority = [50000, 40000, 30000, 20000, 10000];
     const issueTypeWeights = { story: 0.6, bug: 0.3, task: 0.1 };
@@ -56,10 +66,6 @@ export class RequestBuilder {
 
     storyCount += issuesCount - (storyCount + bugCount + taskCount);
 
-    for (let i = 1; i <= epicsCount; i++) {
-      result.push(this.createIssue(`Tytuł epiki ${i}`, IssueType.Epik, null));
-    }
-
     const issueTypes: { type: IssueType; count: number }[] = [
       { type: IssueType.Story, count: storyCount },
       { type: IssueType.Bug, count: bugCount },
@@ -69,7 +75,7 @@ export class RequestBuilder {
     for (let i = 1; i <= issuesCount; i++) {
       const issueTypeObject = issueTypes.find(t => t.count > 0)!;
 
-      result.push(this.createIssue(`Tytuł zadania ${i}`, issueTypeObject.type, this.getRandomPriority(issuesPriority)));
+      result.push(this.createIssue(projectKey, `Tytuł zadania ${i}`, issueTypeObject.type, this.getRandomPriority(issuesPriority)));
 
       issueTypeObject.count--;
     }
@@ -81,10 +87,10 @@ export class RequestBuilder {
 
   static buildMoveToSprintRequest() { }
 
-  private static createIssue(summary: string, issueType: IssueType, priority: IssuePriority | null): IssuesRequest {
+  private static createIssue(projectKey: string, summary: string, issueType: IssueType, priority: IssuePriority | null): IssuesRequest {
     return {
       fields: {
-        project: { key: 'TU MUSI BYC ZWROTNY KLUCZ PROJEKTU' },
+        project: { key: projectKey },
         summary,
         issuetype: { id: issueType },
         priority: issueType !== IssueType.Epik ? priority : null,
@@ -102,7 +108,8 @@ export class RequestBuilder {
           ],
           type: 'doc',
           version: 1
-        }
+        },
+        customfield_10016: 0
       }
     };
   }

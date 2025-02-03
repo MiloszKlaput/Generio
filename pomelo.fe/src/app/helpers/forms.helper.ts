@@ -11,6 +11,7 @@ import {
   ProjectFormControls
 } from "../types/main-form-controls.type";
 import { atLeastOneChecked } from "../validators/at-least-one-checked.validator";
+import { DateTime } from "luxon";
 
 export class FormsHelper {
   public static initExistingProjectForm(): FormGroup<ExistingProjectFormControls> {
@@ -40,7 +41,7 @@ export class FormsHelper {
     return new FormGroup<SprintsFormControls>({
       sprintsCount: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
       sprintDuration: new FormControl<number>(2),
-      projectStartDate: new FormControl<Date>(new Date(Date.now()), [Validators.required]),
+      projectStartDate: new FormControl<Date>(DateTime.now().toJSDate(), [Validators.required]),
     });
   }
 
@@ -71,7 +72,7 @@ export class FormsHelper {
       atlassianId: new FormControl<string>({ value: '', disabled: true }, [Validators.required]),
       sprintsCount: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
       sprintDuration: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
-      projectStartDate: new FormControl<Date>(new Date(Date.now()), [Validators.required]),
+      projectStartDate: new FormControl<Date>(DateTime.now().toJSDate(), [Validators.required]),
       epicsCount: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
       issuesCount: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
       issuesTypes: new FormGroup({

@@ -24,4 +24,6 @@ export interface IssueFields {
   project: IssueProject;
   summary: string;
   priority: IssuePriority | null;
+  // story points estimation
+  customfield_10016: number;
 }

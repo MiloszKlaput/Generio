@@ -1,10 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';;
 import { Observable } from 'rxjs';
-import { IssuesRequest } from '../models/issue/issue.model';
+import { IssuesRequest, IssuesResponse } from '../models/issue/issue.model';
 import { SprintRequest, SprintResponse } from '../models/sprint/sprint.model';
 import { ProjectRequest, ProjectResponse } from '../models/project/project.model';
-import { IssueResponse } from '../models/issue/issue-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -37,11 +36,11 @@ export class JiraApiService {
     return this.http.post<SprintResponse>(url, data);
   }
 
-  createIssues(issues: IssuesRequest[]): Observable<IssueResponse[]> {
+  createIssues(issues: IssuesRequest[]): Observable<IssuesResponse> {
     const url = this.baseUrl + 'create-issues';
     const data = issues;
 
-    return this.http.post<IssueResponse[]>(url, data);
+    return this.http.post<IssuesResponse>(url, data);
   }
 
   moveIssuesToSprint(issues: IssuesRequest[], sprintId: string): Observable<any> {

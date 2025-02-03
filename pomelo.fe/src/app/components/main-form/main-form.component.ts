@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, ViewChild, ViewEncapsulation, type OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, ViewChild, type OnInit } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -30,12 +30,7 @@ import { FormsHelper } from '../../helpers/forms.helper';
 import { CommonModule } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatRadioModule } from '@angular/material/radio';
-import { JiraApiService } from '../../services/jira-api.service';
-import { ProjectRequest } from '../../models/project/project.model';
-import { RequestBuilder } from '../../logic/request-builder.logic';
-import { SprintRequest } from '../../models/sprint/sprint.model';
-import { IssuesRequest } from '../../models/issue/issue.model';
-import { DateTime } from 'luxon';
+import { JiraPopulateProcessService } from '../../services/jira-populate-process.service';
 
 
 @Component({
@@ -67,8 +62,7 @@ import { DateTime } from 'luxon';
   styleUrls: ['./main-form.component.scss']
 })
 export class MainFormComponent implements OnInit, OnDestroy {
-  private apiService = inject(JiraApiService);
-
+  private populateProcessService = inject(JiraPopulateProcessService);
   @ViewChild('stepper') stepper!: MatStepper;
   projectForm!: FormGroup<ProjectFormControls>;
   sprintsForm!: FormGroup<SprintsFormControls>;
@@ -152,42 +146,7 @@ export class MainFormComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     FormsHelper.mapToMainForm(this.projectForm, this.sprintsForm, this.epicsForm, this.issuesForm, this.mainForm);
 
-    const isNewProjectNeeded = this.projectForm.value.isNewProjectNeeded;
-
-    // 1. Projekt
-    if (isNewProjectNeeded) {
-      const newProjectData: ProjectRequest = RequestBuilder.buildProjectRequest(this.fM);
-      this.apiService.createProject(newProjectData);
-    }
-
-    // 2. Pobierz boardId
-    this.apiService.getBoardId();
-
-    // 3. Sprinty
-    const sprintsData: SprintRequest[] = RequestBuilder.buildSprintsRequest(this.fM);
-    for (const sprintData of sprintsData) {
-      this.apiService.createSprint(sprintData);
-    }
-
-    // 4. Epiki + zadania
-    const issuesData: IssuesRequest[] = RequestBuilder.buildIssuesRequest(this.fM);
-    this.apiService.createIssues(issuesData);
-
-    // 5. Przenieś zadania do epik
-    const moveToEpicData = RequestBuilder.buildMoveToEpicRequest();
-    const epicsIds = 0; // Zwrotka z createIssues
-
-    // 6. Przenieś zadania do sprintów
-    const moveToSprintData = RequestBuilder.buildMoveToSprintRequest();
-    const sprintsIds = 0; // Zwrotka z createSprint
-
-    // Jeżeli projekt z dzisiaj lub przyszły -> END
-
-    if (DateTime.fromJSDate(this.fM.projectStartDate.value!).startOf('day') < DateTime.now().startOf('day')) {
-
-    }
-
-    // TO DO - obsługa projektu w przeszłości
+    this.populateProcessService.startProcess(this.fM);
   }
 
   ngOnDestroy(): void {

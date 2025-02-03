@@ -45,7 +45,8 @@ export const issues: IssuesRequest[] = [
         type: 'doc',
         version: 1
       },
-      issuetype: { id: IssueType.Story }
+      issuetype: { id: IssueType.Story },
+      customfield_10016: 0
     }
   },
   {
@@ -68,7 +69,8 @@ export const issues: IssuesRequest[] = [
         type: 'doc',
         version: 1
       },
-      issuetype: { id: IssueType.Bug }
+      issuetype: { id: IssueType.Bug },
+      customfield_10016: 0
     }
   }
 ];

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { JiraApiService } from './services/jira-api.service';
 import { IssuesRequest } from './models/issue/issue.model';
-import { issues, project, sprints } from './data/static-data';
+import { issues, project, sprint } from './data/static-data';
 import { SprintRequest } from './models/sprint/sprint.model';
 import { ProjectRequest } from './models/project/project.model';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,13 +22,13 @@ export class AppComponent {
   currentYear = new Date(Date.now()).getFullYear();
   private jiraApiService = inject(JiraApiService);
   projectData: ProjectRequest = project;
-  sprintsData: SprintRequest[] = sprints;
+  sprintsData: SprintRequest = sprint;
   issuesData: IssuesRequest[] = issues;
 
   showApiCalls = false;
 
   getSprintZero(): void {
-    this.jiraApiService.getSprintZero()
+    this.jiraApiService.getBoardId()
       .subscribe(result => {
         console.log(result);
       });
@@ -42,12 +42,10 @@ export class AppComponent {
   }
 
   createSprint(): void {
-    for (const sprint of this.sprintsData) {
-      this.jiraApiService.createSprint(sprint)
-        .subscribe(result => {
-          console.log(result)
-        });
-    }
+    this.jiraApiService.createSprint(sprint)
+      .subscribe(result => {
+        console.log(result)
+      });
   }
 
   createIssues(): void {

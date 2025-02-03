@@ -15,7 +15,7 @@ export const project: ProjectRequest = {
   url: 'http://atlassian.com'
 };
 
-export const sprints: SprintRequest =
+export const sprint: SprintRequest =
   {
     endDate: '2025-01-30T15:22:00.000+10:00',
     goal: 'Sprint 1 goal',

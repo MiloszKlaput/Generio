@@ -164,7 +164,7 @@ export class MainFormComponent implements OnInit, OnDestroy {
     }
 
     // 2. Pobierz sprint 0
-    this.apiService.getSprintZero(); // zwraca originBoardId, sam sprint 0 niepotrzebny
+    this.apiService.getBoardId(); // zwraca originBoardId, sam sprint 0 niepotrzebny
 
     // 3. Sprinty
     const sprintsData: SprintRequest[] = RequestBuilder.buildSprintsRequest(this.fM);

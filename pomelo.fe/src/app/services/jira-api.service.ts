@@ -29,9 +29,9 @@ export class JiraApiService {
   //       "originBoardId": 5,
   //       "goal": "sprint 1 goal"
   //     }
-  getSprintZero(): Observable<SprintResponse> {
-    const url = this.baseUrl + 'get-sprint-zero';
-    return this.http.get<SprintResponse>(url);
+  getBoardId(): Observable<number> {
+    const url = this.baseUrl + 'get-board-id';
+    return this.http.get<number>(url);
   }
 
 // Response

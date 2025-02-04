@@ -17,9 +17,10 @@ export class JiraApiService {
     return this.http.get(url);
   }
 
-  getBoardId(): Observable<number> {
+  getBoardId(projectKey: string): Observable<{ data: number }> {
     const url = this.baseUrl + 'get-board-id';
-    return this.http.get<number>(url);
+
+    return this.http.get<{ data: number }>(url, { params: { projectKey } });
   }
 
   createProject(project: ProjectRequest): Observable<ProjectResponse> {

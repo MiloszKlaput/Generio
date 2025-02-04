@@ -13,7 +13,7 @@ const auth = {
 
 async function getBoardId(req, res) {
   try {
-    const url = `${apiAgileUrl}/board`;
+    const url = `${apiAgileUrl}/board?projectKeyOrId=${req.query.projectKey}`;
     const config = {
       headers: { 'Content-Type': 'application/json' },
       auth: auth

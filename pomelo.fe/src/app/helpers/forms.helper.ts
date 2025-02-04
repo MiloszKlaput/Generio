@@ -16,15 +16,15 @@ import { DateTime } from "luxon";
 export class FormsHelper {
   public static initExistingProjectForm(): FormGroup<ExistingProjectFormControls> {
     return new FormGroup<ExistingProjectFormControls>({
-      existingProjectKey: new FormControl<string>('', [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-Za-z]+$/), onlyLettersValidator()])
+      existingProjectKey: new FormControl<string>('', [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-Z]*$/), onlyLettersValidator()])
     });
   }
 
   public static initNewProjectForm(): FormGroup<NewProjectFormControls> {
     return new FormGroup<NewProjectFormControls>({
-      projectName: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-z]+$/)]),
-      projectDescription: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-z]+$/)]),
-      projectKey: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-Za-z]+$/), onlyLettersValidator()]),
+      projectName: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9 ]*$/)]),
+      projectDescription: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9 ]*$/)]),
+      projectKey: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-Z]*$/), onlyLettersValidator()]),
       atlassianId: new FormControl<string>({ value: '', disabled: true }, [Validators.required])
     });
   }
@@ -65,10 +65,10 @@ export class FormsHelper {
   public static initMainForm(): FormGroup<MainFormControls> {
     return new FormGroup<MainFormControls>({
       isProjectNeeded: new FormControl<IsProjectNeeded>(IsProjectNeeded.No, [Validators.required]),
-      existingProjectKey: new FormControl<string>('', [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-Za-z]+$/), onlyLettersValidator()]),
-      projectName: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-z]+$/)]),
-      projectDescription: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-z]+$/)]),
-      projectKey: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-Za-z]+$/), onlyLettersValidator()]),
+      existingProjectKey: new FormControl<string>('', [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-Z]*$/), onlyLettersValidator()]),
+      projectName: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9 ]*$/)]),
+      projectDescription: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9 ]*$/)]),
+      projectKey: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-Z]*$/), onlyLettersValidator()]),
       atlassianId: new FormControl<string>({ value: '', disabled: true }, [Validators.required]),
       sprintsCount: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
       sprintDuration: new FormControl<number>(1, [Validators.required, Validators.min(1)]),

@@ -8,6 +8,7 @@ import { IssuesRequest, IssuesResponse } from '../models/issue/issue.model';
 import { DateTime } from 'luxon';
 import { MainFormControls } from '../types/main-form-controls.type';
 import { ProcessData } from '../models/process/process-data.model';
+import { IsProjectNeeded } from '../enums/is-project-needed.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -20,10 +21,12 @@ export class JiraPopulateProcessService {
 
   startProcess(mainFormData: MainFormControls): void {
     this.buildProcessData(mainFormData);
+    console.log(this.processData);
     this.dataService.setProcessData(this.processData);
 
     const isNewProjectNeeded = this.processData.isProjectNeeded;
-    if (isNewProjectNeeded) {
+
+    if (isNewProjectNeeded === IsProjectNeeded.Yes) {
       const newProjectData: ProjectRequest = RequestBuilder.buildProjectRequest(mainFormData);
       this.apiService.createProject(newProjectData)
         .subscribe((newProjectData: ProjectResponse) => {
@@ -42,16 +45,21 @@ export class JiraPopulateProcessService {
   }
 
   private continueProcess(mainFormData: MainFormControls, newProjectData?: any): void {
-    this.apiService.getBoardId()
-      .subscribe((boardId: number) => {
-        if (boardId) {
-          this.processData.boardId = boardId;
+    const projectKey = this.processData.projectKey ? this.processData.projectKey : this.processData.existingProjectKey;
 
-          const sprintsData: SprintRequest[] = RequestBuilder.buildSprintsRequest(mainFormData, boardId);
+    this.apiService.getBoardId(projectKey)
+      .subscribe((boardId: { data: number }) => {
+        if (boardId) {
+          this.processData.boardId = boardId.data;
+
+          const sprintsData: SprintRequest[] = RequestBuilder.buildSprintsRequest(mainFormData, this.processData.boardId);
+
+          // jak to spiąć w jedno??
           for (const sprintData of sprintsData) {
             this.apiService.createSprint(sprintData)
               .subscribe((sprintResponse: SprintResponse) => {
                 if (sprintResponse) {
+                  console.log('zakładam sprint...');
                   this.processData.sprintsIds.push(sprintResponse.id);
                 }
               });
@@ -59,18 +67,25 @@ export class JiraPopulateProcessService {
 
           const projectKey = this.processData.projectKey ? this.processData.projectKey : this.processData.existingProjectKey;
           const epicsData: IssuesRequest[] = RequestBuilder.buildEpicsRequest(mainFormData, projectKey);
+          console.log(epicsData);
 
           this.apiService.createIssues(epicsData)
             .subscribe((epicsResponse: IssuesResponse) => {
               if (epicsResponse) {
+                console.log('zakładam epiki...');
+
                 for (const epic of epicsResponse.issues) {
                   this.processData.epicsIds.push(epic.id);
                 }
 
                 const issuesData: IssuesRequest[] = RequestBuilder.buildEpicsRequest(mainFormData, projectKey);
+                console.log(issuesData);
+
                 this.apiService.createIssues(issuesData)
                   .subscribe((issuesResponse: IssuesResponse) => {
                     if (issuesResponse) {
+                      console.log('zakładam zadania...');
+
                       this.processData.issuesResponse = issuesResponse.issues;
                       // przetestowac co na prawde to zwraca, czy sa tu fields
                       // jezeli nie to sciagnac wszystkie issues

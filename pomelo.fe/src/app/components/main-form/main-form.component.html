@@ -35,7 +35,7 @@
           @if (fpn.projectName.errors?.['required'] && fpn.projectName.touched) {
           <mat-error>Uzupełnij pole</mat-error>
           }
-          @if (fpn.projectName.errors?.['minLength'] && fpn.projectName.touched) {
+          @if (fpn.projectName.errors?.['minlength'] && fpn.projectName.touched) {
           <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
           }
         </mat-form-field>
@@ -46,7 +46,7 @@
           @if (fpn.projectDescription.errors?.['required'] && fpn.projectDescription.touched) {
           <mat-error>Uzupełnij pole</mat-error>
           }
-          @if (fpn.projectDescription.errors?.['minLength'] && fpn.projectDescription.touched) {
+          @if (fpn.projectDescription.errors?.['minlength'] && fpn.projectDescription.touched) {
           <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
           }
         </mat-form-field>

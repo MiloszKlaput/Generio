@@ -6,6 +6,8 @@ export interface IssuesRequest {
 }
 
 export interface IssuesResponse {
-  issues: IssueResponse[];
-  errors: [];
+  data: {
+    issues: IssueResponse[];
+    errors: [];
+  }
 }

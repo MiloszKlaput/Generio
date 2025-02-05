@@ -3,9 +3,6 @@ const express = require('express');
 // allows CORS
 const cors = require('cors');
 
-const axios = require('axios');
-require('dotenv').config();
-
 const testApi = require('./api/test-api.js');
 const createProject = require('./api/create-project.js');
 const getBoardId = require('./api/get-board-id.js');
@@ -20,7 +17,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get('/test-api', (req, res) => testApi(req, res));
 app.post('/create-project', (req, res) => createProject(req, res));
 app.get('/get-board-id', (req, res) => getBoardId(req, res));
 app.post('/create-sprint', (req, res) => createSprint(req, res));
@@ -29,3 +25,4 @@ app.post('/move-issues-to-sprint', (req, res) => moveIssuesToSprint(req, res));
 app.post('/move-issues-to-epic', (req, res) => moveIssuesToEpic(req, res));
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));
+// app.listen(port, (req, res) => testApi(req, res));

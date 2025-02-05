@@ -1,4 +1,4 @@
-import { IssuePriority } from "../models/issue/enums/issue-priority.enum";
+import { IssuePriorityType } from "../models/issue/enums/issue-priority-type.enum";
 import { IssueType } from "../models/issue/enums/issue-type.enum";
 import { IssuesRequest } from "../models/issue/issue.model";
 import { ProjectRequest } from "../models/project/project.model";
@@ -27,7 +27,7 @@ export const sprint: SprintRequest =
 export const issues: IssuesRequest[] = [
   {
     fields: {
-      priority: IssuePriority.Lowest,
+      priority: IssuePriorityType.Lowest,
       project: { key: 'KIWI' },
       summary: 'Story założone przez API',
       description: {
@@ -51,7 +51,7 @@ export const issues: IssuesRequest[] = [
   },
   {
     fields: {
-      priority: IssuePriority.Low,
+      priority: IssuePriorityType.Low,
       project: { key: 'KIWI' },
       summary: 'Bug założony przez API2',
       description: {

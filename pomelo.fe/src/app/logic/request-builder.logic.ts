@@ -1,5 +1,6 @@
-import { IssuePriority } from "../models/issue/enums/issue-priority.enum";
+import { IssuePriorityType } from "../models/issue/enums/issue-priority-type.enum";
 import { IssueType } from "../models/issue/enums/issue-type.enum";
+import { IssuePriority } from "../models/issue/issue-priority.model";
 import { IssuesRequest } from "../models/issue/issue.model";
 import { ProjectRequest } from "../models/project/project.model";
 import { SprintRequest } from "../models/sprint/sprint.model";
@@ -48,7 +49,7 @@ export class RequestBuilder {
     const epicsCount = f.epicsCount.value!;
 
     for (let i = 1; i <= epicsCount; i++) {
-      result.push(this.createIssue(projectKey, `Tytuł epiki ${i}`, IssueType.Epik, null));
+      result.push(this.createIssue(projectKey, `Tytuł epiki ${i}`, IssueType.Epik));
     }
 
     return result;
@@ -57,7 +58,6 @@ export class RequestBuilder {
   static buildIssuesRequest(f: MainFormControls, projectKey: string): IssuesRequest[] {
     const result: IssuesRequest[] = [];
     const issuesCount = f.issuesCount.value!;
-    const issuesPriority = [50000, 40000, 30000, 20000, 10000];
     const issueTypeWeights = { story: 0.6, bug: 0.3, task: 0.1 };
 
     let storyCount = Math.floor(issuesCount * issueTypeWeights.story);
@@ -75,7 +75,7 @@ export class RequestBuilder {
     for (let i = 1; i <= issuesCount; i++) {
       const issueTypeObject = issueTypes.find(t => t.count > 0)!;
 
-      result.push(this.createIssue(projectKey, `Tytuł zadania ${i}`, issueTypeObject.type, this.getRandomPriority(issuesPriority)));
+      result.push(this.createIssue(projectKey, `Tytuł zadania ${i}`, issueTypeObject.type));
 
       issueTypeObject.count--;
     }
@@ -87,13 +87,13 @@ export class RequestBuilder {
 
   static buildMoveToSprintRequest() { }
 
-  private static createIssue(projectKey: string, summary: string, issueType: IssueType, priority: IssuePriority | null): IssuesRequest {
+  private static createIssue(projectKey: string, summary: string, issueType: IssueType): IssuesRequest {
     return {
       fields: {
         project: { key: projectKey },
         summary,
         issuetype: { id: issueType },
-        priority: issueType !== IssueType.Epik ? priority : null,
+        priority:  { id: `${this.getRandomPriority()}` },
         description: {
           content: [
             {
@@ -108,13 +108,20 @@ export class RequestBuilder {
           ],
           type: 'doc',
           version: 1
-        },
-        customfield_10016: 0
+        }
       }
     };
   }
 
-  private static getRandomPriority(priorities: number[]): IssuePriority {
-    return priorities[Math.floor(Math.random() * priorities.length)] as IssuePriority;
-  }
+  private static getRandomPriority(): IssuePriorityType {
+    const priorities = [
+      IssuePriorityType.Highest,
+      IssuePriorityType.High,
+      IssuePriorityType.Medium,
+      IssuePriorityType.Low,
+      IssuePriorityType.Lowest
+    ];
+
+    return priorities[Math.floor(Math.random() * priorities.length)] as IssuePriorityType;
+  };
 }

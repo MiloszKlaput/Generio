@@ -1,4 +1,5 @@
-import { IssuePriority } from "./enums/issue-priority.enum";
+import { IssuePriorityType } from "./enums/issue-priority-type.enum";
+import { IssuePriority } from "./issue-priority.model";
 import { IssueProject } from "./issue-project.model";
 import { IssueType } from "./issue-type.model";
 
@@ -23,7 +24,5 @@ export interface IssueFields {
   issuetype: IssueType;
   project: IssueProject;
   summary: string;
-  priority: IssuePriority | null;
-  // story points estimation
-  customfield_10016: number;
+  priority: IssuePriority;
 }

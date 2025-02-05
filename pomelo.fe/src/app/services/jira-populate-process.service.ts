@@ -9,6 +9,7 @@ import { DateTime } from 'luxon';
 import { MainFormControls } from '../types/main-form-controls.type';
 import { ProcessData } from '../models/process/process-data.model';
 import { IsProjectNeeded } from '../enums/is-project-needed.enum';
+import { concatMap, from, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,6 @@ export class JiraPopulateProcessService {
 
   startProcess(mainFormData: MainFormControls): void {
     this.buildProcessData(mainFormData);
-    console.log(this.processData);
     this.dataService.setProcessData(this.processData);
 
     const isNewProjectNeeded = this.processData.isProjectNeeded;
@@ -53,66 +53,61 @@ export class JiraPopulateProcessService {
           this.processData.boardId = boardId.data;
 
           const sprintsData: SprintRequest[] = RequestBuilder.buildSprintsRequest(mainFormData, this.processData.boardId);
+          from(sprintsData)
+            .pipe(
+              concatMap((sprintData: SprintRequest) => this.apiService.createSprint(sprintData))
+            )
+            .subscribe((sprintResponse: SprintResponse) => {
+              this.processData.sprintsIds.push(sprintResponse.id);
 
-          // jak to spiąć w jedno??
-          for (const sprintData of sprintsData) {
-            this.apiService.createSprint(sprintData)
-              .subscribe((sprintResponse: SprintResponse) => {
-                if (sprintResponse) {
-                  console.log('zakładam sprint...');
-                  this.processData.sprintsIds.push(sprintResponse.id);
-                }
-              });
-          }
+              const projectKey = this.processData.projectKey ? this.processData.projectKey : this.processData.existingProjectKey;
+              const epicsData: IssuesRequest[] = RequestBuilder.buildEpicsRequest(mainFormData, projectKey);
 
-          const projectKey = this.processData.projectKey ? this.processData.projectKey : this.processData.existingProjectKey;
-          const epicsData: IssuesRequest[] = RequestBuilder.buildEpicsRequest(mainFormData, projectKey);
-          console.log(epicsData);
+              this.apiService.createIssues(epicsData)
+                .subscribe((epicsResponse: IssuesResponse) => {
+                  if (epicsResponse) {
+                    console.log('zakładam epiki...');
 
-          this.apiService.createIssues(epicsData)
-            .subscribe((epicsResponse: IssuesResponse) => {
-              if (epicsResponse) {
-                console.log('zakładam epiki...');
-
-                for (const epic of epicsResponse.issues) {
-                  this.processData.epicsIds.push(epic.id);
-                }
-
-                const issuesData: IssuesRequest[] = RequestBuilder.buildEpicsRequest(mainFormData, projectKey);
-                console.log(issuesData);
-
-                this.apiService.createIssues(issuesData)
-                  .subscribe((issuesResponse: IssuesResponse) => {
-                    if (issuesResponse) {
-                      console.log('zakładam zadania...');
-
-                      this.processData.issuesResponse = issuesResponse.issues;
-                      // przetestowac co na prawde to zwraca, czy sa tu fields
-                      // jezeli nie to sciagnac wszystkie issues
-                      // napisac funkcje ktora sprawdza cos w stylu "story point"
-
-
-
-
-                      // 5. Przenieś zadania do epik
-                      const moveToEpicData = RequestBuilder.buildMoveToEpicRequest();
-                      const epicsIds = 0; // Zwrotka z createIssues
-
-
-                      // 6. Przenieś zadania do sprintów
-                      const moveToSprintData = RequestBuilder.buildMoveToSprintRequest();
-                      const sprintsIds = 0; // Zwrotka z createSprint
-
-                      // Jeżeli projekt z dzisiaj lub przyszły -> END
-
-                      if (DateTime.fromJSDate(this.processData.projectStartDate).startOf('day') < DateTime.now().startOf('day')) {
-
-                      }
-
-                      // TO DO - obsługa projektu w przeszłości
+                    for (let epic of epicsResponse.data.issues) {
+                      this.processData.epicsIds.push(epic.id);
                     }
-                  });
-              }
+
+                    const issuesData: IssuesRequest[] = RequestBuilder.buildEpicsRequest(mainFormData, projectKey);
+                    console.log(issuesData);
+
+                    this.apiService.createIssues(issuesData)
+                      .subscribe((issuesResponse: IssuesResponse) => {
+                        if (issuesResponse) {
+                          console.log('zakładam zadania...');
+
+                          this.processData.issuesResponse = issuesResponse.data.issues;
+                          // przetestowac co na prawde to zwraca, czy sa tu fields
+                          // jezeli nie to sciagnac wszystkie issues
+                          // napisac funkcje ktora sprawdza cos w stylu "story point"
+
+
+
+
+                          // 5. Przenieś zadania do epik
+                          const moveToEpicData = RequestBuilder.buildMoveToEpicRequest();
+                          const epicsIds = 0; // Zwrotka z createIssues
+
+
+                          // 6. Przenieś zadania do sprintów
+                          const moveToSprintData = RequestBuilder.buildMoveToSprintRequest();
+                          const sprintsIds = 0; // Zwrotka z createSprint
+
+                          // Jeżeli projekt z dzisiaj lub przyszły -> END
+
+                          if (DateTime.fromJSDate(this.processData.projectStartDate).startOf('day') < DateTime.now().startOf('day')) {
+
+                          }
+
+                          // TO DO - obsługa projektu w przeszłości
+                        }
+                      });
+                  }
+                });
             });
         }
       });

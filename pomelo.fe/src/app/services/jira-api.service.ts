@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { IssuesRequest, IssuesResponse } from '../models/issue/issue.model';
 import { SprintRequest, SprintResponse } from '../models/sprint/sprint.model';
 import { ProjectRequest, ProjectResponse } from '../models/project/project.model';
+import { MoveToEpicRequest } from '../models/issue/move-to-epic.model';
+import { MoveToSprintRequest } from '../models/issue/move-to-sprint.model';
 
 @Injectable({
   providedIn: 'root'
@@ -44,17 +46,17 @@ export class JiraApiService {
     return this.http.post<IssuesResponse>(url, data);
   }
 
-  moveIssuesToSprint(issues: IssuesRequest[], sprintId: string): Observable<any> {
-    const url = this.baseUrl + 'move-issues-to-sprint';
-    const data = { issues, sprintId };
+  moveIssuesToEpic(moveToEpicData: MoveToEpicRequest): Observable<MoveToEpicRequest> {
+    const url = this.baseUrl + 'move-issues-to-epic';
+    const data = { epicId: moveToEpicData.id, issues: moveToEpicData.issuesKeys };
 
-    return this.http.post(url, data);
+    return this.http.post<MoveToEpicRequest>(url, data);
   }
 
-  moveIssuesToEpic(issues: IssuesRequest[], epicId: string): Observable<any> {
-    const url = this.baseUrl + 'move-issues-to-epic';
-    const data = { issues, epicId };
+  moveIssuesToSprint(moveToSprintData: MoveToSprintRequest): Observable<MoveToSprintRequest> {
+    const url = this.baseUrl + 'move-issues-to-sprint';
+    const data = { sprintId: moveToSprintData.id, issues: moveToSprintData.issuesKeys };
 
-    return this.http.post(url, data);
+    return this.http.post<MoveToSprintRequest>(url, data);
   }
 }

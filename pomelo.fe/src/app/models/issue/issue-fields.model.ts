@@ -1,4 +1,3 @@
-import { IssuePriorityType } from "./enums/issue-priority-type.enum";
 import { IssuePriority } from "./issue-priority.model";
 import { IssueProject } from "./issue-project.model";
 import { IssueType } from "./issue-type.model";

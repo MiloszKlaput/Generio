@@ -21,8 +21,8 @@ app.post('/create-project', (req, res) => createProject(req, res));
 app.get('/get-board-id', (req, res) => getBoardId(req, res));
 app.post('/create-sprint', (req, res) => createSprint(req, res));
 app.post('/create-issues', (req, res) => createIssues(req, res));
-app.post('/move-issues-to-sprint', (req, res) => moveIssuesToSprint(req, res));
 app.post('/move-issues-to-epic', (req, res) => moveIssuesToEpic(req, res));
+app.post('/move-issues-to-sprint', (req, res) => moveIssuesToSprint(req, res));
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));
 // app.listen(port, (req, res) => testApi(req, res));

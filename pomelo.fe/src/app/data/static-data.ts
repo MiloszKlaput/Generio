@@ -1,5 +1,5 @@
 import { IssuePriorityType } from "../models/issue/enums/issue-priority-type.enum";
-import { IssueType } from "../models/issue/enums/issue-type.enum";
+import { IssueTypeEnum } from "../models/issue/enums/issue-type.enum";
 import { IssuesRequest } from "../models/issue/issue.model";
 import { ProjectRequest } from "../models/project/project.model";
 import { SprintRequest } from "../models/sprint/sprint.model";
@@ -45,7 +45,7 @@ export const issues: IssuesRequest[] = [
         type: 'doc',
         version: 1
       },
-      issuetype: { id: IssueType.Story },
+      issuetype: { id: IssueTypeEnum.Story },
       customfield_10016: 0
     }
   },
@@ -69,7 +69,7 @@ export const issues: IssuesRequest[] = [
         type: 'doc',
         version: 1
       },
-      issuetype: { id: IssueType.Bug },
+      issuetype: { id: IssueTypeEnum.Bug },
       customfield_10016: 0
     }
   }

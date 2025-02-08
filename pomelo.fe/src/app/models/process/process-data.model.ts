@@ -1,14 +1,14 @@
 import { IsProjectNeeded } from "../../enums/is-project-needed.enum";
 import { IssueResponse } from "../issue/issue-response.model";
+import { MoveToSprintRequest } from "../issue/move-to-sprint.model";
+import { SprintResponse } from "../sprint/sprint.model";
 
-export interface ProcessData {
+export interface RequestData {
   isProjectNeeded: IsProjectNeeded;
   existingProjectKey: string;
   projectName: string;
   projectDescription: string;
   projectKey: string;
-  projectId: string;
-  projectLink: string;
   atlassianId: string;
   sprintsCount: number;
   sprintDuration: number;
@@ -20,8 +20,15 @@ export interface ProcessData {
     bug: boolean;
     task: boolean;
   };
+}
+
+export interface ResponseData {
+  projectId: string;
+  projectKey: string;
+  projectLink: string;
   boardId: number;
-  sprintsIds: number[];
+  sprints: SprintResponse[];
   epicsIds: number[];
-  issuesResponse: IssueResponse[];
+  issues: IssueResponse[];
+  sprintIssuesAssigment: MoveToSprintRequest[];
 }

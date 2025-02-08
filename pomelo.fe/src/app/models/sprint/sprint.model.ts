@@ -7,12 +7,14 @@ export interface SprintRequest {
 }
 
 export interface SprintResponse {
-  id: number,
-  self: string,
-  state: string,
-  name: string,
-  startDate: Date,
-  endDate: Date,
-  originBoardId: number,
-  goal: string
+  data: {
+    id: number,
+    self: string,
+    state: string,
+    name: string,
+    startDate: Date,
+    endDate: Date,
+    originBoardId: number,
+    goal: string
+  }
 }

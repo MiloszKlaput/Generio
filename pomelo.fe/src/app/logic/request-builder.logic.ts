@@ -1,7 +1,10 @@
 import { IssuePriorityType } from "../models/issue/enums/issue-priority-type.enum";
-import { IssueType } from "../models/issue/enums/issue-type.enum";
+import { IssueTypeEnum } from "../models/issue/enums/issue-type.enum";
 import { IssuePriority } from "../models/issue/issue-priority.model";
+import { IssueResponse } from "../models/issue/issue-response.model";
 import { IssuesRequest } from "../models/issue/issue.model";
+import { MoveToEpicRequest } from "../models/issue/move-to-epic.model";
+import { MoveToSprintRequest } from "../models/issue/move-to-sprint.model";
 import { ProjectRequest } from "../models/project/project.model";
 import { SprintRequest } from "../models/sprint/sprint.model";
 import { MainFormControls } from "../types/main-form-controls.type";
@@ -49,7 +52,7 @@ export class RequestBuilder {
     const epicsCount = f.epicsCount.value!;
 
     for (let i = 1; i <= epicsCount; i++) {
-      result.push(this.createIssue(projectKey, `Tytuł epiki ${i}`, IssueType.Epik));
+      result.push(this.createIssue(projectKey, `Tytuł epiki ${i}`, IssueTypeEnum.Epik));
     }
 
     return result;
@@ -66,10 +69,10 @@ export class RequestBuilder {
 
     storyCount += issuesCount - (storyCount + bugCount + taskCount);
 
-    const issueTypes: { type: IssueType; count: number }[] = [
-      { type: IssueType.Story, count: storyCount },
-      { type: IssueType.Bug, count: bugCount },
-      { type: IssueType.Task, count: taskCount }
+    const issueTypes: { type: IssueTypeEnum; count: number }[] = [
+      { type: IssueTypeEnum.Story, count: storyCount },
+      { type: IssueTypeEnum.Bug, count: bugCount },
+      { type: IssueTypeEnum.Task, count: taskCount }
     ];
 
     for (let i = 1; i <= issuesCount; i++) {
@@ -83,17 +86,37 @@ export class RequestBuilder {
     return result;
   }
 
-  static buildMoveToEpicRequest() { }
+  static buildMoveToEpicRequest(epicsIds: number[], issues: IssueResponse[]): MoveToEpicRequest[] {
+    let moveToEpicRequestData: MoveToEpicRequest[];
+    moveToEpicRequestData = epicsIds.map(epicId => ({ id: epicId, issuesKeys: [] }));
 
-  static buildMoveToSprintRequest() { }
+    for (let i = 0; i < issues.length; i++) {
+      const epicIndex = i % epicsIds.length;
+      moveToEpicRequestData[epicIndex].issuesKeys.push(issues[i].key);
+    }
 
-  private static createIssue(projectKey: string, summary: string, issueType: IssueType): IssuesRequest {
+    return moveToEpicRequestData;
+  }
+
+  static buildMoveToSprintRequest(sprintsIds: number[], issues: IssueResponse[]): MoveToSprintRequest[] {
+    let moveToSprintRequestData: MoveToSprintRequest[];
+    moveToSprintRequestData = sprintsIds.map(sprintsId => ({ id: sprintsId, issuesKeys: [] }));
+
+    for (let i = 0; i < issues.length; i++) {
+      const sprintIndex = i % sprintsIds.length;
+      moveToSprintRequestData[sprintIndex].issuesKeys.push(issues[i].key);
+    }
+
+    return moveToSprintRequestData;
+  }
+
+  private static createIssue(projectKey: string, summary: string, issueType: IssueTypeEnum): IssuesRequest {
     return {
       fields: {
         project: { key: projectKey },
         summary,
-        issuetype: { id: issueType },
-        priority:  { id: `${this.getRandomPriority()}` },
+        issuetype: { id: issueType.toString() },
+        priority: { id: `${this.getRandomPriority()}` },
         description: {
           content: [
             {

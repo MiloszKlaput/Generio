@@ -24,7 +24,7 @@ export class FormsHelper {
     return new FormGroup<NewProjectFormControls>({
       projectName: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9 ]*$/)]),
       projectDescription: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9 ]*$/)]),
-      projectKey: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-Z]*$/), onlyLettersValidator()]),
+      projectKey: new FormControl<string>({ value: '', disabled: true }, [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-Z0-9-:]*$/), onlyLettersValidator()]),
       atlassianId: new FormControl<string>({ value: '', disabled: true }, [Validators.required])
     });
   }
@@ -90,6 +90,7 @@ export class FormsHelper {
     issuesForm: FormGroup<IssuesFormControls>,
     mainForm: FormGroup<MainFormControls>) {
     mainForm.patchValue({
+      isProjectNeeded: projectForm.controls.isNewProjectNeeded.value,
       existingProjectKey: projectForm.controls.existingProject.value.existingProjectKey,
       projectName: projectForm.controls.newProject.value.projectName,
       projectKey: projectForm.controls.newProject.value.projectKey,

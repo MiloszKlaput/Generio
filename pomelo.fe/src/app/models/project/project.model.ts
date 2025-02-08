@@ -10,7 +10,9 @@ export interface ProjectRequest {
 }
 
 export interface ProjectResponse {
-  id: string,
-  key: string,
-  self: string;
+  data: {
+    id: string,
+    key: string,
+    self: string
+  }
 }

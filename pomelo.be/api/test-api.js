@@ -14,7 +14,7 @@ const auth = {
 
 async function testApi(req, res) {
   try {
-    const url = `${apiRestUrl}/issuetype`;
+    const url = `${apiRestUrl}/issuetype/project?projectId=10003`;
     const config = {
       headers: { 'Content-Type': 'application/json' },
       auth: auth
@@ -26,9 +26,10 @@ async function testApi(req, res) {
     return res.json({ data: response.data });
 
   } catch (error) {
-    console.log(error);
-    console.log(error.response.data.errors);
-    return res.status(500).json(error.response.data.errors);
+    console.error('Błąd podczas pobierania issueTypes:', error.response ? error.response.data : error.message);
+    return res.status(error.response ? error.response.status : 500).json({
+      error: error.response ? error.response.data : 'Internal Server Error'
+    });
   }
 }
 

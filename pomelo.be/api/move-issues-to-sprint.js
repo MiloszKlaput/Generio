@@ -24,8 +24,10 @@ async function moveIssuesToSprint(req, res) {
     return res.json({ data: response.data });
 
   } catch (error) {
-    console.log(error.response.data.errors);
-    return res.status(500).json(error.response.data.errors);
+    console.error('Błąd podczas przenoszenia zgłoszeń do sprintu:', error.response ? error.response.data : error.message);
+    return res.status(error.response ? error.response.status : 500).json({
+      error: error.response ? error.response.data : 'Internal Server Error'
+    });
   }
 }
 

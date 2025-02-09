@@ -1,0 +1,40 @@
+@use "../../../styles/breakpoints" as *;
+
+.content {
+  width: 100%;
+
+  @media (min-width: $Small) {
+    width: 75%;
+  }
+
+  @media (min-width: $Medium) {
+    width: 50%;
+  }
+
+  @media (min-width: $Large) {
+    width: 35%;
+  }
+
+  h2 {
+    margin-bottom: 4rem;
+    text-align: center;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    margin-bottom: 3rem;
+
+    li {
+      margin: 1rem 0;
+      list-style-type: circle;
+    }
+  }
+}
+
+.action {
+  margin: 5rem auto 2rem;
+  text-align: center;
+}

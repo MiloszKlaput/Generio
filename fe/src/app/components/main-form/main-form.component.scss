@@ -1,5 +1,14 @@
 @use "../../../styles/breakpoints" as *;
 
+.stepper-container {
+  width: 100%;
+
+  @media (min-width: $Large) {
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+}
+
 .form-container {
   display: flex;
   flex-direction: column;

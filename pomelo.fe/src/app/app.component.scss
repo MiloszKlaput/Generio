@@ -1,14 +1,5 @@
 @use '../styles/breakpoints' as *;
 
-@media (min-width: $Medium) {
-}
-
-@media (min-width: $Large) {
-}
-
-@media (min-width: $XLarge) {
-}
-
 :host {
   display: flex;
   flex-direction: column;
@@ -16,26 +7,28 @@
   overflow: hidden;
 
   .top-menu {
-    padding: 1rem;
-    background-color: #abc7ff;
+    padding: 1rem 2rem;
+    background-color: #d7e3ff;
 
     .title {
       font-size: 2rem;
       font-weight: 600;
-      color: #fff;
+      color: #005cbb;
     }
   }
 
   .content {
     flex: 1;
-    background-color: #f7f8fb;
+    background-color: #faf9fd;
     overflow-y: auto;
     padding: 1rem;
   }
 
   .footer {
     padding: 1.5rem;
-    background-color: #abc7ff;
+    background-color: #d7e3ff;
     text-align: center;
+    color: #005cbb;
+    font-weight: 500;
   }
 }

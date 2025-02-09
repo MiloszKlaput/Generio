@@ -1,5 +1,5 @@
 <mat-horizontal-stepper [orientation]="(stepperOrientation$ | async)!" [linear]="true" #stepper>
-  <!-- Step 1: Projekt -->
+
   <mat-step [stepControl]="projectForm" label="Projekt">
     <form class="form-container" [formGroup]="projectForm">
       <h2>Projekt</h2>
@@ -13,7 +13,7 @@
       @if (fp.isNewProjectNeeded.value === IsProjectNeeded.No) {
       <div class="form-group-container" formGroupName="existingProject">
         <mat-form-field>
-          <mat-label>Unikalny klucz twojego projektu np. KIWI</mat-label>
+          <mat-label>Unikalny klucz twojego projektu</mat-label>
           <input formControlName="existingProjectKey" matInput />
           @if (fpe.existingProjectKey.errors?.['required'] && fpe.existingProjectKey.touched) {
           <mat-error>Uzupełnij pole</mat-error>
@@ -52,7 +52,7 @@
         </mat-form-field>
 
         <mat-form-field>
-          <mat-label>Unikalny klucz np. KIWI</mat-label>
+          <mat-label>Unikalny klucz KIWI</mat-label>
           <input formControlName="projectKey" matInput />
           @if (fpn.projectKey.errors?.['required'] && fpn.projectKey.touched) {
           <mat-error>Uzupełnij pole</mat-error>
@@ -76,12 +76,11 @@
       }
 
       <div class="stepper-actions">
-        <button mat-raised-button matStepperNext [disabled]="!projectForm.valid">Dalej</button>
+        <button mat-flat-button matStepperNext [disabled]="!projectForm.valid">Dalej</button>
       </div>
     </form>
   </mat-step>
 
-  <!-- Step 2: Sprinty -->
   <mat-step [stepControl]="sprintsForm" label="Sprinty">
     <form class="form-container" [formGroup]="sprintsForm">
       <h2>Sprinty</h2>
@@ -120,12 +119,11 @@
 
       <div class="stepper-actions">
         <button mat-raised-button matStepperPrevious>Wróć</button>
-        <button mat-raised-button matStepperNext [disabled]="!sprintsForm.valid">Dalej</button>
+        <button mat-flat-button matStepperNext [disabled]="!sprintsForm.valid">Dalej</button>
       </div>
     </form>
   </mat-step>
 
-  <!-- Step 3: Epiki -->
   <mat-step [stepControl]="epicsForm" label="Epiki">
     <form class="form-container" [formGroup]="epicsForm">
       <h2>Epiki</h2>
@@ -143,12 +141,11 @@
 
       <div class="stepper-actions">
         <button mat-raised-button matStepperPrevious>Wróć</button>
-        <button mat-raised-button matStepperNext [disabled]="!epicsForm.valid">Dalej</button>
+        <button mat-flat-button matStepperNext [disabled]="!epicsForm.valid">Dalej</button>
       </div>
     </form>
   </mat-step>
 
-  <!-- Step 4: Zadania -->
   <mat-step [stepControl]="issuesForm" label="Zadania">
     <form class="form-container" [formGroup]="issuesForm">
       <h2>Zadania</h2>
@@ -176,7 +173,7 @@
 
       <div class="stepper-actions">
         <button mat-raised-button matStepperPrevious>Wróć</button>
-        <button mat-raised-button matStepperNext [disabled]="!issuesForm.valid">Dalej</button>
+        <button mat-flat-button matStepperNext [disabled]="!issuesForm.valid">Dalej</button>
       </div>
     </form>
   </mat-step>
@@ -260,7 +257,7 @@
       </mat-card>
 
       <div class="summary-actions">
-        <button mat-raised-button (click)="onReset()">Zacznij od nowa</button>
+        <button mat-raised-button (click)="onReset()">Resetuj</button>
         <button (click)="onSubmit()" mat-flat-button type="submit" [disabled]="!issuesForm.valid">Rozpocznij</button>
       </div>
     </form>

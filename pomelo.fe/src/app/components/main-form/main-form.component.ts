@@ -99,8 +99,9 @@ export class MainFormComponent implements OnInit, OnDestroy {
   }
 
   onReset(): void {
-    this.initForms();
+    this.projectForm.reset();
     this.stepper.reset();
+    this.initForms();
   }
 
   private initForms(): void {

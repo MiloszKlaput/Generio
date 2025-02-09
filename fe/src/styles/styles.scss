@@ -1,3 +1,5 @@
+@use '../styles/variables' as *;
+
 html,
 body {
   height: 100%;
@@ -5,5 +7,5 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  color: #44474e;
+  color: $font;
 }

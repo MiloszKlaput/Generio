@@ -1,4 +1,5 @@
-@use "../../../styles/breakpoints" as *;
+@use '../../../styles/breakpoints' as *;
+@use '../../../styles/variables' as *;
 
 .stepper-container {
   width: 100%;
@@ -102,7 +103,7 @@
 
       .summary-value {
         font-weight: 500;
-        color: #005cbb;
+        color: $primary;
         text-align: end;
       }
     }

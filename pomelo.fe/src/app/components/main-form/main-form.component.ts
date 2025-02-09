@@ -87,7 +87,7 @@ export class MainFormComponent implements OnInit, OnDestroy {
   constructor() {
     const breakpointObserver = inject(BreakpointObserver);
     this.stepperOrientation$ = breakpointObserver
-      .observe('(min-width: 1023px)')
+      .observe('(min-width: 960px)')
       .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
   }
 

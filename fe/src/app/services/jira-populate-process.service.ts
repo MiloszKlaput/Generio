@@ -3,24 +3,16 @@ import { JiraApiService } from './jira-api.service';
 import { RequestBuilder } from '../logic/request-builder.logic';
 import { ProjectRequest, ProjectResponse } from '../models/project/project.model';
 import { SprintRequest, SprintResponse } from '../models/sprint/sprint.model';
-import { IssuesRequest, IssuesResponse } from '../models/issue/issue.model';
+import { Issue } from '../models/issue/issue.model';
 import { MoveToEpicRequest } from '../models/issue/move-to-epic.model';
 import { MoveToSprintRequest } from '../models/issue/move-to-sprint.model';
 import { MainFormControls } from '../types/main-form-controls.type';
 import { IsProjectNeeded } from '../enums/is-project-needed.enum';
 import { RequestData, ResponseData } from '../models/process/process-data.model';
 import { DateTime } from 'luxon';
-import {
-  from,
-  switchMap,
-  concatMap,
-  toArray,
-  tap,
-  Observable,
-  catchError,
-  throwError
-} from 'rxjs';
+import { from, switchMap, concatMap, toArray, tap, Observable, catchError, throwError } from 'rxjs';
 import { BoardIdResponse } from '../models/board/board.model';
+import { RealWorkflowSimulator } from '../logic/real-workflow-simulator.logic';
 
 
 @Injectable({
@@ -46,18 +38,18 @@ export class JiraPopulateProcessService {
   }
 
   private continueProcess(data: MainFormControls): void {
-    const projectKey = this.resolveProjectKey();
+    const projectKey = this.getProjectKey();
 
     this.getBoardId(projectKey)
       .pipe(
         switchMap(() => this.createSprints(data)),
         switchMap(() => this.createEpics(data)),
         switchMap(() => this.createIssues(data)),
-        switchMap(() => this.linkIssuesToEpics()),
-        switchMap(() => this.linkIssuesToSprints())
+        switchMap(() => this.moveIssuesToEpics()),
+        switchMap(() => this.moveIssuesToSprints())
       )
       .subscribe({
-        next: () => this.handlePastProjectScenario(),
+        next: () => this.createPastProjectDataFile(),
         error: (err) => console.error(err)
       });
   }
@@ -66,10 +58,12 @@ export class JiraPopulateProcessService {
     const request: ProjectRequest = RequestBuilder.buildProjectRequest(data);
 
     return this.apiService.createProject(request).pipe(
-      tap((res: ProjectResponse) => {
-        this.responseData.projectId = res.data.id;
-        this.responseData.projectLink = res.data.self;
-        this.responseData.projectKey = res.data.key;
+      tap((result: ProjectResponse) => {
+        if (result) {
+          this.responseData.projectId = result.data.id;
+          this.responseData.projectLink = result.data.self;
+          this.responseData.projectKey = result.data.key;
+        }
       }),
       catchError((err) => {
         console.error('Error creating project', err);
@@ -80,8 +74,10 @@ export class JiraPopulateProcessService {
 
   private getBoardId(projectKey: string): Observable<BoardIdResponse> {
     return this.apiService.getBoardId(projectKey).pipe(
-      tap((res: BoardIdResponse) => {
-        this.responseData.boardId = res.data;
+      tap((result: BoardIdResponse) => {
+        if (result) {
+          this.responseData.boardId = result.data;
+        }
       }),
       catchError((err) => {
         console.error('Error resolving board', err);
@@ -98,8 +94,10 @@ export class JiraPopulateProcessService {
     return from(sprints).pipe(
       concatMap((sprint: SprintRequest) => this.apiService.createSprint(sprint)),
       toArray(),
-      tap((res: SprintResponse[]) => {
-        this.responseData.sprints = res;
+      tap((result: SprintResponse[]) => {
+        if (result) {
+          this.responseData.sprints = result;
+        }
       }),
       catchError((err) => {
         console.error('Error creating sprints', err);
@@ -108,14 +106,16 @@ export class JiraPopulateProcessService {
     );
   }
 
-  private createEpics(data: MainFormControls): Observable<IssuesResponse> {
-    const projectKey = this.resolveProjectKey();
-    const epics: IssuesRequest[] = RequestBuilder.buildEpicsRequest(data, projectKey);
+  private createEpics(data: MainFormControls): Observable<{ issues: Issue[], errors: any[] }> {
+    const projectKey = this.getProjectKey();
+    const epics: Issue[] = RequestBuilder.buildEpicsRequest(data, projectKey);
     return this.apiService.createIssues(epics).pipe(
-      tap((res: IssuesResponse) => {
-        res.data.issues.forEach((epic) => {
-          this.responseData.epicsIds.push(epic.id);
-        });
+      tap((result: { issues: Issue[], errors: any[] }) => {
+        if (result.issues) {
+          for (const epic of result.issues) {
+            this.responseData.epicsIds.push(epic.id!);
+          }
+        }
       }),
       catchError((err) => {
         console.error('Error creating epics', err);
@@ -124,12 +124,16 @@ export class JiraPopulateProcessService {
     );
   }
 
-  private createIssues(data: MainFormControls): Observable<IssuesResponse> {
-    const projectKey = this.resolveProjectKey();
-    const issues: IssuesRequest[] = RequestBuilder.buildIssuesRequest(data, projectKey);
+  private createIssues(data: MainFormControls): Observable<{ issues: Issue[], errors: any[] }> {
+    const projectKey = this.getProjectKey();
+    const issues: Issue[] = RequestBuilder.buildIssuesRequest(data, projectKey);
+    this.requestData.issues = issues;
+
     return this.apiService.createIssues(issues).pipe(
-      tap((res: IssuesResponse) => {
-        this.responseData.issues = res.data.issues;
+      tap((result: { issues: Issue[], errors: any[] }) => {
+        if (result.issues) {
+          this.responseData.issues = result.issues;
+        }
       }),
       catchError((err) => {
         console.error('Error creating issues', err);
@@ -138,7 +142,7 @@ export class JiraPopulateProcessService {
     );
   }
 
-  private linkIssuesToEpics(): Observable<unknown[]> {
+  private moveIssuesToEpics(): Observable<any> {
     const requests: MoveToEpicRequest[] = RequestBuilder.buildMoveToEpicRequest(
       this.responseData.epicsIds,
       this.responseData.issues
@@ -153,11 +157,12 @@ export class JiraPopulateProcessService {
     );
   }
 
-  private linkIssuesToSprints(): Observable<unknown[]> {
+  private moveIssuesToSprints(): Observable<any> {
     const sprintsIds = this.responseData.sprints.map((s) => s.data.id);
     const requests: MoveToSprintRequest[] =
       RequestBuilder.buildMoveToSprintRequest(sprintsIds, this.responseData.issues);
-    this.responseData.sprintIssuesAssigment = requests;
+    this.requestData.sprintIssuesAssigment = requests;
+
     return from(requests).pipe(
       concatMap((req: MoveToSprintRequest) => this.apiService.moveIssuesToSprint(req)),
       toArray(),
@@ -168,33 +173,11 @@ export class JiraPopulateProcessService {
     );
   }
 
-  private handlePastProjectScenario(): void {
-    const startDate = DateTime.fromJSDate(this.requestData.projectStartDate).startOf('day');
-    const now = DateTime.now().startOf('day');
-
-    if (startDate < now) {
-
-      const issuesWithPastDates = this.responseData.issues.map((issue, index) => {
-        const resolvedDate = startDate.plus({ days: index + 1 });
-        const finalResolvedDate = resolvedDate > now ? now : resolvedDate;
-
-        return {
-          key: issue.key,
-          createdDate: startDate.toISO(),
-          resolvedDate: finalResolvedDate.toISO()
-        };
-      });
-
-      const jsonDoc = JSON.stringify(issuesWithPastDates, null, 2);
-      console.log('Issues with past dates:\n', jsonDoc);
-
-      // W tym miejscu możesz np. zapisać plik .json przez inny serwis,
-      // wysłać do back-endu, itp.
-    }
+  private createPastProjectDataFile(): void {
+    RealWorkflowSimulator.simulateWorkflowForAllSprints(this.requestData, this.responseData);
   }
 
-
-  private resolveProjectKey(): string {
+  private getProjectKey(): string {
     return this.responseData?.projectKey
       ? this.responseData.projectKey
       : this.requestData.existingProjectKey;
@@ -210,14 +193,16 @@ export class JiraPopulateProcessService {
       atlassianId: formData.atlassianId.value!,
       sprintsCount: formData.sprintsCount.value!,
       sprintDuration: formData.sprintDuration.value!,
-      projectStartDate: formData.projectStartDate.value!,
+      projectStartDate: DateTime.fromJSDate(formData.projectStartDate.value!),
       epicsCount: formData.epicsCount.value!,
       issuesCount: formData.issuesCount.value!,
       issuesTypes: {
         story: formData.issuesTypes.value.story!,
         bug: formData.issuesTypes.value.bug!,
         task: formData.issuesTypes.value.task!
-      }
+      },
+      sprintIssuesAssigment: [],
+      issues: []
     };
   }
 
@@ -229,8 +214,7 @@ export class JiraPopulateProcessService {
       boardId: 0,
       sprints: [],
       epicsIds: [],
-      issues: [],
-      sprintIssuesAssigment: []
+      issues: []
     };
   }
 }

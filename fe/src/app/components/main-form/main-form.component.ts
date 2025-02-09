@@ -17,15 +17,7 @@ import { IsProjectNeeded } from '../../enums/is-project-needed.enum';
 import { map, Observable, Subscription } from 'rxjs';
 import { MatStepper, MatStepperModule, StepperOrientation } from '@angular/material/stepper';
 import { MatGridListModule } from '@angular/material/grid-list';
-import {
-  EpicsFormControls,
-  ExistingProjectFormControls,
-  IssuesFormControls,
-  MainFormControls,
-  NewProjectFormControls,
-  ProjectFormControls,
-  SprintsFormControls
-} from '../../types/main-form-controls.type';
+import { EpicsFormControls, ExistingProjectFormControls, IssuesFormControls, MainFormControls, NewProjectFormControls, ProjectFormControls, SprintsFormControls } from '../../types/main-form-controls.type';
 import { FormsHelper } from '../../helpers/forms.helper';
 import { CommonModule } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';

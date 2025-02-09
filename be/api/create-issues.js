@@ -21,7 +21,7 @@ async function createIssues(req, res) {
     };
 
     const response = await axios.post(url, data, config);
-    return res.json({ data: response.data });
+    return res.json(response.data);
 
   } catch (error) {
     console.error('Błąd podczas tworzenia zgłoszeń w trybie bulk:', error.response ? error.response.data : error.message);

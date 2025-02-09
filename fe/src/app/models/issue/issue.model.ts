@@ -1,13 +1,8 @@
 import { IssueFields } from "./issue-fields.model";
-import { IssueResponse } from "./issue-response.model";
 
-export interface IssuesRequest {
+export interface Issue {
+  id?: number;
+  key?: string;
+  self?: string;
   fields: IssueFields;
-}
-
-export interface IssuesResponse {
-  data: {
-    issues: IssueResponse[];
-    errors: [];
-  }
 }

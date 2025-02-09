@@ -1,7 +1,9 @@
+import { DateTime } from "luxon";
 import { IsProjectNeeded } from "../../enums/is-project-needed.enum";
 import { IssueResponse } from "../issue/issue-response.model";
 import { MoveToSprintRequest } from "../issue/move-to-sprint.model";
 import { SprintResponse } from "../sprint/sprint.model";
+import { Issue } from "../issue/issue.model";
 
 export interface RequestData {
   isProjectNeeded: IsProjectNeeded;
@@ -12,14 +14,16 @@ export interface RequestData {
   atlassianId: string;
   sprintsCount: number;
   sprintDuration: number;
-  projectStartDate: Date;
+  projectStartDate: DateTime;
   epicsCount: number;
   issuesCount: number;
   issuesTypes: {
     story: boolean;
     bug: boolean;
     task: boolean;
-  };
+  },
+  sprintIssuesAssigment: MoveToSprintRequest[];
+  issues: Issue[];
 }
 
 export interface ResponseData {
@@ -29,6 +33,5 @@ export interface ResponseData {
   boardId: number;
   sprints: SprintResponse[];
   epicsIds: number[];
-  issues: IssueResponse[];
-  sprintIssuesAssigment: MoveToSprintRequest[];
+  issues: Issue[];
 }

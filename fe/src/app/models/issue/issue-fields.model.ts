@@ -3,7 +3,7 @@ import { IssueProject } from "./issue-project.model";
 import { IssueType } from "./issue-type.model";
 
 export interface IssueFields {
-  id?: string;
+  id?: number;
   key?: string;
   description: {
     content: [
@@ -24,4 +24,9 @@ export interface IssueFields {
   project: IssueProject;
   summary: string;
   priority: IssuePriority;
+  createdDate?: string;
+  inProgressDate?: string | null;
+  resolvedDate?: string | null;
+  status?: string;
+  self?: string;
 }

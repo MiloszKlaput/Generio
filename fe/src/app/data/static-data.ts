@@ -1,6 +1,6 @@
 import { IssuePriorityType } from "../models/issue/enums/issue-priority-type.enum";
 import { IssueTypeEnum } from "../models/issue/enums/issue-type.enum";
-import { IssuesRequest } from "../models/issue/issue.model";
+import { Issues } from "../models/issue/issue.model";
 import { ProjectRequest } from "../models/project/project.model";
 import { SprintRequest } from "../models/sprint/sprint.model";
 
@@ -24,7 +24,7 @@ export const sprint: SprintRequest =
     startDate: '2025-01-01T15:22:00.000+10:00'
   };
 
-export const issues: IssuesRequest[] = [
+export const issues: Issues[] = [
   {
     fields: {
       priority: IssuePriorityType.Lowest,

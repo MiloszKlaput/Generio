@@ -1,0 +1,12 @@
+{
+  "name": "pomelo",
+  "version": "1.0.0-alfa",
+  "scripts": {
+    "install:all": "cd be && npm install && cd ../fe && npm install && cd ..",
+    "start:all": "concurrently \"cd be && npm run start\" \"cd fe && ng serve --open\"",
+    "all": "npm install && npm run install:all && npm run start:all"
+  },
+  "dependencies": {
+    "concurrently": "^7.0.0"
+  }
+}

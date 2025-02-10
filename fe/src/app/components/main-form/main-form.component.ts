@@ -24,7 +24,6 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatRadioModule } from '@angular/material/radio';
 import { JiraPopulateProcessService } from '../../services/jira-populate-process.service';
 
-
 @Component({
   selector: 'main-form',
   imports: [
@@ -61,6 +60,8 @@ export class MainFormComponent implements OnInit, OnDestroy {
   epicsForm!: FormGroup<EpicsFormControls>;
   issuesForm!: FormGroup<IssuesFormControls>;
   mainForm!: FormGroup<MainFormControls>;
+  isInProgress = false;
+  isSubmitted = false;
 
   stepperOrientation$!: Observable<StepperOrientation>;
 
@@ -86,6 +87,8 @@ export class MainFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForms();
     const updateFormSub = this.getUpdateForm();
+    this.populateProcessService.isInProgress$.subscribe(s => this.isInProgress = s);
+    this.populateProcessService.isSubmitted$.subscribe(s => this.isSubmitted = s);
 
     this.subscriptions.push(updateFormSub);
   }

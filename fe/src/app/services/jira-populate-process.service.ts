@@ -9,7 +9,7 @@ import { MainFormControls } from '../types/main-form-controls.type';
 import { IsProjectNeeded } from '../enums/is-project-needed.enum';
 import { RequestData, ResponseData } from '../models/process/process-data.model';
 import { DateTime } from 'luxon';
-import { from, switchMap, concatMap, toArray, tap, Observable, catchError, throwError } from 'rxjs';
+import { from, switchMap, concatMap, toArray, tap, Observable, catchError, throwError, BehaviorSubject } from 'rxjs';
 import { BoardIdResponse } from '../models/board/board.model';
 import { WorkflowSimulator } from '../logic/workflow-simulator.logic';
 import { FileDataHelper } from '../helpers/file-data.helper';
@@ -25,9 +25,12 @@ export class JiraPopulateProcessService {
   private requestData!: RequestData;
   private responseData!: ResponseData;
   private issues: Issue[] = [];
-  isSubmitted: boolean = false;
+  isInProgress$ = new BehaviorSubject<boolean>(false);
+  isSubmitted$ = new BehaviorSubject<boolean>(false);
 
   startProcess(mainFormData: MainFormControls): void {
+    this.isInProgress$.next(true);
+
     this.initRequestData(mainFormData);
     this.initResponseData();
 
@@ -56,7 +59,7 @@ export class JiraPopulateProcessService {
       .subscribe({
         next: () => {
           if (this.requestData.projectStartDate < DateTime.now())
-          this.createPastProjectDataFile();
+            this.createPastProjectDataFile();
         },
         error: (err) => console.error(err)
       });
@@ -187,7 +190,8 @@ export class JiraPopulateProcessService {
     const fileData = FileDataHelper.generateFileData(this.requestData, this.issues);
     this.saveToFile(fileData);
 
-    this.isSubmitted = true;
+    this.isInProgress$.next(false);
+    this.isSubmitted$.next(true);
   }
 
   private getProjectKey(): string {

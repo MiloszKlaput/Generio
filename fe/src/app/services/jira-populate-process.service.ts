@@ -14,6 +14,7 @@ import { BoardIdResponse } from '../models/board/board.model';
 import { WorkflowSimulator } from '../logic/workflow-simulator.logic';
 import { FileDataHelper } from '../helpers/file-data.helper';
 import { IssueRequest, IssueResponse, Issue } from '../models/issue/issue.model';
+import { FileData } from '../models/process/file-data.model';
 
 
 @Injectable({
@@ -24,6 +25,7 @@ export class JiraPopulateProcessService {
   private requestData!: RequestData;
   private responseData!: ResponseData;
   private issues: Issue[] = [];
+  isSubmitted: boolean = false;
 
   startProcess(mainFormData: MainFormControls): void {
     this.initRequestData(mainFormData);
@@ -52,7 +54,10 @@ export class JiraPopulateProcessService {
         switchMap(() => this.moveIssuesToSprints())
       )
       .subscribe({
-        next: () => this.createPastProjectDataFile(),
+        next: () => {
+          if (this.requestData.projectStartDate < DateTime.now())
+          this.createPastProjectDataFile();
+        },
         error: (err) => console.error(err)
       });
   }
@@ -180,8 +185,9 @@ export class JiraPopulateProcessService {
   private createPastProjectDataFile(): void {
     WorkflowSimulator.simulateWorkflowForAllSprints(this.requestData, this.responseData, this.issues);
     const fileData = FileDataHelper.generateFileData(this.requestData, this.issues);
+    this.saveToFile(fileData);
 
-    console.log(fileData);
+    this.isSubmitted = true;
   }
 
   private getProjectKey(): string {
@@ -236,5 +242,18 @@ export class JiraPopulateProcessService {
       epicsIds: [],
       issues: []
     };
+  }
+
+  private saveToFile(fileData: FileData): void {
+    const jsonData = JSON.stringify(fileData, null, 2);
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'jiraProjectImport.json';
+    link.click();
+
+    URL.revokeObjectURL(url);
   }
 }

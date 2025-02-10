@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';;
 import { Observable } from 'rxjs';
-import { Issue, IssueRequest, IssueResponse } from '../models/issue/issue.model';
+import { IssueRequest, IssueResponse } from '../models/issue/issue.model';
 import { SprintRequest, SprintResponse } from '../models/sprint/sprint.model';
 import { ProjectRequest, ProjectResponse } from '../models/project/project.model';
 import { MoveToEpicRequest } from '../models/issue/move-to-epic.model';

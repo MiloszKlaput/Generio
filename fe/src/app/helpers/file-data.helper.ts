@@ -4,8 +4,6 @@ import { Issue } from "../models/issue/issue.model";
 
 export class FileDataHelper {
   static generateFileData(requestData: RequestData, issues: Issue[]): FileData {
-    console.log('requestData: ', requestData);
-
     const project: ProjectFileData = {
       key: requestData.projectKey,
       issues: issues.map(issue => ({
@@ -20,7 +18,6 @@ export class FileDataHelper {
       }))
     };
 
-    console.log('project: ', project);
     return { projects: [project] };
   }
 }

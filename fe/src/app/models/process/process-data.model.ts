@@ -3,7 +3,7 @@ import { IsProjectNeeded } from "../../enums/is-project-needed.enum";
 import { IssueResponse } from "../issue/issue-response.model";
 import { MoveToSprintRequest } from "../issue/move-to-sprint.model";
 import { SprintResponse } from "../sprint/sprint.model";
-import { Issue } from "../issue/issue.model";
+import { IssueRequest } from "../issue/issue.model";
 
 export interface RequestData {
   isProjectNeeded: IsProjectNeeded;
@@ -23,7 +23,7 @@ export interface RequestData {
     task: boolean;
   },
   sprintIssuesAssigment: MoveToSprintRequest[];
-  issues: Issue[];
+  issues: IssueRequest[];
 }
 
 export interface ResponseData {
@@ -33,5 +33,5 @@ export interface ResponseData {
   boardId: number;
   sprints: SprintResponse[];
   epicsIds: number[];
-  issues: Issue[];
+  issues: IssueResponse[];
 }

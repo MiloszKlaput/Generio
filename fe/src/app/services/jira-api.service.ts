@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';;
 import { Observable } from 'rxjs';
-import { Issue } from '../models/issue/issue.model';
+import { Issue, IssueRequest, IssueResponse } from '../models/issue/issue.model';
 import { SprintRequest, SprintResponse } from '../models/sprint/sprint.model';
 import { ProjectRequest, ProjectResponse } from '../models/project/project.model';
 import { MoveToEpicRequest } from '../models/issue/move-to-epic.model';
@@ -39,11 +39,11 @@ export class JiraApiService {
     return this.http.post<SprintResponse>(url, data);
   }
 
-  createIssues(issues: Issue[]): Observable<{ issues: Issue[], errors: any[] }> {
+  createIssues(issues: IssueRequest[]): Observable<{ issues: IssueResponse[], errors: any[] }> {
     const url = this.baseUrl + 'create-issues';
     const data = issues;
 
-    return this.http.post<{ issues: Issue[], errors: any[] }>(url, data);
+    return this.http.post<{ issues: IssueResponse[], errors: any[] }>(url, data);
   }
 
   moveIssuesToEpic(moveToEpicData: MoveToEpicRequest): Observable<MoveToEpicRequest> {

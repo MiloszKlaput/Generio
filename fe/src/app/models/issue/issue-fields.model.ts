@@ -24,9 +24,9 @@ export interface IssueFields {
   project: IssueProject;
   summary: string;
   priority: IssuePriority;
-  createdDate?: string;
-  inProgressDate?: string | null;
-  resolvedDate?: string | null;
+  created?: string;
+  updated?: string | null;
   status?: string;
   self?: string;
+  resolution?: string;
 }

@@ -1,5 +1,3 @@
-import { DateTime } from "luxon";
-
 export interface SprintRequest {
   endDate: string;
   goal: string;
@@ -14,8 +12,8 @@ export interface SprintResponse {
     self: string,
     state: string,
     name: string,
-    startDate: DateTime,
-    endDate: DateTime,
+    startDate: Date,
+    endDate: Date,
     originBoardId: number,
     goal: string
   }

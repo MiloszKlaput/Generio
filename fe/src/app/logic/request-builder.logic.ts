@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 import { IssuePriorityType } from "../models/issue/enums/issue-priority-type.enum";
 import { IssueTypeEnum } from "../models/issue/enums/issue-type.enum";
-import { Issue } from "../models/issue/issue.model";
+import { Issue, IssueRequest } from "../models/issue/issue.model";
 import { MoveToEpicRequest } from "../models/issue/move-to-epic.model";
 import { MoveToSprintRequest } from "../models/issue/move-to-sprint.model";
 import { ProjectRequest } from "../models/project/project.model";
@@ -45,8 +45,8 @@ export class RequestBuilder {
     return result;
   }
 
-  static buildEpicsRequest(f: MainFormControls, projectKey: string): Issue[] {
-    const result: Issue[] = [];
+  static buildEpicsRequest(f: MainFormControls, projectKey: string): IssueRequest[] {
+    const result: IssueRequest[] = [];
     const epicsCount = f.epicsCount.value!;
 
     for (let i = 1; i <= epicsCount; i++) {
@@ -56,8 +56,8 @@ export class RequestBuilder {
     return result;
   }
 
-  static buildIssuesRequest(f: MainFormControls, projectKey: string): Issue[] {
-    const result: Issue[] = [];
+  static buildIssuesRequest(f: MainFormControls, projectKey: string): IssueRequest[] {
+    const result: IssueRequest[] = [];
     const issuesCount = f.issuesCount.value!;
     const issueTypeWeights = { story: 0.6, bug: 0.3, task: 0.1 };
 
@@ -90,7 +90,7 @@ export class RequestBuilder {
 
     for (let i = 0; i < issues.length; i++) {
       const epicIndex = i % epicsIds.length;
-      moveToEpicRequestData[epicIndex].issuesKeys.push(issues[i].key!);
+      moveToEpicRequestData[epicIndex].issuesKeys.push(issues[i].key);
     }
 
     return moveToEpicRequestData;
@@ -102,13 +102,13 @@ export class RequestBuilder {
 
     for (let i = 0; i < issues.length; i++) {
       const sprintIndex = i % sprintsIds.length;
-      moveToSprintRequestData[sprintIndex].issuesKeys.push(issues[i].key!);
+      moveToSprintRequestData[sprintIndex].issuesKeys.push(issues[i].key);
     }
 
     return moveToSprintRequestData;
   }
 
-  private static createIssue(projectKey: string, summary: string, issueType: IssueTypeEnum): Issue {
+  private static createIssue(projectKey: string, summary: string, issueType: IssueTypeEnum): IssueRequest {
     return {
       fields: {
         project: { key: projectKey },

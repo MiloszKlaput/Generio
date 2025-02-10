@@ -9,16 +9,16 @@ export class WorkflowSimulator {
     const spilledOverChance = 0.05;
 
     const sprintsSorted = [...responseData.sprints].sort((a, b) => {
-      const startA = DateTime.fromJSDate(a.data.startDate).toMillis();
-      const startB = DateTime.fromJSDate(b.data.startDate).toMillis();
+      const startA = DateTime.fromISO(a.data.startDate).toMillis();
+      const startB = DateTime.fromISO(b.data.startDate).toMillis();
       return startA - startB;
     });
 
     for (let i = 0; i < sprintsSorted.length; i++) {
       const sprint = sprintsSorted[i].data;
       const sprintId = sprint.id;
-      const sprintStart = DateTime.fromJSDate(sprint.startDate).startOf('day');
-      const sprintEnd = DateTime.fromJSDate(sprint.endDate).startOf('day');
+      const sprintStart = DateTime.fromISO(sprint.startDate).startOf('day');
+      const sprintEnd = DateTime.fromISO(sprint.endDate).startOf('day');
 
       const assignment = requestData.sprintIssuesAssigment.find(sprint => sprint.id === sprintId);
       if (!assignment) {
@@ -46,13 +46,14 @@ export class WorkflowSimulator {
         );
 
         let updated: DateTime | null = null;
+        let resolution: string | null = null;
         let status: string;
 
         if (isRejected) {
           updated = null;
           status = 'Rejected';
+          resolution = 'Rejected';
         } else if (isSpilledOver) {
-          updated = null;
           status = 'In Progress';
 
           if (!nextAssignment.issuesKeys.includes(issue.fields.key!)) {
@@ -61,11 +62,13 @@ export class WorkflowSimulator {
         } else {
           updated = WorkflowSimulator.randomDateBetween(created, sprintEnd);
           status = 'Done';
+          resolution = 'Resolved';
         }
 
         issue.fields.created = created.toISO()!;
         issue.fields.updated = updated?.toISO() ?? null;
         issue.fields.status = status;
+        issue.fields.resolution = resolution!;
       });
     }
   }

@@ -35,6 +35,7 @@ export class JiraPopulateProcessService {
         error: (err) => console.error(err)
       });
     } else {
+      this.requestData.projectKey = mainFormData.existingProjectKey.value!;
       this.continueProcess(mainFormData);
     }
   }
@@ -58,6 +59,9 @@ export class JiraPopulateProcessService {
 
   private createNewProject(data: MainFormControls): Observable<ProjectResponse> {
     const request: ProjectRequest = RequestBuilder.buildProjectRequest(data);
+    this.requestData.projectDescription = request.description;
+    this.requestData.projectName = request.name;
+    this.requestData.projectKey = request.key;
 
     return this.apiService.createProject(request).pipe(
       tap((result: ProjectResponse) => {

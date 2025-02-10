@@ -12,8 +12,8 @@ export interface SprintResponse {
     self: string,
     state: string,
     name: string,
-    startDate: Date,
-    endDate: Date,
+    startDate: string,
+    endDate: string,
     originBoardId: number,
     goal: string
   }

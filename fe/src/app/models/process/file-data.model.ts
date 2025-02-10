@@ -3,9 +3,7 @@ export interface FileData {
 }
 
 export interface ProjectFileData {
-  name: string;
   key: string;
-  description: string;
   issues: IssueFileData[];
 }
 

@@ -1,13 +1,13 @@
-import { RequestData, ResponseData } from "../models/process/process-data.model";
+import { RequestData } from "../models/process/process-data.model";
 import { FileData, ProjectFileData } from "../models/process/file-data.model";
 import { Issue } from "../models/issue/issue.model";
 
 export class FileDataHelper {
   static generateFileData(requestData: RequestData, issues: Issue[]): FileData {
+    console.log('requestData: ', requestData);
+
     const project: ProjectFileData = {
-      name: requestData.projectName,
       key: requestData.projectKey,
-      description: requestData.projectDescription,
       issues: issues.map(issue => ({
         externalId: issue.id !== undefined ? issue.id : 0,
         key: issue.key !== undefined ? issue.key : '',
@@ -20,6 +20,7 @@ export class FileDataHelper {
       }))
     };
 
+    console.log('project: ', project);
     return { projects: [project] };
   }
 }

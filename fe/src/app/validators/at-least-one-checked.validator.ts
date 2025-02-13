@@ -1,8 +1,7 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { CustomErrors } from './form-custom-errors.model';
 
 export function atLeastOneChecked(): ValidatorFn {
-  return (formGroup: AbstractControl): CustomErrors | null => {
+  return (formGroup: AbstractControl): ValidationErrors | null => {
     if (!formGroup || !formGroup.value) {
       return null;
     }

@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, ViewChild, type OnInit } from '@angular/core';
-import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatNativeDateModule, NativeDateModule } from '@angular/material/core';
@@ -93,6 +93,12 @@ export class MainFormComponent implements OnInit, OnDestroy {
     this.subscriptions.push(updateFormSub);
   }
 
+  onBlur(control: AbstractControl): void {
+    if (control && typeof control.value === 'string') {
+      control.setValue(control.value.trim(), { emitEvent: false });
+    }
+  }
+
   onReset(): void {
     this.projectForm.reset();
     this.stepper.reset();
@@ -140,6 +146,7 @@ export class MainFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
+    return;
     FormsHelper.mapToMainForm(this.projectForm, this.sprintsForm, this.epicsForm, this.issuesForm, this.mainForm);
 
     this.populateProcessService.startProcess(this.fM);

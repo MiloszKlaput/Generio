@@ -85,12 +85,14 @@ export class MainFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.populateProcessService.clearError();
     this.initForms();
-    const updateFormSub = this.getUpdateForm();
+    this.subscriptions.push(
+      this.getUpdateForm(),
+      this.watchProcessError()
+    );
     this.populateProcessService.isInProgress$.subscribe(s => this.isInProgress = s);
     this.populateProcessService.isSubmitted$.subscribe(s => this.isSubmitted = s);
-
-    this.subscriptions.push(updateFormSub);
   }
 
   onBlur(control: AbstractControl): void {
@@ -101,8 +103,11 @@ export class MainFormComponent implements OnInit, OnDestroy {
 
   onReset(): void {
     this.projectForm.reset();
-    this.stepper.reset();
     this.initForms();
+    this.subscriptions.push(
+      this.getUpdateForm()
+    );
+    this.stepper.reset();
   }
 
   private initForms(): void {
@@ -124,6 +129,21 @@ export class MainFormComponent implements OnInit, OnDestroy {
       });
   }
 
+  private watchProcessError(): Subscription {
+    return this.populateProcessService.error$
+      .subscribe((error: string | null) => {
+        if (error && error.length > 0) {
+          this.onReset();
+        }
+      });
+  }
+
+  onSubmit(): void {
+    FormsHelper.mapToMainForm(this.projectForm, this.sprintsForm, this.epicsForm, this.issuesForm, this.mainForm);
+
+    this.populateProcessService.startProcess(this.fM);
+  }
+
   private updateProjectForm(value: IsProjectNeeded): void {
     if (!value) {
       return;
@@ -143,13 +163,6 @@ export class MainFormComponent implements OnInit, OnDestroy {
       default:
         break;
     }
-  }
-
-  onSubmit(): void {
-    return;
-    FormsHelper.mapToMainForm(this.projectForm, this.sprintsForm, this.epicsForm, this.issuesForm, this.mainForm);
-
-    this.populateProcessService.startProcess(this.fM);
   }
 
   ngOnDestroy(): void {

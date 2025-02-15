@@ -32,6 +32,13 @@ export class JiraApiService {
     return this.http.post<ProjectResponse>(url, data);
   }
 
+  deleteProject(projectKey: string): Observable<string> {
+    const url = this.baseUrl + 'delete-project';
+    const data = { projectKey };
+
+    return this.http.post<string>(url, data);
+  }
+
   createSprint(sprint: SprintRequest): Observable<SprintResponse> {
     const url = this.baseUrl + 'create-sprint';
     const data = sprint;

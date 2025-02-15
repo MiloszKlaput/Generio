@@ -27,6 +27,7 @@ export class JiraPopulateProcessService {
   private issues: Issue[] = [];
   isInProgress$ = new BehaviorSubject<boolean>(false);
   isSubmitted$ = new BehaviorSubject<boolean>(false);
+  error$ = new BehaviorSubject<string | null>(null);
 
   startProcess(mainFormData: MainFormControls): void {
     this.isInProgress$.next(true);
@@ -35,14 +36,41 @@ export class JiraPopulateProcessService {
     this.initResponseData();
 
     if (this.requestData.isProjectNeeded === IsProjectNeeded.Yes) {
-      this.createNewProject(mainFormData).subscribe({
-        next: () => this.continueProcess(mainFormData),
-        error: (err) => console.error(err)
-      });
+      this.createNewProject(mainFormData)
+        .subscribe({
+          next: () => this.continueProcess(mainFormData),
+          error: (err) => {
+            console.error(err);
+            this.handleError('Server error');
+          }
+        });
     } else {
       this.requestData.projectKey = mainFormData.existingProjectKey.value!;
       this.continueProcess(mainFormData);
     }
+  }
+
+  clearError(): void {
+    this.error$.next(null);
+  }
+
+  private setError(msg: string): void {
+    this.error$.next(msg);
+  }
+
+  private handleError(msg: string): void {
+    this.setError(msg);
+    this.clearData();
+    this.resetProcessStatus();
+  }
+
+  private clearData(): void {
+    console.log(this.requestData.projectKey);
+    this.apiService.deleteProject(this.requestData.projectKey).subscribe();
+  }
+
+  private resetProcessStatus(): void {
+    this.isInProgress$.next(false);
   }
 
   private continueProcess(data: MainFormControls): void {
@@ -61,7 +89,10 @@ export class JiraPopulateProcessService {
           if (this.requestData.projectStartDate < DateTime.now())
             this.createPastProjectDataFile();
         },
-        error: (err) => console.error(err)
+        error: (err) => {
+          console.error(err);
+          this.handleError('Server error');
+        }
       });
   }
 
@@ -94,7 +125,7 @@ export class JiraPopulateProcessService {
         }
       }),
       catchError((err) => {
-        console.error('Error resolving board', err);
+        this.handleError('Server error');
         return throwError(() => err);
       })
     );

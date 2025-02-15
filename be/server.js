@@ -10,6 +10,7 @@ const createSprint = require('./api/create-sprint.js');
 const createIssues = require('./api/create-issues.js');
 const moveIssuesToSprint = require('./api/move-issues-to-sprint.js');
 const moveIssuesToEpic = require('./api/move-issues-to-epic.js');
+const deleteProject = require('./api/delete-project.js');
 
 const port = process.env.PORT || 8000;
 
@@ -23,6 +24,7 @@ app.post('/create-sprint', (req, res) => createSprint(req, res));
 app.post('/create-issues', (req, res) => createIssues(req, res));
 app.post('/move-issues-to-epic', (req, res) => moveIssuesToEpic(req, res));
 app.post('/move-issues-to-sprint', (req, res) => moveIssuesToSprint(req, res));
+app.post('/delete-project', (req, res) => deleteProject(req, res));
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));
 // app.listen(port, (req, res) => testApi(req, res));

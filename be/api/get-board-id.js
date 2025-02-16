@@ -24,8 +24,8 @@ async function getBoardId(req, res) {
     return res.json({ data: response.data.values[0].id });
 
   } catch (error) {
-    console.log(error.response.data.errors);
-    return res.status(500).json(error.response.data.errors);
+    const errorMessage = error.response.data.errors ?? error.response.data.errorMessages;
+    return res.status(500).json(errorMessage);
   }
 }
 

@@ -24,10 +24,8 @@ async function createIssues(req, res) {
     return res.json(response.data);
 
   } catch (error) {
-    console.error('Błąd podczas tworzenia zgłoszeń w trybie bulk:', error.response ? error.response.data : error.message);
-    return res.status(error.response ? error.response.status : 500).json({
-      error: error.response ? error.response.data : 'Internal server error'
-    });
+    const errorMessage = error.response.data.errors ?? error.response.data.errorMessages;
+    return res.status(500).json({ errorMessage });
   }
 }
 

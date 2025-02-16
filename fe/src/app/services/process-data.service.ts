@@ -3,6 +3,7 @@ import { RequestData, ResponseData } from '../models/process/process-data.model'
 import { MainFormControls } from '../types/main-form-controls.type';
 import { DateTime } from 'luxon';
 import { Issue } from '../models/issue/issue.model';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ import { Issue } from '../models/issue/issue.model';
 export class ProcessDataService {
   requestData!: RequestData;
   responseData!: ResponseData;
+  errorMessage$ = new BehaviorSubject<string | null>(null);
 
   initRequestData(formData: MainFormControls): void {
     this.requestData = {

@@ -24,10 +24,8 @@ async function moveIssuesToEpic(req, res) {
     return res.status(200).json(response.data);
 
   } catch (error) {
-    console.error('Błąd podczas przenoszenia zgłoszeń do epiku:', error.response ? error.response.data : error.message);
-    return res.status(error.response ? error.response.status : 500).json({
-      error: error.response ? error.response.data : 'Internal Server Error'
-    });
+    const errorMessage = error.response.data.errors ?? error.response.data.errorMessages;
+    return res.status(500).json(errorMessage);
   }
 }
 

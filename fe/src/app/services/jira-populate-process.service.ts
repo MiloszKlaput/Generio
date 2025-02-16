@@ -52,8 +52,7 @@ export class JiraPopulateProcessService {
           this.processStateService.setProcessState(ProcessState.Success);
         },
         error: (err) => {
-          this.handleError();
-          console.error(err);
+          this.handleError(err);
         }
       });
   }
@@ -62,9 +61,21 @@ export class JiraPopulateProcessService {
     this.apiService.deleteProject(this.processDataService.requestData.projectKey).subscribe();
   }
 
-  private handleError() {
+  private handleError(err: any) {
+    this.setErrorMessage(err);
     this.processStateService.setProcessState(ProcessState.Error);
+    if (!this.processDataService.responseData.projectKey) {
+      return;
+    }
     this.clearData();
+  }
+
+  private setErrorMessage(err: any): void {
+    const errMsg = JSON.stringify(err.error, null, 2);
+    const formatedErrMsgArr = errMsg.replace(/{|}|"/g, '').split(': ');
+    const formatedErrMsg = formatedErrMsgArr[formatedErrMsgArr.length - 1];
+
+    this.processDataService.errorMessage$.next(formatedErrMsg);
   }
 
   private createNewProject(data: MainFormControls): Observable<ProjectResponse> {
@@ -82,7 +93,6 @@ export class JiraPopulateProcessService {
         }
       }),
       catchError((err) => {
-        console.error('Error creating project', err);
         return throwError(() => err);
       })
     );
@@ -97,7 +107,6 @@ export class JiraPopulateProcessService {
         }
       }),
       catchError((err) => {
-        console.error('Error getting boardId', err);
         return throwError(() => err);
       })
     );
@@ -114,7 +123,6 @@ export class JiraPopulateProcessService {
         }
       }),
       catchError((err) => {
-        console.error('Error creating sprints', err);
         return throwError(() => err);
       })
     );
@@ -132,7 +140,6 @@ export class JiraPopulateProcessService {
         }
       }),
       catchError((err) => {
-        console.error('Error creating epics', err);
         return throwError(() => err);
       })
     );
@@ -151,7 +158,6 @@ export class JiraPopulateProcessService {
         }
       }),
       catchError((err) => {
-        console.error('Error creating issues', err);
         return throwError(() => err);
       })
     );
@@ -164,7 +170,6 @@ export class JiraPopulateProcessService {
       concatMap((req: MoveToEpicRequest) => this.apiService.moveIssuesToEpic(req)),
       toArray(),
       catchError((err) => {
-        console.error('Error linking issues to epics', err);
         return throwError(() => err);
       })
     );
@@ -179,7 +184,6 @@ export class JiraPopulateProcessService {
       concatMap((req: MoveToSprintRequest) => this.apiService.moveIssuesToSprint(req)),
       toArray(),
       catchError((err) => {
-        console.error('Error linking issues to sprints', err);
         return throwError(() => err);
       })
     );

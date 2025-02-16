@@ -24,16 +24,8 @@ async function deleteProject(req, res) {
     return res.json({ data: response.data });
 
   } catch (error) {
-    console.log(error.response.data);
-    let errors;
-    if (error.response.data.errors) {
-      errors = error.response.data.errors;
-    }
-    if (error.response.data.errorMessages) {
-      errors = error.response.data.errorMessages;
-    }
-
-    return res.status(500).json(errors);
+    const errorMessage = error.response.data.errors ?? error.response.data.errorMessages;
+    return res.status(500).json(errorMessage);
   }
 }
 

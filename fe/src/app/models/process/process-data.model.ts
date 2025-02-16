@@ -1,13 +1,10 @@
 import { DateTime } from "luxon";
-import { IsProjectNeeded } from "../../enums/is-project-needed.enum";
 import { IssueResponse } from "../issue/issue-response.model";
 import { MoveToSprintRequest } from "../issue/move-to-sprint.model";
 import { SprintResponse } from "../sprint/sprint.model";
 import { IssueRequest } from "../issue/issue.model";
 
 export interface RequestData {
-  isProjectNeeded: IsProjectNeeded;
-  existingProjectKey: string;
   projectName: string;
   projectDescription: string;
   projectKey: string;

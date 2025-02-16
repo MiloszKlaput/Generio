@@ -9,7 +9,7 @@ import { MainFormControls } from '../types/main-form-controls.type';
 import { IsProjectNeeded } from '../enums/is-project-needed.enum';
 import { RequestData, ResponseData } from '../models/process/process-data.model';
 import { DateTime } from 'luxon';
-import { from, switchMap, concatMap, toArray, tap, Observable, catchError, throwError, BehaviorSubject } from 'rxjs';
+import { from, switchMap, concatMap, toArray, tap, Observable, catchError, throwError, BehaviorSubject, of } from 'rxjs';
 import { BoardIdResponse } from '../models/board/board.model';
 import { WorkflowSimulator } from '../logic/workflow-simulator.logic';
 import { FileDataHelper } from '../helpers/file-data.helper';
@@ -35,19 +35,25 @@ export class JiraPopulateProcessService {
     this.initRequestData(mainFormData);
     this.initResponseData();
 
-    if (this.requestData.isProjectNeeded === IsProjectNeeded.Yes) {
-      this.createNewProject(mainFormData)
-        .subscribe({
-          next: () => this.continueProcess(mainFormData),
-          error: (err) => {
-            console.error(err);
-            this.handleError('Server error');
-          }
-        });
-    } else {
-      this.requestData.projectKey = mainFormData.existingProjectKey.value!;
-      this.continueProcess(mainFormData);
-    }
+    this.createNewProject(mainFormData)
+      .pipe(
+        switchMap(() => this.getBoardId()),
+        switchMap(() => this.createSprints()),
+        switchMap(() => this.createEpics()),
+        switchMap(() => this.createIssues()),
+        switchMap(() => this.moveIssuesToEpics()),
+        switchMap(() => this.moveIssuesToSprints())
+      )
+      .subscribe({
+        next: () => {
+          if (this.requestData.projectStartDate < DateTime.now())
+            this.createPastProjectDataFile();
+        },
+        error: (err) => {
+          console.error(err);
+          this.handleError('Server error');
+        }
+      });
   }
 
   clearError(): void {
@@ -65,35 +71,11 @@ export class JiraPopulateProcessService {
   }
 
   private clearData(): void {
-    console.log(this.requestData.projectKey);
     this.apiService.deleteProject(this.requestData.projectKey).subscribe();
   }
 
   private resetProcessStatus(): void {
     this.isInProgress$.next(false);
-  }
-
-  private continueProcess(data: MainFormControls): void {
-    const projectKey = this.getProjectKey();
-
-    this.getBoardId(projectKey)
-      .pipe(
-        switchMap(() => this.createSprints(data)),
-        switchMap(() => this.createEpics(data)),
-        switchMap(() => this.createIssues(data)),
-        switchMap(() => this.moveIssuesToEpics()),
-        switchMap(() => this.moveIssuesToSprints())
-      )
-      .subscribe({
-        next: () => {
-          if (this.requestData.projectStartDate < DateTime.now())
-            this.createPastProjectDataFile();
-        },
-        error: (err) => {
-          console.error(err);
-          this.handleError('Server error');
-        }
-      });
   }
 
   private createNewProject(data: MainFormControls): Observable<ProjectResponse> {
@@ -117,7 +99,8 @@ export class JiraPopulateProcessService {
     );
   }
 
-  private getBoardId(projectKey: string): Observable<BoardIdResponse> {
+  private getBoardId(): Observable<BoardIdResponse> {
+    const projectKey = this.requestData.projectKey;
     return this.apiService.getBoardId(projectKey).pipe(
       tap((result: BoardIdResponse) => {
         if (result) {
@@ -131,9 +114,11 @@ export class JiraPopulateProcessService {
     );
   }
 
-  private createSprints(data: MainFormControls): Observable<SprintResponse[]> {
+  private createSprints(): Observable<SprintResponse[]> {
     const sprints: SprintRequest[] = RequestBuilder.buildSprintsRequest(
-      data,
+      this.requestData.sprintsCount,
+      this.requestData.sprintDuration,
+      this.requestData.projectStartDate,
       this.responseData.boardId
     );
     return from(sprints).pipe(
@@ -151,9 +136,11 @@ export class JiraPopulateProcessService {
     );
   }
 
-  private createEpics(data: MainFormControls): Observable<{ issues: IssueResponse[], errors: any[] }> {
-    const projectKey = this.getProjectKey();
-    const epics: IssueRequest[] = RequestBuilder.buildEpicsRequest(data, projectKey);
+  private createEpics(): Observable<{ issues: IssueResponse[], errors: any[] }> {
+    const epicsCount = this.requestData.epicsCount;
+    const projectKey = this.requestData.projectKey;
+    const epics: IssueRequest[] = RequestBuilder.buildEpicsRequest(epicsCount, projectKey);
+
     return this.apiService.createIssues(epics).pipe(
       tap((result: { issues: IssueResponse[], errors: any[] }) => {
         if (result.issues) {
@@ -169,9 +156,10 @@ export class JiraPopulateProcessService {
     );
   }
 
-  private createIssues(data: MainFormControls): Observable<{ issues: IssueResponse[], errors: any[] }> {
-    const projectKey = this.getProjectKey();
-    const issuesRequest: IssueRequest[] = RequestBuilder.buildIssuesRequest(data, projectKey);
+  private createIssues(): Observable<{ issues: IssueResponse[], errors: any[] }> {
+    const issuesCount = this.requestData.issuesCount;
+    const projectKey = this.requestData.projectKey;
+    const issuesRequest: IssueRequest[] = RequestBuilder.buildIssuesRequest(issuesCount, projectKey);
     this.requestData.issues = issuesRequest;
 
     return this.apiService.createIssues(issuesRequest).pipe(
@@ -225,12 +213,6 @@ export class JiraPopulateProcessService {
     this.isSubmitted$.next(true);
   }
 
-  private getProjectKey(): string {
-    return this.responseData?.projectKey
-      ? this.responseData.projectKey
-      : this.requestData.existingProjectKey;
-  }
-
   private mergeIssues(): Issue[] {
     return this.responseData.issues.map((issueResponse, index) => {
       const issueRequest = this.requestData.issues[index];
@@ -246,8 +228,6 @@ export class JiraPopulateProcessService {
 
   private initRequestData(formData: MainFormControls): void {
     this.requestData = {
-      isProjectNeeded: formData.isProjectNeeded.value!,
-      existingProjectKey: formData.existingProjectKey.value!,
       projectName: formData.projectName.value!,
       projectDescription: formData.projectDescription.value!,
       projectKey: formData.projectKey.value!,

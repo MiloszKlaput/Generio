@@ -5,101 +5,67 @@
     <mat-step [stepControl]="projectForm" label="Projekt">
       <form class="form-container" [formGroup]="projectForm">
         <h2>Projekt</h2>
+        <mat-form-field>
+          <mat-label>Nazwa</mat-label>
+          <input formControlName="projectName" matInput (blur)="onBlur(fp.projectName)" />
+          @if (fp.projectName.errors?.['required'] && fp.projectName.touched) {
+          <mat-error>Uzupełnij pole</mat-error>
+          }
+          @if (fp.projectName.errors?.['minlength'] && fp.projectName.touched) {
+          <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
+          }
+          @if (fp.projectName.errors?.['maxLength'] && fp.projectName.touched) {
+          <mat-error>Pole może mieć maksymalnie 50 znaków</mat-error>
+          }
+          @if (fp.projectName.errors?.['forbiddenCharacters'] && fp.projectName.touched) {
+          <mat-error>Niedozwolone znaki: {{ fp.projectName.errors?.['forbiddenCharacters'].join('') }}</mat-error>
+          }
+        </mat-form-field>
 
-        <mat-label>Czy chcesz założyć nowy projekt?</mat-label>
-        <mat-button-toggle-group formControlName="isNewProjectNeeded" aria-label="Is project needed">
-          <mat-button-toggle [value]="IsProjectNeeded.Yes">Tak</mat-button-toggle>
-          <mat-button-toggle [value]="IsProjectNeeded.No">Nie</mat-button-toggle>
-        </mat-button-toggle-group>
+        <mat-form-field>
+          <mat-label>Opis</mat-label>
+          <input formControlName="projectDescription" (blur)="onBlur(fp.projectDescription)" matInput />
+          @if (fp.projectDescription.errors?.['required'] && fp.projectDescription.touched) {
+          <mat-error>Uzupełnij pole</mat-error>
+          }
+          @if (fp.projectDescription.errors?.['minlength'] && fp.projectDescription.touched) {
+          <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
+          }
+          @if (fp.projectDescription.errors?.['maxLength'] && fp.projectDescription.touched) {
+          <mat-error>Pole może mieć maksymalnie 50 znaków</mat-error>
+          }
+          @if (fp.projectDescription.errors?.['forbiddenCharacters'] && fp.projectDescription.touched) {
+          <mat-error>Niedozwolone znaki: {{ fp.projectDescription.errors?.['forbiddenCharacters'].join('') }}</mat-error>
+          }
+        </mat-form-field>
 
-        @if (fp.isNewProjectNeeded.value === IsProjectNeeded.No) {
-        <div class="form-group-container" formGroupName="existingProject">
-          <mat-form-field>
-            <mat-label>Unikalny klucz twojego projektu</mat-label>
-            <input formControlName="existingProjectKey" matInput (blur)="onBlur(fpe.existingProjectKey)" />
-            @if (fpe.existingProjectKey.errors?.['required'] && fpe.existingProjectKey.touched) {
-            <mat-error>Uzupełnij pole</mat-error>
-            }
-            @if (fpe.existingProjectKey.errors?.['minLength'] && fpe.existingProjectKey.touched) {
-            <mat-error>Pole musi mieć przynajmniej 2 litery</mat-error>
-            }
-            @if (fpe.existingProjectKey.errors?.['maxLength'] && fpe.existingProjectKey.touched) {
-            <mat-error>Pole może mieć maksymalnie 10 znaków</mat-error>
-            }
-            @if (fpe.existingProjectKey.errors?.['whitespace'] && fpe.existingProjectKey.touched) {
-            <mat-error>Pole nie może zawierać pustych znaków</mat-error>
-            }
-            @if (fpe.existingProjectKey.errors?.['forbiddenCharacters'] && !fpe.existingProjectKey.errors?.['whitespace'] && fpe.existingProjectKey.touched) {
-            <mat-error>Niedozwolone znaki: {{ fpe.existingProjectKey.errors?.['forbiddenCharacters'].join('') }}</mat-error>
-            }
-          </mat-form-field>
-        </div>
-        }
-        @if (fp.isNewProjectNeeded.value === IsProjectNeeded.Yes) {
-        <div class="form-group-container" formGroupName="newProject">
-          <mat-form-field>
-            <mat-label>Nazwa</mat-label>
-            <input formControlName="projectName" matInput (blur)="onBlur(fpn.projectName)" />
-            @if (fpn.projectName.errors?.['required'] && fpn.projectName.touched) {
-            <mat-error>Uzupełnij pole</mat-error>
-            }
-            @if (fpn.projectName.errors?.['minlength'] && fpn.projectName.touched) {
-            <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
-            }
-            @if (fpn.projectName.errors?.['maxLength'] && fpn.projectName.touched) {
-            <mat-error>Pole może mieć maksymalnie 50 znaków</mat-error>
-            }
-            @if (fpn.projectName.errors?.['forbiddenCharacters'] && fpn.projectName.touched) {
-            <mat-error>Niedozwolone znaki: {{ fpn.projectName.errors?.['forbiddenCharacters'].join('') }}</mat-error>
-            }
-          </mat-form-field>
+        <mat-form-field>
+          <mat-label>Unikalny klucz KIWI</mat-label>
+          <input formControlName="projectKey" matInput (blur)="onBlur(fp.projectKey)" />
+          @if (fp.projectKey.errors?.['required'] && fp.projectKey.touched) {
+          <mat-error>Uzupełnij pole</mat-error>
+          }
+          @if (fp.projectKey.errors?.['minLength'] && fp.projectKey.touched) {
+          <mat-error>Wymagane przynajmniej 2 znaki</mat-error>
+          }
+          @if (fp.projectKey.errors?.['maxLength'] && fp.projectKey.touched) {
+          <mat-error>Pole może mieć maksymalnie 10 znaków</mat-error>
+          }
+          @if (fp.projectKey.errors?.['whitespace'] && fp.projectKey.touched) {
+          <mat-error>Pole nie może zawierać pustych znaków</mat-error>
+          }
+          @if (fp.projectKey.errors?.['forbiddenCharacters'] && !fp.projectKey.errors?.['whitespace'] && fp.projectKey.touched) {
+          <mat-error>Niedozwolone znaki: {{ fp.projectKey.errors?.['forbiddenCharacters'].join('') }}</mat-error>
+          }
+        </mat-form-field>
 
-          <mat-form-field>
-            <mat-label>Opis</mat-label>
-            <input formControlName="projectDescription" (blur)="onBlur(fpn.projectDescription)" matInput />
-            @if (fpn.projectDescription.errors?.['required'] && fpn.projectDescription.touched) {
-            <mat-error>Uzupełnij pole</mat-error>
-            }
-            @if (fpn.projectDescription.errors?.['minlength'] && fpn.projectDescription.touched) {
-            <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
-            }
-            @if (fpn.projectDescription.errors?.['maxLength'] && fpn.projectDescription.touched) {
-            <mat-error>Pole może mieć maksymalnie 50 znaków</mat-error>
-            }
-            @if (fpn.projectDescription.errors?.['forbiddenCharacters'] && fpn.projectDescription.touched) {
-            <mat-error>Niedozwolone znaki: {{ fpn.projectDescription.errors?.['forbiddenCharacters'].join('') }}</mat-error>
-            }
-          </mat-form-field>
-
-          <mat-form-field>
-            <mat-label>Unikalny klucz KIWI</mat-label>
-            <input formControlName="projectKey" matInput (blur)="onBlur(fpn.projectKey)" />
-            @if (fpn.projectKey.errors?.['required'] && fpn.projectKey.touched) {
-            <mat-error>Uzupełnij pole</mat-error>
-            }
-            @if (fpn.projectKey.errors?.['minLength'] && fpn.projectKey.touched) {
-            <mat-error>Wymagane przynajmniej 2 znaki</mat-error>
-            }
-            @if (fpn.projectKey.errors?.['maxLength'] && fpn.projectKey.touched) {
-            <mat-error>Pole może mieć maksymalnie 10 znaków</mat-error>
-            }
-            @if (fpn.projectKey.errors?.['whitespace'] && fpn.projectKey.touched) {
-            <mat-error>Pole nie może zawierać pustych znaków</mat-error>
-            }
-            @if (fpn.projectKey.errors?.['forbiddenCharacters'] && !fpn.projectKey.errors?.['whitespace'] && fpn.projectKey.touched) {
-            <mat-error>Niedozwolone znaki: {{ fpn.projectKey.errors?.['forbiddenCharacters'].join('') }}</mat-error>
-            }
-          </mat-form-field>
-
-          <mat-form-field>
-            <mat-label>Id użytkownika Atlassian</mat-label>
-            <input formControlName="atlassianId" matInput />
-            @if (fpn.atlassianId.errors?.['required'] && fpn.atlassianId.touched) {
-            <mat-error>Uzupełnij pole</mat-error>
-            }
-          </mat-form-field>
-        </div>
-        }
+        <mat-form-field>
+          <mat-label>Id użytkownika Atlassian</mat-label>
+          <input formControlName="atlassianId" matInput />
+          @if (fp.atlassianId.errors?.['required'] && fp.atlassianId.touched) {
+          <mat-error>Uzupełnij pole</mat-error>
+          }
+        </mat-form-field>
 
         <div class="stepper-actions">
           <button mat-flat-button matStepperNext [disabled]="!projectForm.valid">Dalej</button>
@@ -209,33 +175,20 @@
         <h2>Podsumowanie</h2>
         <mat-card appearance="outlined">
           <mat-card-content>
-            @if (fp.isNewProjectNeeded.value === IsProjectNeeded.No) {
             <div class="summary-section">
-              <div class="summary-item">
-                <div>Klucz twojego projektu</div>
-                <div class="summary-value">{{ fpe.existingProjectKey.value }}</div>
-              </div>
-            </div>
-            }
-            @if (fp.isNewProjectNeeded.value === IsProjectNeeded.Yes) {
-            <div class="summary-section">
-              <div class="summary-item">
-                <div>Nowy projekt zostanie założony</div>
-              </div>
               <div class="summary-item">
                 <div>Klucz nowego projektu</div>
-                <div class="summary-value">{{ fpn.projectKey.value }}</div>
+                <div class="summary-value">{{ fp.projectKey.value }}</div>
               </div>
               <div class="summary-item">
                 <div>Nazwa projektu</div>
-                <div class="summary-value">{{ fpn.projectName.value }}</div>
+                <div class="summary-value">{{ fp.projectName.value }}</div>
               </div>
               <div class="summary-item">
                 <div>Opis projektu</div>
-                <div class="summary-value">{{ fpn.projectDescription.value }}</div>
+                <div class="summary-value">{{ fp.projectDescription.value }}</div>
               </div>
             </div>
-            }
             <mat-divider></mat-divider>
             <div class="summary-section">
               <div class="summary-item">

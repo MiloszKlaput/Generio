@@ -22,10 +22,8 @@ export class RequestBuilder {
     }
   }
 
-  static buildSprintsRequest(f: MainFormControls, boardId: number): SprintRequest[] {
+  static buildSprintsRequest(sprintsCount: number, sprintDuration: number, projectStartDate: DateTime, boardId: number): SprintRequest[] {
     const result: SprintRequest[] = [];
-    const sprintsCount = f.sprintsCount.value!;
-    const duration = f.sprintDuration.value!;
     let sprintStartDate = 0;
 
     for (let index = 1; index <= sprintsCount; index++) {
@@ -33,11 +31,11 @@ export class RequestBuilder {
         originBoardId: boardId,
         name: `Sprint ${index}`,
         goal: `Cel sprintu ${index}`,
-        startDate: DateTime.fromJSDate(f.projectStartDate.value!).plus({ days: sprintStartDate }).toISO()!,
-        endDate: DateTime.fromJSDate(f.projectStartDate.value!).plus({ days: sprintStartDate + duration }).toISO()!
+        startDate: projectStartDate.plus({ days: sprintStartDate }).toISO()!,
+        endDate: projectStartDate.plus({ days: sprintStartDate + sprintDuration }).toISO()!
       };
 
-      sprintStartDate += duration;
+      sprintStartDate += sprintDuration;
 
       result.push(sprintData);
     }
@@ -45,9 +43,8 @@ export class RequestBuilder {
     return result;
   }
 
-  static buildEpicsRequest(f: MainFormControls, projectKey: string): IssueRequest[] {
+  static buildEpicsRequest(epicsCount: number, projectKey: string): IssueRequest[] {
     const result: IssueRequest[] = [];
-    const epicsCount = f.epicsCount.value!;
 
     for (let i = 1; i <= epicsCount; i++) {
       result.push(this.createIssue(projectKey, `Tytuł epiki ${i}`, IssueTypeEnum.Epik));
@@ -56,9 +53,8 @@ export class RequestBuilder {
     return result;
   }
 
-  static buildIssuesRequest(f: MainFormControls, projectKey: string): IssueRequest[] {
+  static buildIssuesRequest(issuesCount: number, projectKey: string): IssueRequest[] {
     const result: IssueRequest[] = [];
-    const issuesCount = f.issuesCount.value!;
     const issueTypeWeights = { story: 0.6, bug: 0.3, task: 0.1 };
 
     let storyCount = Math.floor(issuesCount * issueTypeWeights.story);

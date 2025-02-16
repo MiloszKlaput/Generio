@@ -13,11 +13,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { IsProjectNeeded } from '../../enums/is-project-needed.enum';
 import { map, Observable, Subscription } from 'rxjs';
 import { MatStepper, MatStepperModule, StepperOrientation } from '@angular/material/stepper';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { EpicsFormControls, ExistingProjectFormControls, IssuesFormControls, MainFormControls, NewProjectFormControls, ProjectFormControls, SprintsFormControls } from '../../types/main-form-controls.type';
+import { EpicsFormControls, IssuesFormControls, MainFormControls, ProjectFormControls, SprintsFormControls } from '../../types/main-form-controls.type';
 import { FormsHelper } from '../../helpers/forms.helper';
 import { CommonModule } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -65,12 +64,8 @@ export class MainFormComponent implements OnInit, OnDestroy {
 
   stepperOrientation$!: Observable<StepperOrientation>;
 
-  IsProjectNeeded = IsProjectNeeded;
-
   subscriptions: Subscription[] = [];
 
-  get fpe(): ExistingProjectFormControls { return this.projectForm.controls.existingProject.controls }
-  get fpn(): NewProjectFormControls { return this.projectForm.controls.newProject.controls; }
   get fp(): ProjectFormControls { return this.projectForm.controls; }
   get fs(): SprintsFormControls { return this.sprintsForm.controls; }
   get fe(): EpicsFormControls { return this.epicsForm.controls; }
@@ -87,10 +82,7 @@ export class MainFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.populateProcessService.clearError();
     this.initForms();
-    this.subscriptions.push(
-      this.getUpdateForm(),
-      this.watchProcessError()
-    );
+    this.subscriptions.push(this.watchProcessError());
     this.populateProcessService.isInProgress$.subscribe(s => this.isInProgress = s);
     this.populateProcessService.isSubmitted$.subscribe(s => this.isSubmitted = s);
   }
@@ -104,10 +96,13 @@ export class MainFormComponent implements OnInit, OnDestroy {
   onReset(): void {
     this.projectForm.reset();
     this.initForms();
-    this.subscriptions.push(
-      this.getUpdateForm()
-    );
     this.stepper.reset();
+  }
+
+  onSubmit(): void {
+    FormsHelper.mapToMainForm(this.projectForm, this.sprintsForm, this.epicsForm, this.issuesForm, this.mainForm);
+
+    this.populateProcessService.startProcess(this.fM);
   }
 
   private initForms(): void {
@@ -118,17 +113,6 @@ export class MainFormComponent implements OnInit, OnDestroy {
     this.mainForm = FormsHelper.initMainForm();
   }
 
-  private getUpdateForm(): Subscription {
-    return this.fp.isNewProjectNeeded.valueChanges
-      .subscribe(value => {
-        if (!value) {
-          return;
-        }
-
-        this.updateProjectForm(value);
-      });
-  }
-
   private watchProcessError(): Subscription {
     return this.populateProcessService.error$
       .subscribe((error: string | null) => {
@@ -136,33 +120,6 @@ export class MainFormComponent implements OnInit, OnDestroy {
           this.onReset();
         }
       });
-  }
-
-  onSubmit(): void {
-    FormsHelper.mapToMainForm(this.projectForm, this.sprintsForm, this.epicsForm, this.issuesForm, this.mainForm);
-
-    this.populateProcessService.startProcess(this.fM);
-  }
-
-  private updateProjectForm(value: IsProjectNeeded): void {
-    if (!value) {
-      return;
-    }
-
-    switch (value) {
-      case IsProjectNeeded.Yes:
-        this.projectForm.controls.existingProject.disable();
-        this.projectForm.controls.newProject.enable();
-        break;
-
-      case IsProjectNeeded.No:
-        this.projectForm.controls.existingProject.enable();
-        this.projectForm.controls.newProject.disable();
-        break;
-
-      default:
-        break;
-    }
   }
 
   ngOnDestroy(): void {

@@ -2,8 +2,6 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { IsProjectNeeded } from "../enums/is-project-needed.enum";
 import { whitespaceValidator } from "../validators/whitespace.validator";
 import {
-  ExistingProjectFormControls,
-  NewProjectFormControls,
   EpicsFormControls,
   IssuesFormControls,
   MainFormControls,
@@ -15,47 +13,28 @@ import { DateTime } from "luxon";
 import { allowedCharactersValidator } from "../validators/allowed-characters.validator";
 
 export class FormsHelper {
-  public static initExistingProjectForm(): FormGroup<ExistingProjectFormControls> {
-    return new FormGroup<ExistingProjectFormControls>({
-      existingProjectKey: new FormControl<string>('', [
+  public static initProjectForm(): FormGroup<ProjectFormControls> {
+    return new FormGroup<ProjectFormControls>({
+      projectName: new FormControl<string>('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(50),
+        allowedCharactersValidator(/^[a-zA-Z0-9 ]*$/)
+      ]),
+      projectDescription: new FormControl<string>('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(50),
+        allowedCharactersValidator(/^[a-zA-Z0-9 ]*$/)
+      ]),
+      projectKey: new FormControl<string>('', [
         Validators.required,
         Validators.minLength(2),
         Validators.maxLength(10),
-        allowedCharactersValidator(/^[a-zA-Z]*$/),
+        allowedCharactersValidator(/^[a-zA-Z0-9-:]*$/),
         whitespaceValidator()
-      ])
-    });
-  }
-
-  public static initNewProjectForm(): FormGroup<NewProjectFormControls> {
-    return new FormGroup<NewProjectFormControls>({
-      projectName: new FormControl<string>({ value: '', disabled: true }, [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
-        allowedCharactersValidator(/^[a-zA-Z0-9 ]*$/)
       ]),
-      projectDescription: new FormControl<string>({ value: '', disabled: true }, [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
-        allowedCharactersValidator(/^[a-zA-Z0-9 ]*$/)
-      ]),
-      projectKey: new FormControl<string>({ value: '', disabled: true }, [Validators.required,
-      Validators.minLength(2),
-      Validators.maxLength(10),
-      allowedCharactersValidator(/^[a-zA-Z0-9-:]*$/),
-      whitespaceValidator()
-      ]),
-      atlassianId: new FormControl<string>({ value: '', disabled: true }, [Validators.required])
-    });
-  }
-
-  public static initProjectForm(): FormGroup<ProjectFormControls> {
-    return new FormGroup<ProjectFormControls>({
-      isNewProjectNeeded: new FormControl<IsProjectNeeded>(IsProjectNeeded.No),
-      existingProject: FormsHelper.initExistingProjectForm(),
-      newProject: FormsHelper.initNewProjectForm()
+      atlassianId: new FormControl<string>('', [Validators.required])
     });
   }
 
@@ -69,7 +48,7 @@ export class FormsHelper {
 
   public static initEpicsForm(): FormGroup<EpicsFormControls> {
     return new FormGroup<EpicsFormControls>({
-      epicsCount: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
+      epicsCount: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
     });
   }
 
@@ -86,32 +65,29 @@ export class FormsHelper {
 
   public static initMainForm(): FormGroup<MainFormControls> {
     return new FormGroup<MainFormControls>({
-      isProjectNeeded: new FormControl<IsProjectNeeded>(IsProjectNeeded.No, [Validators.required]),
-      existingProjectKey: new FormControl<string>('', [
-        Validators.required,
-        Validators.minLength(2),
-        allowedCharactersValidator(/^[a-zA-Z]*$/)
-      ]),
-      projectName: new FormControl<string>({ value: '', disabled: true }, [
+      projectName: new FormControl<string>('', [
         Validators.required,
         Validators.minLength(3),
+        Validators.maxLength(50),
         allowedCharactersValidator(/^[a-zA-Z0-9 ]*$/)
       ]),
-      projectDescription: new FormControl<string>({ value: '', disabled: true }, [
+      projectDescription: new FormControl<string>('', [
         Validators.required,
         Validators.minLength(3),
+        Validators.maxLength(50),
         allowedCharactersValidator(/^[a-zA-Z0-9 ]*$/)
       ]),
-      projectKey: new FormControl<string>({ value: '', disabled: true }, [
+      projectKey: new FormControl<string>('', [
         Validators.required,
         Validators.minLength(2),
+        Validators.maxLength(10),
         allowedCharactersValidator(/^[a-zA-Z]*$/)
       ]),
-      atlassianId: new FormControl<string>({ value: '', disabled: true }, [Validators.required]),
+      atlassianId: new FormControl<string>('', [Validators.required]),
       sprintsCount: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
       sprintDuration: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
       projectStartDate: new FormControl<Date>(DateTime.now().toJSDate(), [Validators.required]),
-      epicsCount: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
+      epicsCount: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
       issuesCount: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
       issuesTypes: new FormGroup({
         story: new FormControl<boolean>(false),
@@ -128,12 +104,10 @@ export class FormsHelper {
     issuesForm: FormGroup<IssuesFormControls>,
     mainForm: FormGroup<MainFormControls>) {
     mainForm.patchValue({
-      isProjectNeeded: projectForm.controls.isNewProjectNeeded.value,
-      existingProjectKey: projectForm.controls.existingProject.value.existingProjectKey,
-      projectName: projectForm.controls.newProject.value.projectName,
-      projectKey: projectForm.controls.newProject.value.projectKey,
-      projectDescription: projectForm.controls.newProject.value.projectDescription,
-      atlassianId: projectForm.controls.newProject.value.atlassianId,
+      projectName: projectForm.value.projectName,
+      projectKey: projectForm.value.projectKey,
+      projectDescription: projectForm.value.projectDescription,
+      atlassianId: projectForm.value.atlassianId,
       sprintsCount: sprintsForm.value.sprintsCount,
       sprintDuration: sprintsForm.value.sprintDuration ? sprintsForm.value.sprintDuration * 7 : null,
       projectStartDate: sprintsForm.value.projectStartDate,

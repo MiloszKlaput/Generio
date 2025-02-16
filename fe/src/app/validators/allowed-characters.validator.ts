@@ -5,14 +5,20 @@ export function allowedCharactersValidator(allowedPattern: RegExp): ValidatorFn 
     if (!control.value || typeof control.value !== 'string') {
       return null;
     }
+
     const pattern = new RegExp(allowedPattern.source, allowedPattern.flags.replace(/g/, ''));
-    const forbiddenChars: string[] = [];
+    const forbiddenSet = new Set<string>();
+
     for (const char of control.value) {
       if (!pattern.test(char)) {
-        forbiddenChars.push(char);
+        forbiddenSet.add(char);
       }
     }
 
-    return forbiddenChars.length > 0 ? { forbiddenCharacters: forbiddenChars } : null;
+    const forbiddenChars = [...forbiddenSet];
+
+    return forbiddenChars.length > 0
+      ? { forbiddenCharacters: forbiddenChars }
+      : null;
   };
 }

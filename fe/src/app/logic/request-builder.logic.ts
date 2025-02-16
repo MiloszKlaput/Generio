@@ -13,7 +13,7 @@ export class RequestBuilder {
     return {
       assigneeType: 'PROJECT_LEAD',
       description: f.projectDescription.value!,
-      key: f.projectKey.value!,
+      key: f.projectKey.value!.toUpperCase(),
       leadAccountId: f.atlassianId.value!,
       name: f.projectName.value!,
       projectTemplateKey: 'com.pyxis.greenhopper.jira:gh-simplified-scrum-classic',

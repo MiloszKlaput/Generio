@@ -13,7 +13,7 @@
           @if (fp.projectName.errors?.['minlength'] && fp.projectName.touched) {
             <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
           }
-          @if (fp.projectName.errors?.['maxLength'] && fp.projectName.touched) {
+          @if (fp.projectName.errors?.['maxlength'] && fp.projectName.touched) {
             <mat-error>Pole może mieć maksymalnie 50 znaków</mat-error>
           }
           @if (fp.projectName.errors?.['forbiddenCharacters'] && fp.projectName.touched) {
@@ -30,7 +30,7 @@
           @if (fp.projectDescription.errors?.['minlength'] && fp.projectDescription.touched) {
             <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
           }
-          @if (fp.projectDescription.errors?.['maxLength'] && fp.projectDescription.touched) {
+          @if (fp.projectDescription.errors?.['maxlength'] && fp.projectDescription.touched) {
             <mat-error>Pole może mieć maksymalnie 50 znaków</mat-error>
           }
           @if (fp.projectDescription.errors?.['forbiddenCharacters'] && fp.projectDescription.touched) {
@@ -39,15 +39,15 @@
         </mat-form-field>
 
         <mat-form-field>
-          <mat-label>Unikalny klucz KIWI</mat-label>
+          <mat-label>Unikalny klucz</mat-label>
           <input formControlName="projectKey" matInput (blur)="onBlur(fp.projectKey)" />
           @if (fp.projectKey.errors?.['required'] && fp.projectKey.touched) {
             <mat-error>Uzupełnij pole</mat-error>
           }
-          @if (fp.projectKey.errors?.['minLength'] && fp.projectKey.touched) {
+          @if (fp.projectKey.errors?.['minlength'] && fp.projectKey.touched) {
             <mat-error>Wymagane przynajmniej 2 znaki</mat-error>
           }
-          @if (fp.projectKey.errors?.['maxLength'] && fp.projectKey.touched) {
+          @if (fp.projectKey.errors?.['maxlength'] && fp.projectKey.touched) {
             <mat-error>Pole może mieć maksymalnie 10 znaków</mat-error>
           }
           @if (fp.projectKey.errors?.['whitespace'] && fp.projectKey.touched) {
@@ -63,6 +63,15 @@
           <input formControlName="atlassianId" matInput />
           @if (fp.atlassianId.errors?.['required'] && fp.atlassianId.touched) {
             <mat-error>Uzupełnij pole</mat-error>
+          }
+          @if (fp.atlassianId.errors?.['maxlength'] && fp.atlassianId.touched) {
+            <mat-error>Pole może mieć maksymalnie 50 znaków</mat-error>
+          }
+          @if (fp.atlassianId.errors?.['whitespace'] && fp.atlassianId.touched) {
+            <mat-error>Pole nie może zawierać pustych znaków</mat-error>
+          }
+          @if (fp.atlassianId.errors?.['forbiddenCharacters'] && !fp.atlassianId.errors?.['whitespace'] && fp.atlassianId.touched) {
+            <mat-error>Niedozwolone znaki: {{ fp.atlassianId.errors?.['forbiddenCharacters'].join('') }}</mat-error>
           }
         </mat-form-field>
 

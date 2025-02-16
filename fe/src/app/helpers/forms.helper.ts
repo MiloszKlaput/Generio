@@ -31,10 +31,14 @@ export class FormsHelper {
         Validators.required,
         Validators.minLength(2),
         Validators.maxLength(10),
-        allowedCharactersValidator(/^[a-zA-Z0-9-:]*$/),
+        allowedCharactersValidator(/^[a-zA-Z0-9]*$/),
         whitespaceValidator()
       ]),
-      atlassianId: new FormControl<string>('', [Validators.required])
+      atlassianId: new FormControl<string>('', [
+        Validators.required,
+        allowedCharactersValidator(/^[a-zA-Z0-9-:]*$/),
+        Validators.maxLength(50)
+      ])
     });
   }
 
@@ -81,9 +85,14 @@ export class FormsHelper {
         Validators.required,
         Validators.minLength(2),
         Validators.maxLength(10),
-        allowedCharactersValidator(/^[a-zA-Z]*$/)
+        allowedCharactersValidator(/^[a-zA-Z0-9]*$/),
+        whitespaceValidator()
       ]),
-      atlassianId: new FormControl<string>('', [Validators.required]),
+      atlassianId: new FormControl<string>('', [
+        Validators.required,
+        allowedCharactersValidator(/^[a-zA-Z0-9-:]*$/),
+        Validators.maxLength(50)
+      ]),
       sprintsCount: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
       sprintDuration: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
       projectStartDate: new FormControl<Date>(DateTime.now().toJSDate(), [Validators.required]),

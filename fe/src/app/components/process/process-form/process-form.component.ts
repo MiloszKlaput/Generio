@@ -16,15 +16,15 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { map, Observable, Subscription } from 'rxjs';
 import { MatStepper, MatStepperModule, StepperOrientation } from '@angular/material/stepper';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { EpicsFormControls, IssuesFormControls, MainFormControls, ProjectFormControls, SprintsFormControls } from '../../types/main-form-controls.type';
-import { FormsHelper } from '../../helpers/forms.helper';
+import { EpicsFormControls, IssuesFormControls, MainFormControls, ProjectFormControls, SprintsFormControls } from '../../../types/main-form-controls.type';
+import { FormsHelper } from '../../../helpers/forms.helper';
 import { CommonModule } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatRadioModule } from '@angular/material/radio';
-import { JiraPopulateProcessService } from '../../services/jira-populate-process.service';
+import { JiraPopulateProcessService } from '../../../services/jira-populate-process.service';
 
 @Component({
-  selector: 'main-form',
+  selector: 'process-form',
   imports: [
     CommonModule,
     FormsModule,
@@ -48,10 +48,11 @@ import { JiraPopulateProcessService } from '../../services/jira-populate-process
     MatGridListModule,
     MatRadioModule
   ],
-  templateUrl: './main-form.component.html',
-  styleUrls: ['./main-form.component.scss']
+  templateUrl: './process-form.component.html',
+  styleUrls: ['./process-form.component.scss'],
+  standalone: true
 })
-export class MainFormComponent implements OnInit, OnDestroy {
+export class ProcessFormComponent implements OnInit, OnDestroy {
   private populateProcessService = inject(JiraPopulateProcessService);
   @ViewChild('stepper') stepper!: MatStepper;
   projectForm!: FormGroup<ProjectFormControls>;
@@ -80,11 +81,7 @@ export class MainFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.populateProcessService.clearError();
     this.initForms();
-    this.subscriptions.push(this.watchProcessError());
-    this.populateProcessService.isInProgress$.subscribe(s => this.isInProgress = s);
-    this.populateProcessService.isSubmitted$.subscribe(s => this.isSubmitted = s);
   }
 
   onBlur(control: AbstractControl): void {
@@ -111,15 +108,6 @@ export class MainFormComponent implements OnInit, OnDestroy {
     this.epicsForm = FormsHelper.initEpicsForm();
     this.issuesForm = FormsHelper.initIssuesForm();
     this.mainForm = FormsHelper.initMainForm();
-  }
-
-  private watchProcessError(): Subscription {
-    return this.populateProcessService.error$
-      .subscribe((error: string | null) => {
-        if (error && error.length > 0) {
-          this.onReset();
-        }
-      });
   }
 
   ngOnDestroy(): void {

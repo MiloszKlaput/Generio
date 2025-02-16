@@ -6,7 +6,6 @@ import { SprintRequest, SprintResponse } from '../models/sprint/sprint.model';
 import { MoveToEpicRequest } from '../models/issue/move-to-epic.model';
 import { MoveToSprintRequest } from '../models/issue/move-to-sprint.model';
 import { MainFormControls } from '../types/main-form-controls.type';
-import { IsProjectNeeded } from '../enums/is-project-needed.enum';
 import { RequestData, ResponseData } from '../models/process/process-data.model';
 import { DateTime } from 'luxon';
 import { from, switchMap, concatMap, toArray, tap, Observable, catchError, throwError, BehaviorSubject } from 'rxjs';
@@ -25,13 +24,8 @@ export class JiraPopulateProcessService {
   private requestData!: RequestData;
   private responseData!: ResponseData;
   private issues: Issue[] = [];
-  isInProgress$ = new BehaviorSubject<boolean>(false);
-  isSubmitted$ = new BehaviorSubject<boolean>(false);
-  error$ = new BehaviorSubject<string | null>(null);
 
   startProcess(mainFormData: MainFormControls): void {
-    this.isInProgress$.next(true);
-
     this.initRequestData(mainFormData);
     this.initResponseData();
 
@@ -49,36 +43,15 @@ export class JiraPopulateProcessService {
           if (this.requestData.projectStartDate.startOf('day') < DateTime.now().startOf('day')) {
             this.createPastProjectDataFile();
           }
-
-          this.isInProgress$.next(false);
         },
         error: (err) => {
           console.error(err);
-          this.handleError('Server error');
         }
       });
   }
 
-  clearError(): void {
-    this.error$.next(null);
-  }
-
-  private setError(msg: string): void {
-    this.error$.next(msg);
-  }
-
-  private handleError(msg: string): void {
-    this.setError(msg);
-    this.clearData();
-    this.resetProcessStatus();
-  }
-
   private clearData(): void {
     this.apiService.deleteProject(this.requestData.projectKey).subscribe();
-  }
-
-  private resetProcessStatus(): void {
-    this.isInProgress$.next(false);
   }
 
   private createNewProject(data: MainFormControls): Observable<ProjectResponse> {
@@ -111,7 +84,6 @@ export class JiraPopulateProcessService {
         }
       }),
       catchError((err) => {
-        this.handleError('Server error');
         return throwError(() => err);
       })
     );
@@ -203,9 +175,6 @@ export class JiraPopulateProcessService {
     WorkflowSimulator.simulateWorkflowForAllSprints(this.requestData, this.responseData, this.issues);
     const fileData = FileDataHelper.generateFileData(this.requestData, this.issues);
     this.saveToFile(fileData);
-
-    this.isInProgress$.next(false);
-    this.isSubmitted$.next(true);
   }
 
   private mergeIssues(): Issue[] {

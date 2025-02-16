@@ -5,7 +5,6 @@ const apiBaseUrl = process.env.API_BASE_URL;
 const apiRestUrl = apiBaseUrl + process.env.API_REST_URL;
 const apiUserName = process.env.API_USER_NAME;
 const apiKeyValue = process.env.API_KEY_VALUE;
-const leadAccountId = process.env.LEAD_ACCOUNT_ID;
 
 const auth = {
   username: apiUserName,
@@ -13,7 +12,6 @@ const auth = {
 };
 
 async function createProject(req, res) {
-  req.body.leadAccountId = leadAccountId;
   try {
     const url = `${apiRestUrl}/project`;
     const data = req.body;

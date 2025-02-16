@@ -1,10 +1,10 @@
 @if (!isInProgress && !isSubmitted) {
-<div class="stepper-container">
-  <mat-horizontal-stepper [orientation]="(stepperOrientation$ | async)!" [linear]="true" #stepper>
+  <div class="stepper-container">
+    <mat-horizontal-stepper [orientation]="(stepperOrientation$ | async)!" [linear]="true" #stepper>
 
-    <mat-step [stepControl]="projectForm" label="Projekt">
-      <form class="form-container" [formGroup]="projectForm">
-        <h2>Projekt</h2>
+      <mat-step [stepControl]="projectForm" label="Projekt">
+        <form class="form-container" [formGroup]="projectForm">
+          <h2>Projekt</h2>
         <mat-form-field>
           <mat-label>Nazwa</mat-label>
           <input formControlName="projectName" matInput (blur)="onBlur(fp.projectName)" />
@@ -243,8 +243,4 @@
     </mat-step>
   </mat-horizontal-stepper>
 </div>
-}
-
-@if (isInProgress) {
-<mat-progress-bar mode="indeterminate"></mat-progress-bar>
 }

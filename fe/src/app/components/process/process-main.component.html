@@ -1,0 +1,17 @@
+@switch (state) {
+  @case (ProcessState.New) {
+    <process-form></process-form>
+  }
+  @case (ProcessState.InProgress) {
+    <process-in-progress></process-in-progress>
+  }
+  @case (ProcessState.Success) {
+    <process-success></process-success>
+  }
+  @case (ProcessState.Error) {
+    <process-error></process-error>
+  }
+  @default {
+    <process-form></process-form>
+  }
+}

@@ -1,0 +1,35 @@
+@use '../../../../styles/breakpoints' as *;
+
+$icon-mobile: 4rem;
+$icon-desktop: 8rem;
+
+.in-progress-container {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem auto;
+  width: 100%;
+  @media (min-width: $Small) {
+    margin: 6rem auto;
+    width: 30rem;
+  }
+
+  .loading-icon {
+    text-align: center;
+    margin-bottom: 2rem;
+    align-self: center;
+    height: $icon-mobile;
+    width: $icon-mobile;
+    font-size: $icon-mobile;
+    @media (min-width: $Small) {
+      height: $icon-desktop;
+      width: $icon-desktop;
+      font-size: $icon-desktop;
+    }
+  }
+
+  .text {
+    display: block;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+}

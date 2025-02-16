@@ -1,5 +1,5 @@
-@use '../../../styles/breakpoints' as *;
-@use '../../../styles/variables' as *;
+@use '../../../../styles/breakpoints' as *;
+@use '../../../../styles/variables' as *;
 
 .stepper-container {
   width: 100%;
@@ -108,4 +108,9 @@
       }
     }
   }
+}
+
+.home-icon {
+  color: red;
+  font-size: 4rem;
 }

@@ -9,7 +9,7 @@ import { MainFormControls } from '../types/main-form-controls.type';
 import { IsProjectNeeded } from '../enums/is-project-needed.enum';
 import { RequestData, ResponseData } from '../models/process/process-data.model';
 import { DateTime } from 'luxon';
-import { from, switchMap, concatMap, toArray, tap, Observable, catchError, throwError, BehaviorSubject, of } from 'rxjs';
+import { from, switchMap, concatMap, toArray, tap, Observable, catchError, throwError, BehaviorSubject } from 'rxjs';
 import { BoardIdResponse } from '../models/board/board.model';
 import { WorkflowSimulator } from '../logic/workflow-simulator.logic';
 import { FileDataHelper } from '../helpers/file-data.helper';
@@ -38,16 +38,19 @@ export class JiraPopulateProcessService {
     this.createNewProject(mainFormData)
       .pipe(
         switchMap(() => this.getBoardId()),
-        switchMap(() => this.createSprints()),
-        switchMap(() => this.createEpics()),
-        switchMap(() => this.createIssues()),
+        switchMap(() => this.createSprints(mainFormData)),
+        switchMap(() => this.createEpics(mainFormData)),
+        switchMap(() => this.createIssues(mainFormData)),
         switchMap(() => this.moveIssuesToEpics()),
         switchMap(() => this.moveIssuesToSprints())
       )
       .subscribe({
         next: () => {
-          if (this.requestData.projectStartDate < DateTime.now())
+          if (this.requestData.projectStartDate.startOf('day') < DateTime.now().startOf('day')) {
             this.createPastProjectDataFile();
+          }
+
+          this.isInProgress$.next(false);
         },
         error: (err) => {
           console.error(err);
@@ -114,13 +117,8 @@ export class JiraPopulateProcessService {
     );
   }
 
-  private createSprints(): Observable<SprintResponse[]> {
-    const sprints: SprintRequest[] = RequestBuilder.buildSprintsRequest(
-      this.requestData.sprintsCount,
-      this.requestData.sprintDuration,
-      this.requestData.projectStartDate,
-      this.responseData.boardId
-    );
+  private createSprints(formData: MainFormControls): Observable<SprintResponse[]> {
+    const sprints: SprintRequest[] = RequestBuilder.buildSprintsRequest(formData, this.responseData.boardId);
     return from(sprints).pipe(
       concatMap((sprint: SprintRequest) => this.apiService.createSprint(sprint)),
       toArray(),
@@ -136,11 +134,9 @@ export class JiraPopulateProcessService {
     );
   }
 
-  private createEpics(): Observable<{ issues: IssueResponse[], errors: any[] }> {
-    const epicsCount = this.requestData.epicsCount;
+  private createEpics(data: MainFormControls): Observable<{ issues: IssueResponse[], errors: any[] }> {
     const projectKey = this.requestData.projectKey;
-    const epics: IssueRequest[] = RequestBuilder.buildEpicsRequest(epicsCount, projectKey);
-
+    const epics: IssueRequest[] = RequestBuilder.buildEpicsRequest(data, projectKey);
     return this.apiService.createIssues(epics).pipe(
       tap((result: { issues: IssueResponse[], errors: any[] }) => {
         if (result.issues) {
@@ -156,10 +152,9 @@ export class JiraPopulateProcessService {
     );
   }
 
-  private createIssues(): Observable<{ issues: IssueResponse[], errors: any[] }> {
-    const issuesCount = this.requestData.issuesCount;
+  private createIssues(data: MainFormControls): Observable<{ issues: IssueResponse[], errors: any[] }> {
     const projectKey = this.requestData.projectKey;
-    const issuesRequest: IssueRequest[] = RequestBuilder.buildIssuesRequest(issuesCount, projectKey);
+    const issuesRequest: IssueRequest[] = RequestBuilder.buildIssuesRequest(data, projectKey);
     this.requestData.issues = issuesRequest;
 
     return this.apiService.createIssues(issuesRequest).pipe(

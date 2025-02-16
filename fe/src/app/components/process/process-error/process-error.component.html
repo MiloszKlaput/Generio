@@ -1,6 +1,8 @@
-<div class="in-progress-container">
+<div class="error-container">
   <mat-icon class="error-icon" aria-hidden="false" aria-label="Error" fontIcon="error"></mat-icon>
-  <p class="text">Wystąpił błąd</p>
-
-
+  <h3 class="text">Wystąpił błąd</h3>
+  <p class="text">treść błędu z BE jeżeli dostępna</p>
+  <button type="button" mat-flat-button class="action" (click)="startOver()">
+    Spróbuj ponownie
+  </button>
 </div>

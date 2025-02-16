@@ -17,6 +17,9 @@ export class AppComponent {
   currentYear = DateTime.now().year;
 
   onLogoClick(): void {
-    this.router.navigate(['/']);
+    this.router.navigateByUrl('/', { skipLocationChange: true })
+      .then(() => {
+        this.router.navigate(['/Form'])
+      });
   }
 }

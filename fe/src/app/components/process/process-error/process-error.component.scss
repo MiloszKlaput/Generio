@@ -1,9 +1,10 @@
 @use '../../../../styles/breakpoints' as *;
+@use '../../../../styles/variables' as *;
 
 $icon-mobile: 4rem;
 $icon-desktop: 8rem;
 
-.in-progress-container {
+.error-container {
   display: flex;
   flex-direction: column;
   margin: 1rem auto;
@@ -13,7 +14,8 @@ $icon-desktop: 8rem;
     width: 30rem;
   }
 
-  .loading-icon {
+  .error-icon {
+    color: $error;
     text-align: center;
     margin-bottom: 2rem;
     align-self: center;
@@ -28,8 +30,10 @@ $icon-desktop: 8rem;
   }
 
   .text {
-    display: block;
-    margin-bottom: 2rem;
     text-align: center;
+  }
+
+  .action {
+    margin-top: 1rem;
   }
 }

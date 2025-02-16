@@ -22,6 +22,8 @@ import { CommonModule } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatRadioModule } from '@angular/material/radio';
 import { JiraPopulateProcessService } from '../../../services/jira-populate-process.service';
+import { ProcessStateService } from '../../../services/process-state.service';
+import { ProcessState } from '../../../enums/process-state.enum';
 
 @Component({
   selector: 'process-form',
@@ -54,6 +56,7 @@ import { JiraPopulateProcessService } from '../../../services/jira-populate-proc
 })
 export class ProcessFormComponent implements OnInit, OnDestroy {
   private populateProcessService = inject(JiraPopulateProcessService);
+  private processStateService = inject(ProcessStateService);
   @ViewChild('stepper') stepper!: MatStepper;
   projectForm!: FormGroup<ProjectFormControls>;
   sprintsForm!: FormGroup<SprintsFormControls>;

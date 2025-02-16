@@ -6,7 +6,6 @@ import { SprintRequest, SprintResponse } from '../models/sprint/sprint.model';
 import { MoveToEpicRequest } from '../models/issue/move-to-epic.model';
 import { MoveToSprintRequest } from '../models/issue/move-to-sprint.model';
 import { MainFormControls } from '../types/main-form-controls.type';
-import { RequestData, ResponseData } from '../models/process/process-data.model';
 import { DateTime } from 'luxon';
 import { from, switchMap, concatMap, toArray, tap, Observable, catchError, throwError, BehaviorSubject } from 'rxjs';
 import { BoardIdResponse } from '../models/board/board.model';
@@ -14,6 +13,9 @@ import { WorkflowSimulator } from '../logic/workflow-simulator.logic';
 import { FileDataHelper } from '../helpers/file-data.helper';
 import { IssueRequest, IssueResponse, Issue } from '../models/issue/issue.model';
 import { FileData } from '../models/process/file-data.model';
+import { ProcessStateService } from './process-state.service';
+import { ProcessState } from '../enums/process-state.enum';
+import { ProcessDataService } from './process-data.service';
 
 
 @Injectable({
@@ -21,13 +23,16 @@ import { FileData } from '../models/process/file-data.model';
 })
 export class JiraPopulateProcessService {
   private apiService = inject(JiraApiService);
-  private requestData!: RequestData;
-  private responseData!: ResponseData;
+  private processStateService = inject(ProcessStateService);
+  private processDataService = inject(ProcessDataService);
+
   private issues: Issue[] = [];
 
   startProcess(mainFormData: MainFormControls): void {
-    this.initRequestData(mainFormData);
-    this.initResponseData();
+    this.processStateService.setProcessState(ProcessState.InProgress);
+
+    this.processDataService.initRequestData(mainFormData);
+    this.processDataService.initResponseData();
 
     this.createNewProject(mainFormData)
       .pipe(
@@ -40,32 +45,40 @@ export class JiraPopulateProcessService {
       )
       .subscribe({
         next: () => {
-          if (this.requestData.projectStartDate.startOf('day') < DateTime.now().startOf('day')) {
+          if (this.processDataService.requestData.projectStartDate.startOf('day') < DateTime.now().startOf('day')) {
             this.createPastProjectDataFile();
           }
+
+          this.processStateService.setProcessState(ProcessState.Success);
         },
         error: (err) => {
+          this.handleError();
           console.error(err);
         }
       });
   }
 
-  private clearData(): void {
-    this.apiService.deleteProject(this.requestData.projectKey).subscribe();
+  clearData(): void {
+    this.apiService.deleteProject(this.processDataService.requestData.projectKey).subscribe();
+  }
+
+  private handleError() {
+    this.processStateService.setProcessState(ProcessState.Error);
+    this.clearData();
   }
 
   private createNewProject(data: MainFormControls): Observable<ProjectResponse> {
     const request: ProjectRequest = RequestBuilder.buildProjectRequest(data);
-    this.requestData.projectDescription = request.description;
-    this.requestData.projectName = request.name;
-    this.requestData.projectKey = request.key;
+    this.processDataService.requestData.projectDescription = request.description;
+    this.processDataService.requestData.projectName = request.name;
+    this.processDataService.requestData.projectKey = request.key;
 
     return this.apiService.createProject(request).pipe(
       tap((result: ProjectResponse) => {
         if (result) {
-          this.responseData.projectId = result.data.id;
-          this.responseData.projectLink = result.data.self;
-          this.responseData.projectKey = result.data.key;
+          this.processDataService.responseData.projectId = result.data.id;
+          this.processDataService.responseData.projectLink = result.data.self;
+          this.processDataService.responseData.projectKey = result.data.key;
         }
       }),
       catchError((err) => {
@@ -76,27 +89,28 @@ export class JiraPopulateProcessService {
   }
 
   private getBoardId(): Observable<BoardIdResponse> {
-    const projectKey = this.requestData.projectKey;
+    const projectKey = this.processDataService.requestData.projectKey;
     return this.apiService.getBoardId(projectKey).pipe(
       tap((result: BoardIdResponse) => {
         if (result) {
-          this.responseData.boardId = result.data;
+          this.processDataService.responseData.boardId = result.data;
         }
       }),
       catchError((err) => {
+        console.error('Error getting boardId', err);
         return throwError(() => err);
       })
     );
   }
 
   private createSprints(formData: MainFormControls): Observable<SprintResponse[]> {
-    const sprints: SprintRequest[] = RequestBuilder.buildSprintsRequest(formData, this.responseData.boardId);
+    const sprints: SprintRequest[] = RequestBuilder.buildSprintsRequest(formData, this.processDataService.responseData.boardId);
     return from(sprints).pipe(
       concatMap((sprint: SprintRequest) => this.apiService.createSprint(sprint)),
       toArray(),
       tap((result: SprintResponse[]) => {
         if (result) {
-          this.responseData.sprints = result;
+          this.processDataService.responseData.sprints = result;
         }
       }),
       catchError((err) => {
@@ -107,13 +121,13 @@ export class JiraPopulateProcessService {
   }
 
   private createEpics(data: MainFormControls): Observable<{ issues: IssueResponse[], errors: any[] }> {
-    const projectKey = this.requestData.projectKey;
+    const projectKey = this.processDataService.requestData.projectKey;
     const epics: IssueRequest[] = RequestBuilder.buildEpicsRequest(data, projectKey);
     return this.apiService.createIssues(epics).pipe(
       tap((result: { issues: IssueResponse[], errors: any[] }) => {
         if (result.issues) {
           for (const epic of result.issues) {
-            this.responseData.epicsIds.push(epic.id);
+            this.processDataService.responseData.epicsIds.push(epic.id);
           }
         }
       }),
@@ -125,15 +139,15 @@ export class JiraPopulateProcessService {
   }
 
   private createIssues(data: MainFormControls): Observable<{ issues: IssueResponse[], errors: any[] }> {
-    const projectKey = this.requestData.projectKey;
+    const projectKey = this.processDataService.requestData.projectKey;
     const issuesRequest: IssueRequest[] = RequestBuilder.buildIssuesRequest(data, projectKey);
-    this.requestData.issues = issuesRequest;
+    this.processDataService.requestData.issues = issuesRequest;
 
     return this.apiService.createIssues(issuesRequest).pipe(
       tap((result: { issues: IssueResponse[], errors: any[] }) => {
         if (result.issues) {
-          this.responseData.issues = result.issues;
-          this.issues = this.mergeIssues();
+          this.processDataService.responseData.issues = result.issues;
+          this.issues = this.processDataService.mergeIssues();
         }
       }),
       catchError((err) => {
@@ -144,7 +158,7 @@ export class JiraPopulateProcessService {
   }
 
   private moveIssuesToEpics(): Observable<any> {
-    const requests: MoveToEpicRequest[] = RequestBuilder.buildMoveToEpicRequest(this.responseData.epicsIds, this.issues);
+    const requests: MoveToEpicRequest[] = RequestBuilder.buildMoveToEpicRequest(this.processDataService.responseData.epicsIds, this.issues);
 
     return from(requests).pipe(
       concatMap((req: MoveToEpicRequest) => this.apiService.moveIssuesToEpic(req)),
@@ -157,9 +171,9 @@ export class JiraPopulateProcessService {
   }
 
   private moveIssuesToSprints(): Observable<any> {
-    const sprintsIds = this.responseData.sprints.map((s) => s.data.id);
+    const sprintsIds = this.processDataService.responseData.sprints.map((s) => s.data.id);
     const requests: MoveToSprintRequest[] = RequestBuilder.buildMoveToSprintRequest(sprintsIds, this.issues);
-    this.requestData.sprintIssuesAssigment = requests;
+    this.processDataService.requestData.sprintIssuesAssigment = requests;
 
     return from(requests).pipe(
       concatMap((req: MoveToSprintRequest) => this.apiService.moveIssuesToSprint(req)),
@@ -172,55 +186,9 @@ export class JiraPopulateProcessService {
   }
 
   private createPastProjectDataFile(): void {
-    WorkflowSimulator.simulateWorkflowForAllSprints(this.requestData, this.responseData, this.issues);
-    const fileData = FileDataHelper.generateFileData(this.requestData, this.issues);
+    WorkflowSimulator.simulateWorkflowForAllSprints(this.processDataService.requestData, this.processDataService.responseData, this.issues);
+    const fileData = FileDataHelper.generateFileData(this.processDataService.requestData, this.issues);
     this.saveToFile(fileData);
-  }
-
-  private mergeIssues(): Issue[] {
-    return this.responseData.issues.map((issueResponse, index) => {
-      const issueRequest = this.requestData.issues[index];
-
-      return {
-        id: issueResponse.id,
-        key: issueResponse.key,
-        self: issueResponse.self,
-        fields: issueRequest.fields
-      } as Issue;
-    });
-  }
-
-  private initRequestData(formData: MainFormControls): void {
-    this.requestData = {
-      projectName: formData.projectName.value!,
-      projectDescription: formData.projectDescription.value!,
-      projectKey: formData.projectKey.value!,
-      atlassianId: formData.atlassianId.value!,
-      sprintsCount: formData.sprintsCount.value!,
-      sprintDuration: formData.sprintDuration.value!,
-      projectStartDate: DateTime.fromJSDate(formData.projectStartDate.value!),
-      epicsCount: formData.epicsCount.value!,
-      issuesCount: formData.issuesCount.value!,
-      issuesTypes: {
-        story: formData.issuesTypes.value.story!,
-        bug: formData.issuesTypes.value.bug!,
-        task: formData.issuesTypes.value.task!
-      },
-      sprintIssuesAssigment: [],
-      issues: []
-    };
-  }
-
-  private initResponseData(): void {
-    this.responseData = {
-      projectId: '',
-      projectLink: '',
-      projectKey: '',
-      boardId: 0,
-      sprints: [],
-      epicsIds: [],
-      issues: []
-    };
   }
 
   private saveToFile(fileData: FileData): void {

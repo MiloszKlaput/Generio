@@ -1,4 +1,3 @@
-@if (!isInProgress && !isSubmitted) {
   <div class="stepper-container">
     <mat-horizontal-stepper [orientation]="(stepperOrientation$ | async)!" [linear]="true" #stepper>
 
@@ -9,16 +8,16 @@
           <mat-label>Nazwa</mat-label>
           <input formControlName="projectName" matInput (blur)="onBlur(fp.projectName)" />
           @if (fp.projectName.errors?.['required'] && fp.projectName.touched) {
-          <mat-error>Uzupełnij pole</mat-error>
+            <mat-error>Uzupełnij pole</mat-error>
           }
           @if (fp.projectName.errors?.['minlength'] && fp.projectName.touched) {
-          <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
+            <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
           }
           @if (fp.projectName.errors?.['maxLength'] && fp.projectName.touched) {
-          <mat-error>Pole może mieć maksymalnie 50 znaków</mat-error>
+            <mat-error>Pole może mieć maksymalnie 50 znaków</mat-error>
           }
           @if (fp.projectName.errors?.['forbiddenCharacters'] && fp.projectName.touched) {
-          <mat-error>Niedozwolone znaki: {{ fp.projectName.errors?.['forbiddenCharacters'].join('') }}</mat-error>
+            <mat-error>Niedozwolone znaki: {{ fp.projectName.errors?.['forbiddenCharacters'].join('') }}</mat-error>
           }
         </mat-form-field>
 
@@ -26,16 +25,16 @@
           <mat-label>Opis</mat-label>
           <input formControlName="projectDescription" (blur)="onBlur(fp.projectDescription)" matInput />
           @if (fp.projectDescription.errors?.['required'] && fp.projectDescription.touched) {
-          <mat-error>Uzupełnij pole</mat-error>
+            <mat-error>Uzupełnij pole</mat-error>
           }
           @if (fp.projectDescription.errors?.['minlength'] && fp.projectDescription.touched) {
-          <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
+            <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
           }
           @if (fp.projectDescription.errors?.['maxLength'] && fp.projectDescription.touched) {
-          <mat-error>Pole może mieć maksymalnie 50 znaków</mat-error>
+            <mat-error>Pole może mieć maksymalnie 50 znaków</mat-error>
           }
           @if (fp.projectDescription.errors?.['forbiddenCharacters'] && fp.projectDescription.touched) {
-          <mat-error>Niedozwolone znaki: {{ fp.projectDescription.errors?.['forbiddenCharacters'].join('') }}</mat-error>
+            <mat-error>Niedozwolone znaki: {{ fp.projectDescription.errors?.['forbiddenCharacters'].join('') }}</mat-error>
           }
         </mat-form-field>
 
@@ -43,19 +42,19 @@
           <mat-label>Unikalny klucz KIWI</mat-label>
           <input formControlName="projectKey" matInput (blur)="onBlur(fp.projectKey)" />
           @if (fp.projectKey.errors?.['required'] && fp.projectKey.touched) {
-          <mat-error>Uzupełnij pole</mat-error>
+            <mat-error>Uzupełnij pole</mat-error>
           }
           @if (fp.projectKey.errors?.['minLength'] && fp.projectKey.touched) {
-          <mat-error>Wymagane przynajmniej 2 znaki</mat-error>
+            <mat-error>Wymagane przynajmniej 2 znaki</mat-error>
           }
           @if (fp.projectKey.errors?.['maxLength'] && fp.projectKey.touched) {
-          <mat-error>Pole może mieć maksymalnie 10 znaków</mat-error>
+            <mat-error>Pole może mieć maksymalnie 10 znaków</mat-error>
           }
           @if (fp.projectKey.errors?.['whitespace'] && fp.projectKey.touched) {
-          <mat-error>Pole nie może zawierać pustych znaków</mat-error>
+            <mat-error>Pole nie może zawierać pustych znaków</mat-error>
           }
           @if (fp.projectKey.errors?.['forbiddenCharacters'] && !fp.projectKey.errors?.['whitespace'] && fp.projectKey.touched) {
-          <mat-error>Niedozwolone znaki: {{ fp.projectKey.errors?.['forbiddenCharacters'].join('') }}</mat-error>
+            <mat-error>Niedozwolone znaki: {{ fp.projectKey.errors?.['forbiddenCharacters'].join('') }}</mat-error>
           }
         </mat-form-field>
 
@@ -63,7 +62,7 @@
           <mat-label>Id użytkownika Atlassian</mat-label>
           <input formControlName="atlassianId" matInput />
           @if (fp.atlassianId.errors?.['required'] && fp.atlassianId.touched) {
-          <mat-error>Uzupełnij pole</mat-error>
+            <mat-error>Uzupełnij pole</mat-error>
           }
         </mat-form-field>
 
@@ -81,10 +80,10 @@
           <mat-label>Ilość sprintów</mat-label>
           <input type="number" formControlName="sprintsCount" min="1" matInput />
           @if (fs.sprintsCount.errors?.['required'] && fs.sprintsCount.touched) {
-          <mat-error>Uzupełnij pole</mat-error>
+            <mat-error>Uzupełnij pole</mat-error>
           }
           @if (fs.sprintsCount.errors?.['min'] && fs.sprintsCount.touched) {
-          <mat-error>Minimalna wartość to 1</mat-error>
+            <mat-error>Minimalna wartość to 1</mat-error>
           }
         </mat-form-field>
 
@@ -102,10 +101,10 @@
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
           @if (fs.projectStartDate.errors?.['required'] && fs.projectStartDate.touched) {
-          <mat-error>Uzupełnij pole</mat-error>
+            <mat-error>Uzupełnij pole</mat-error>
           }
           @if (fs.projectStartDate.invalid && fs.projectStartDate.touched) {
-          <mat-error>Nieprawidłowa data</mat-error>
+            <mat-error>Nieprawidłowa data</mat-error>
           }
         </mat-form-field>
 
@@ -124,10 +123,10 @@
           <mat-label>Ilość epik</mat-label>
           <input type="number" formControlName="epicsCount" min="0" matInput />
           @if (fe.epicsCount.errors?.['required'] && fe.epicsCount.touched) {
-          <mat-error>Uzupełnij pole</mat-error>
+            <mat-error>Uzupełnij pole</mat-error>
           }
           @if (fe.epicsCount.errors?.['min'] && fe.epicsCount.touched) {
-          <mat-error>Minimalna wartość to 0</mat-error>
+            <mat-error>Minimalna wartość to 0</mat-error>
           }
         </mat-form-field>
 
@@ -146,10 +145,10 @@
           <mat-label>Ilość zadań</mat-label>
           <input type="number" formControlName="issuesCount" min="0" matInput />
           @if (fi.issuesCount.errors?.['required'] && fi.issuesCount.touched) {
-          <mat-error>Uzupełnij pole</mat-error>
+            <mat-error>Uzupełnij pole</mat-error>
           }
           @if (fi.issuesCount.errors?.['min'] && fi.issuesCount.touched) {
-          <mat-error>Minimalna wartość to 1</mat-error>
+            <mat-error>Minimalna wartość to 1</mat-error>
           }
         </mat-form-field>
 
@@ -160,7 +159,7 @@
           <mat-checkbox formControlName="task">Task</mat-checkbox>
         </div>
         @if (fi.issuesTypes.errors?.['atLeastOneChecked']) {
-        <mat-error>Przynajmniej jedno zadanie musi być zaznaczone</mat-error>
+          <mat-error>Przynajmniej jedno zadanie musi być zaznaczone</mat-error>
         }
 
         <div class="stepper-actions">
@@ -221,13 +220,13 @@
                 <div>Rodzaje zadań:</div>
                 <div class="summary-value">
                   @if (fi.issuesTypes.value.story) {
-                  Story
+                    Story
                   }
                   @if (fi.issuesTypes.value.bug) {
-                  Bug
+                    Bug
                   }
                   @if (fi.issuesTypes.value.task) {
-                  Task
+                    Task
                   }
                 </div>
               </div>
@@ -243,4 +242,3 @@
     </mat-step>
   </mat-horizontal-stepper>
 </div>
-}

@@ -1,25 +1,28 @@
 <div class="content">
-  <h2>Witaj w aplikacji do automatycznego tworzenia i wypełniania projektów w Jira!</h2>
-  <p>Skonfiguruj swój nowy projekt w kilka kroków i pozwól aplikacji zająć się resztą.</p>
-  <p>Narzędzie umożliwia:</p>
+  <h2>{{ 'home.title' | translate }}</h2>
+  <p>{{ 'home.description1' | translate }}</p>
+  <p>{{ 'home.description2' | translate }}</p>
   <ul>
     <li>
-      Szybkie generowanie projektów w Jira
+      {{ 'home.feature1' | translate }}
     </li>
     <li>
-      Automatyczne dodawanie sprintów, epik i zadań
+      {{ 'home.feature2' | translate }}
     </li>
     <li>
-      Przypisywanie zadań do epik oraz sprintów
+      {{ 'home.feature3' | translate }}
     </li>
     <li>
-      Możesz utworzyć nowy lub skorzystać ze swojego projektu
+      {{ 'home.feature4' | translate }}
     </li>
   </ul>
-  <p>Wystarczy, że wypełnisz podstawowe informacje w formularzu, a aplikacja zadba o utworzenie wszystkich niezbędnych elementów w Jira
+  <p>
+    {{ 'home.description3' | translate }}
   </p>
 </div>
 
 <div class="action">
-  <button mat-flat-button (click)="goToForm()" type="button">Rozpocznij</button>
+  <button mat-flat-button (click)="goToForm()" type="button">
+    {{ 'home.startButton' | translate }}
+  </button>
 </div>

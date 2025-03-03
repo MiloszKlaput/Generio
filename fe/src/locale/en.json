@@ -1,0 +1,13 @@
+{
+  "home": {
+    "title": "Welcome to the Jira Project Automation App!",
+    "description1": "Configure your new project in a few steps and let the app handle the rest.",
+    "description2": "The tool allows you to:",
+    "feature1": "Quick generation of projects in Jira",
+    "feature2": "Automatic addition of sprints, epics, and tasks",
+    "feature3": "Assigning tasks to epics and sprints",
+    "feature4": "You can create a new project or use your existing one",
+    "description3": "Simply fill in the basic information in the form, and the app will take care of creating all the necessary elements in Jira",
+    "startButton": "Start"
+  }
+}

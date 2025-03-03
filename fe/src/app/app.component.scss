@@ -10,6 +10,8 @@
   .top-menu {
     padding: 1rem 2rem;
     background-color: $secondary;
+    display: flex;
+    justify-content: space-between;
 
     .logo {
       font-size: 2rem;
@@ -21,7 +23,25 @@
       @media (min-width: $Small) {
         text-align: start;
         max-width: 1440px;
-        margin: 0 auto;
+      }
+    }
+
+    .change-language {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+
+      .language-icon {
+        color: $primary;
+        height: 2rem;
+        width: 2rem;
+        font-size: 2rem;
+        margin-right: 0.5rem;
+      }
+
+      .language-text {
+        color: $primary;
+        font-weight: 500;
       }
     }
   }

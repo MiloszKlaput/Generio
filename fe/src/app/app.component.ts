@@ -1,25 +1,50 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-root',
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    MatIconModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   private router = inject(Router);
+  private translate = inject(TranslateService);
   currentYear = DateTime.now().year;
+  currentLang!: string;
+  switchToLang!: string;
+
+  ngOnInit(): void {
+    this.currentLang = localStorage.getItem('lang') || 'pl';
+    this.translate.setDefaultLang(this.currentLang);
+    this.translate.use(this.currentLang);
+    this.setSwitchLangButtonText();
+  }
 
   onLogoClick(): void {
     this.router.navigateByUrl('/', { skipLocationChange: true })
       .then(() => {
         this.router.navigate(['/Form'])
       });
+  }
+
+  onLanguageChange(): void {
+    const newLang = this.currentLang === 'pl' ? 'en' : 'pl';
+    this.translate.use(newLang);
+    this.currentLang = newLang;
+    localStorage.setItem('lang', newLang);
+    this.setSwitchLangButtonText();
+  }
+
+  private setSwitchLangButtonText(): void {
+    this.switchToLang = this.currentLang === 'pl' ? 'English' : 'Polski';
   }
 }

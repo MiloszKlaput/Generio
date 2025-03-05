@@ -1,241 +1,373 @@
   <div class="stepper-container">
     <mat-horizontal-stepper [orientation]="(stepperOrientation$ | async)!" [linear]="true" #stepper>
 
-      <mat-step [stepControl]="projectForm" label="Projekt">
+      <mat-step [stepControl]="projectForm" [label]="'form.project.projectLabel' | translate">
         <form class="form-container" [formGroup]="projectForm">
-          <h2>Projekt</h2>
+          <h2>
+            {{ 'form.project.projectTitle' | translate }}
+          </h2>
         <mat-form-field>
-          <mat-label>Nazwa</mat-label>
+          <mat-label>
+            {{ 'form.project.projectName' | translate }}
+          </mat-label>
           <input formControlName="projectName" matInput (blur)="onBlur(fp.projectName)" />
           @if (fp.projectName.errors?.['required'] && fp.projectName.touched) {
-            <mat-error>Uzupełnij pole</mat-error>
+            <mat-error>
+              {{ 'form.project.validations.projectNameRequired' | translate }}
+            </mat-error>
           }
           @if (fp.projectName.errors?.['minlength'] && fp.projectName.touched) {
-            <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
+            <mat-error>
+              {{ 'form.project.validations.projectNameMin' | translate }}
+            </mat-error>
           }
           @if (fp.projectName.errors?.['maxlength'] && fp.projectName.touched) {
-            <mat-error>Pole może mieć maksymalnie 50 znaków</mat-error>
+            <mat-error>
+              {{ 'form.project.validations.projectNameMax' | translate }}
+            </mat-error>
           }
-          @if (fp.projectName.errors?.['forbiddenCharacters'] && fp.projectName.touched) {
-            <mat-error>Niedozwolone znaki: {{ fp.projectName.errors?.['forbiddenCharacters'].join('') }}</mat-error>
+          @if (fp.projectName.errors?.['forbiddenCharacters'] && !fp.projectName.errors?.['minlength'] && !fp.projectName.errors?.['maxlength'] && fp.projectName.touched) {
+            <mat-error>
+              {{ 'form.project.validations.projectNameForbidden' | translate }} {{ fp.projectName.errors?.['forbiddenCharacters'].join('') }}
+            </mat-error>
           }
         </mat-form-field>
 
         <mat-form-field>
-          <mat-label>Opis</mat-label>
+          <mat-label>
+            {{ 'form.project.projectDescription' | translate }}
+          </mat-label>
           <input formControlName="projectDescription" (blur)="onBlur(fp.projectDescription)" matInput />
           @if (fp.projectDescription.errors?.['required'] && fp.projectDescription.touched) {
-            <mat-error>Uzupełnij pole</mat-error>
+            <mat-error>
+              {{ 'form.project.validations.projectDescriptionRequired' | translate }}
+            </mat-error>
           }
           @if (fp.projectDescription.errors?.['minlength'] && fp.projectDescription.touched) {
-            <mat-error>Wymagane przynajmniej 3 znaki</mat-error>
+            <mat-error>
+              {{ 'form.project.validations.projectDescriptionMin' | translate }}
+            </mat-error>
           }
           @if (fp.projectDescription.errors?.['maxlength'] && fp.projectDescription.touched) {
-            <mat-error>Pole może mieć maksymalnie 50 znaków</mat-error>
+            <mat-error>
+              {{ 'form.project.validations.projectDescriptionMax' | translate }}
+            </mat-error>
           }
-          @if (fp.projectDescription.errors?.['forbiddenCharacters'] && fp.projectDescription.touched) {
-            <mat-error>Niedozwolone znaki: {{ fp.projectDescription.errors?.['forbiddenCharacters'].join('') }}</mat-error>
+          @if (fp.projectDescription.errors?.['forbiddenCharacters'] && !fp.projectDescription.errors?.['minlength'] && !fp.projectDescription.errors?.['maxlength'] && fp.projectDescription.touched) {
+            <mat-error>
+              {{ 'form.project.validations.projectDescriptionForbidden' | translate }} {{ fp.projectDescription.errors?.['forbiddenCharacters'].join('') }}
+            </mat-error>
           }
         </mat-form-field>
 
         <mat-form-field>
-          <mat-label>Unikalny klucz</mat-label>
+          <mat-label>
+            {{ 'form.project.projectUniqueKey' | translate }}
+          </mat-label>
           <input formControlName="projectKey" matInput (blur)="onBlur(fp.projectKey)" />
           @if (fp.projectKey.errors?.['required'] && fp.projectKey.touched) {
-            <mat-error>Uzupełnij pole</mat-error>
+            <mat-error>{{ 'form.project.validations.projectKeyRequired' | translate }}</mat-error>
           }
           @if (fp.projectKey.errors?.['minlength'] && fp.projectKey.touched) {
-            <mat-error>Wymagane przynajmniej 2 znaki</mat-error>
+            <mat-error>{{ 'form.project.validations.projectKeyMin' | translate }}</mat-error>
           }
           @if (fp.projectKey.errors?.['maxlength'] && fp.projectKey.touched) {
-            <mat-error>Pole może mieć maksymalnie 10 znaków</mat-error>
+            <mat-error>{{ 'form.project.validations.projectKeyMax' | translate }}</mat-error>
           }
           @if (fp.projectKey.errors?.['whitespace'] && fp.projectKey.touched) {
-            <mat-error>Pole nie może zawierać pustych znaków</mat-error>
+            <mat-error>{{ 'form.project.validations.projectKeyWhitespace' | translate }}</mat-error>
           }
-          @if (fp.projectKey.errors?.['forbiddenCharacters'] && !fp.projectKey.errors?.['whitespace'] && fp.projectKey.touched) {
-            <mat-error>Niedozwolone znaki: {{ fp.projectKey.errors?.['forbiddenCharacters'].join('') }}</mat-error>
+          @if (fp.projectKey.errors?.['forbiddenCharacters'] && !fp.projectKey.errors?.['whitespace'] && !fp.projectKey.errors?.['minlength'] && !fp.projectKey.errors?.['maxlength'] && fp.projectKey.touched) {
+            <mat-error>
+              {{ 'form.project.validations.projectKeyForbidden' | translate }} {{ fp.projectKey.errors?.['forbiddenCharacters'].join('') }}
+            </mat-error>
           }
         </mat-form-field>
 
         <mat-form-field>
-          <mat-label>Id użytkownika Atlassian</mat-label>
+          <mat-label>
+            {{ 'form.project.atlassianUserId' | translate }}
+          </mat-label>
           <input formControlName="atlassianId" matInput />
           @if (fp.atlassianId.errors?.['required'] && fp.atlassianId.touched) {
-            <mat-error>Uzupełnij pole</mat-error>
+            <mat-error>
+              {{ 'form.project.validations.atlassiaUsernIdRequired' | translate }}
+            </mat-error>
           }
           @if (fp.atlassianId.errors?.['maxlength'] && fp.atlassianId.touched) {
-            <mat-error>Pole może mieć maksymalnie 50 znaków</mat-error>
+            <mat-error>
+              {{ 'form.project.validations.atlUserassianIdMax' | translate }}
+            </mat-error>
           }
           @if (fp.atlassianId.errors?.['whitespace'] && fp.atlassianId.touched) {
-            <mat-error>Pole nie może zawierać pustych znaków</mat-error>
+            <mat-error>
+              {{ 'form.project.validations.atlassianIUserdWhitespace' | translate }}
+            </mat-error>
           }
-          @if (fp.atlassianId.errors?.['forbiddenCharacters'] && !fp.atlassianId.errors?.['whitespace'] && fp.atlassianId.touched) {
-            <mat-error>Niedozwolone znaki: {{ fp.atlassianId.errors?.['forbiddenCharacters'].join('') }}</mat-error>
+          @if (fp.atlassianId.errors?.['forbiddenCharacters'] && !fp.atlassianId.errors?.['minlength'] && !fp.atlassianId.errors?.['maxlength'] && !fp.atlassianId.errors?.['whitespace'] && fp.atlassianId.touched) {
+            <mat-error>
+              {{ 'form.project.validations.atlassianUserIdForbidden' | translate }} {{ fp.atlassianId.errors?.['forbiddenCharacters'].join('') }}
+            </mat-error>
           }
         </mat-form-field>
 
         <div class="stepper-actions">
-          <button mat-flat-button matStepperNext [disabled]="!projectForm.valid">Dalej</button>
+          <button mat-flat-button matStepperNext [disabled]="!projectForm.valid">
+            {{ 'form.actions.nextButton' | translate }}
+          </button>
         </div>
       </form>
     </mat-step>
 
-    <mat-step [stepControl]="sprintsForm" label="Sprinty">
+    <mat-step [stepControl]="sprintsForm" [label]="'form.sprints.sprintsLabel' | translate">
       <form class="form-container" [formGroup]="sprintsForm">
-        <h2>Sprinty</h2>
+        <h2>
+          {{ 'form.sprints.sprintsTitle' | translate }}
+        </h2>
 
         <mat-form-field>
-          <mat-label>Ilość sprintów</mat-label>
+          <mat-label>
+            {{ 'form.sprints.sprintsCountLabel' | translate }}
+          </mat-label>
           <input type="number" formControlName="sprintsCount" min="1" matInput />
           @if (fs.sprintsCount.errors?.['required'] && fs.sprintsCount.touched) {
-            <mat-error>Uzupełnij pole</mat-error>
+            <mat-error>
+              {{ 'form.sprints.validations.sprintsCountRequired' | translate }}
+            </mat-error>
           }
           @if (fs.sprintsCount.errors?.['min'] && fs.sprintsCount.touched) {
-            <mat-error>Minimalna wartość to 1</mat-error>
+            <mat-error>
+              {{ 'form.sprints.validations.sprintsCountMin' | translate }}
+            </mat-error>
           }
         </mat-form-field>
 
         <mat-radio-group formControlName="sprintDuration" class="sprints-duration" aria-label="Wybierz długość sprintu">
-          <label>Ile w twoim projekcie trwa sprint?</label>
-          <mat-radio-button [value]="1">1 tydzień</mat-radio-button>
-          <mat-radio-button [value]="2">2 tygodnie</mat-radio-button>
-          <mat-radio-button [value]="3">3 tygodnie</mat-radio-button>
-          <mat-radio-button [value]="4">4 tygodnie</mat-radio-button>
+          <label>
+            {{ 'form.sprints.sprintDurationQuestion' | translate }}
+          </label>
+          <mat-radio-button [value]="1">
+            {{ 'form.sprints.sprintDurationOption1' | translate }}
+          </mat-radio-button>
+          <mat-radio-button [value]="2">
+            {{ 'form.sprints.sprintDurationOption2' | translate }}
+          </mat-radio-button>
+          <mat-radio-button [value]="3">
+            {{ 'form.sprints.sprintDurationOption3' | translate }}
+          </mat-radio-button>
+          <mat-radio-button [value]="4">
+            {{ 'form.sprints.sprintDurationOption4' | translate }}
+          </mat-radio-button>
         </mat-radio-group>
 
         <mat-form-field>
-          <mat-label>Data startu pierwszego sprintu</mat-label>
+          <mat-label>
+            {{ 'form.sprints.projectStartDateLabel' | translate }}
+          </mat-label>
           <input matInput [matDatepicker]="picker" formControlName="projectStartDate">
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
-          @if (fs.projectStartDate.errors?.['required'] && fs.projectStartDate.touched) {
-            <mat-error>Uzupełnij pole</mat-error>
-          }
-          @if (fs.projectStartDate.invalid && fs.projectStartDate.touched) {
-            <mat-error>Nieprawidłowa data</mat-error>
+          @if ((fs.projectStartDate.errors?.['required'] || fs.projectStartDate.invalid) && fs.projectStartDate.touched) {
+            <mat-error>
+              {{ 'form.sprints.validations.projectStartDateInvalid' | translate }}
+            </mat-error>
           }
         </mat-form-field>
 
         <div class="stepper-actions">
-          <button mat-raised-button matStepperPrevious>Wróć</button>
-          <button mat-flat-button matStepperNext [disabled]="!sprintsForm.valid">Dalej</button>
+          <button mat-raised-button matStepperPrevious>
+            {{ 'form.actions.backButton' | translate }}
+          </button>
+          <button mat-flat-button matStepperNext [disabled]="!sprintsForm.valid">
+            {{ 'form.actions.nextButton' | translate }}
+          </button>
         </div>
       </form>
     </mat-step>
 
-    <mat-step [stepControl]="epicsForm" label="Epiki">
+    <mat-step [stepControl]="epicsForm" [label]="'form.epics.epicsLabel' | translate">
       <form class="form-container" [formGroup]="epicsForm">
-        <h2>Epiki</h2>
+        <h2>
+          {{ 'form.epics.epicsTitle' | translate }}
+        </h2>
 
         <mat-form-field>
-          <mat-label>Ilość epik</mat-label>
+          <mat-label>
+            {{ 'form.epics.epicsTitle' | translate }}
+          </mat-label>
           <input type="number" formControlName="epicsCount" min="0" matInput />
           @if (fe.epicsCount.errors?.['required'] && fe.epicsCount.touched) {
-            <mat-error>Uzupełnij pole</mat-error>
+            <mat-error>
+              {{ 'form.epics.validations.epicsCountRequired' | translate }}
+            </mat-error>
           }
           @if (fe.epicsCount.errors?.['min'] && fe.epicsCount.touched) {
-            <mat-error>Minimalna wartość to 0</mat-error>
+            <mat-error>
+              {{ 'form.epics.validations.epicsCountMin' | translate }}
+            </mat-error>
           }
         </mat-form-field>
 
         <div class="stepper-actions">
-          <button mat-raised-button matStepperPrevious>Wróć</button>
-          <button mat-flat-button matStepperNext [disabled]="!epicsForm.valid">Dalej</button>
+          <button mat-raised-button matStepperPrevious>
+            {{ 'form.actions.backButton' | translate }}
+          </button>
+          <button mat-flat-button matStepperNext [disabled]="!epicsForm.valid">
+            {{ 'form.actions.nextButton' | translate }}
+          </button>
         </div>
       </form>
     </mat-step>
 
-    <mat-step [stepControl]="issuesForm" label="Zadania">
+    <mat-step [stepControl]="issuesForm" [label]="'form.issues.issuesLabel' | translate">
       <form class="form-container" [formGroup]="issuesForm">
-        <h2>Zadania</h2>
+        <h2>
+          {{ 'form.issues.issuesTitle' | translate }}
+        </h2>
 
         <mat-form-field>
-          <mat-label>Ilość zadań</mat-label>
+          <mat-label>
+            {{ 'form.issues.issuesTitle' | translate }}
+          </mat-label>
           <input type="number" formControlName="issuesCount" min="0" matInput />
           @if (fi.issuesCount.errors?.['required'] && fi.issuesCount.touched) {
-            <mat-error>Uzupełnij pole</mat-error>
+            <mat-error>
+              {{ 'form.issues.validations.issuesCountRequired' | translate }}
+            </mat-error>
           }
           @if (fi.issuesCount.errors?.['min'] && fi.issuesCount.touched) {
-            <mat-error>Minimalna wartość to 1</mat-error>
+            <mat-error>
+              {{ 'form.issues.validations.issuesCountMin' | translate }}
+            </mat-error>
           }
         </mat-form-field>
 
-        <mat-label>Rodzaj zadań (przynajmniej jedno musi być zaznaczone)</mat-label>
+        <mat-label>
+          {{ 'form.issues.issuesTypesLabel' | translate }}
+        </mat-label>
         <div formGroupName="issuesTypes">
-          <mat-checkbox formControlName="story">Story</mat-checkbox>
-          <mat-checkbox formControlName="bug">Bug</mat-checkbox>
-          <mat-checkbox formControlName="task">Task</mat-checkbox>
+          <mat-checkbox formControlName="story">
+            {{ 'form.issues.issueTypeStory' | translate }}
+          </mat-checkbox>
+          <mat-checkbox formControlName="bug">
+            {{ 'form.issues.issueTypeBug' | translate }}
+          </mat-checkbox>
+          <mat-checkbox formControlName="task">
+            {{ 'form.issues.issueTypeTask' | translate }}
+          </mat-checkbox>
         </div>
         @if (fi.issuesTypes.errors?.['atLeastOneChecked']) {
-          <mat-error>Przynajmniej jedno zadanie musi być zaznaczone</mat-error>
+          <mat-error>
+            {{ 'form.issues.validations.issuesTypesError' | translate }}
+          </mat-error>
         }
 
         <div class="stepper-actions">
-          <button mat-raised-button matStepperPrevious>Wróć</button>
-          <button mat-flat-button matStepperNext [disabled]="!issuesForm.valid">Dalej</button>
+          <button mat-raised-button matStepperPrevious>
+            {{ 'form.actions.backButton' | translate }}
+          </button>
+          <button mat-flat-button matStepperNext [disabled]="!issuesForm.valid">
+            {{ 'form.actions.nextButton' | translate }}
+          </button>
         </div>
       </form>
     </mat-step>
 
-    <mat-step [stepControl]="mainForm" label="Podsumowanie">
+    <mat-step [stepControl]="mainForm" [label]="'form.summary.summaryLabel' | translate">
       <form class="form-container" [formGroup]="mainForm">
-        <h2>Podsumowanie</h2>
+        <h2>
+          {{ 'form.summary.summaryTitle' | translate }}
+        </h2>
+
         <mat-card appearance="outlined">
           <mat-card-content>
             <div class="summary-section">
               <div class="summary-item">
-                <div>Klucz nowego projektu</div>
-                <div class="summary-value">{{ fp.projectKey.value }}</div>
+                <div>
+                  {{ 'form.summary.summaryProjectKey' | translate }}
+                </div>
+                <div class="summary-value">
+                  {{ fp.projectKey.value }}
+                </div>
               </div>
               <div class="summary-item">
-                <div>Nazwa projektu</div>
-                <div class="summary-value">{{ fp.projectName.value }}</div>
+                <div>
+                  {{ 'form.summary.summaryProjectName' | translate }}
+                </div>
+                <div class="summary-value">
+                  {{ fp.projectName.value }}
+                </div>
               </div>
               <div class="summary-item">
-                <div>Opis projektu</div>
-                <div class="summary-value">{{ fp.projectDescription.value }}</div>
-              </div>
-            </div>
-            <mat-divider></mat-divider>
-            <div class="summary-section">
-              <div class="summary-item">
-                <div>Data rozpoczęcia projektu</div>
-                <div class="summary-value">{{ fs.projectStartDate.value | date: 'dd MMM yyyy' }}</div>
-              </div>
-              <div class="summary-item">
-                <div>Ilość sprintów</div>
-                <div class="summary-value">{{ fs.sprintsCount.value }}</div>
-              </div>
-              <div class="summary-item">
-                <div>Ile tygodni trwa sprint</div>
-                <div class="summary-value">{{ fs.sprintDuration.value }}</div>
+                <div>
+                  {{ 'form.summary.summaryProjectDescription' | translate }}
+                </div>
+                <div class="summary-value">
+                  {{ fp.projectDescription.value }}
+                </div>
               </div>
             </div>
             <mat-divider></mat-divider>
             <div class="summary-section">
               <div class="summary-item">
-                <div>Ilość epik</div>
-                <div class="summary-value">{{ fe.epicsCount.value }}</div>
+                <div>
+                  {{ 'form.summary.summaryProjectStartDate' | translate }}
+                </div>
+                <div class="summary-value">
+                  {{ fs.projectStartDate.value | date: 'dd MMM yyyy' }}
+                </div>
+              </div>
+              <div class="summary-item">
+                <div>
+                  {{ 'form.summary.summarySprintsCount' | translate }}
+                </div>
+                <div class="summary-value">
+                  {{ fs.sprintsCount.value }}
+                </div>
+              </div>
+              <div class="summary-item">
+                <div>
+                  {{ 'form.summary.summarySprintDuration' | translate }}
+                </div>
+                <div class="summary-value">
+                  {{ fs.sprintDuration.value }}
+                </div>
               </div>
             </div>
             <mat-divider></mat-divider>
             <div class="summary-section">
               <div class="summary-item">
-                <div>Ilość zadań</div>
-                <div class="summary-value">{{ fi.issuesCount.value }}</div>
+                <div>
+                  {{ 'form.summary.summaryEpicsCount' | translate }}
+                </div>
+                <div class="summary-value">
+                  {{ fe.epicsCount.value }}
+                </div>
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="summary-section">
+              <div class="summary-item">
+                <div>
+                  {{ 'form.summary.summaryIssuesCount' | translate }}
+                </div>
+                <div class="summary-value">
+                  {{ fi.issuesCount.value }}
+                </div>
               </div>
               <div class="summary-item">
-                <div>Rodzaje zadań:</div>
+                <div>
+                  {{ 'form.summary.summaryIssuesTypes' | translate }}
+                </div>
                 <div class="summary-value">
                   @if (fi.issuesTypes.value.story) {
-                    Story
+                    {{ 'form.summary.summaryIssueTypeStory' | translate }}
                   }
                   @if (fi.issuesTypes.value.bug) {
-                    Bug
+                    {{ 'form.summary.summaryIssueTypeBug' | translate }}
                   }
                   @if (fi.issuesTypes.value.task) {
-                    Task
+                    {{ 'form.summary.summaryIssueTypeTask' | translate }}
                   }
                 </div>
               </div>
@@ -244,8 +376,12 @@
         </mat-card>
 
         <div class="summary-actions">
-          <button mat-raised-button (click)="onReset()">Resetuj</button>
-          <button (click)="onSubmit()" mat-flat-button type="submit" [disabled]="!issuesForm.valid">Rozpocznij</button>
+          <button mat-raised-button (click)="onReset()">
+            {{ 'form.actions.resetButton' | translate }}
+          </button>
+          <button (click)="onSubmit()" mat-flat-button type="submit" [disabled]="!issuesForm.valid">
+            {{ 'form.actions.submitButton' | translate }}
+          </button>
         </div>
       </form>
     </mat-step>

@@ -1,5 +1,4 @@
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { IsProjectNeeded } from "../enums/is-project-needed.enum";
 import { whitespaceValidator } from "../validators/whitespace.validator";
 import {
   EpicsFormControls,
@@ -19,13 +18,15 @@ export class FormsHelper {
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(50),
-        allowedCharactersValidator(/^[a-zA-Z0-9 ]*$/)
+        allowedCharactersValidator(/^[a-zA-Z0-9 ]*$/),
+        whitespaceValidator()
       ]),
       projectDescription: new FormControl<string>('', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(50),
-        allowedCharactersValidator(/^[a-zA-Z0-9 ]*$/)
+        allowedCharactersValidator(/^[a-zA-Z0-9 ]*$/),
+        whitespaceValidator()
       ]),
       projectKey: new FormControl<string>('', [
         Validators.required,
@@ -37,30 +38,42 @@ export class FormsHelper {
       atlassianId: new FormControl<string>('', [
         Validators.required,
         allowedCharactersValidator(/^[a-zA-Z0-9-:]*$/),
-        Validators.maxLength(50)
+        Validators.maxLength(50),
+        whitespaceValidator()
       ])
     });
   }
 
   public static initSprintsForm(): FormGroup<SprintsFormControls> {
     return new FormGroup<SprintsFormControls>({
-      sprintsCount: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
+      sprintsCount: new FormControl<number>(1, [
+        Validators.required,
+        Validators.min(1)
+      ]),
       sprintDuration: new FormControl<number>(2),
-      projectStartDate: new FormControl<Date>(DateTime.now().toJSDate(), [Validators.required]),
+      projectStartDate: new FormControl<Date>(DateTime.now().toJSDate(), [
+        Validators.required
+      ])
     });
   }
 
   public static initEpicsForm(): FormGroup<EpicsFormControls> {
     return new FormGroup<EpicsFormControls>({
-      epicsCount: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
+      epicsCount: new FormControl<number>(1, [
+        Validators.required,
+        Validators.min(1)
+      ])
     });
   }
 
   public static initIssuesForm(): FormGroup<IssuesFormControls> {
     return new FormGroup<IssuesFormControls>({
-      issuesCount: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
+      issuesCount: new FormControl<number>(1, [
+        Validators.required,
+        Validators.min(1)
+      ]),
       issuesTypes: new FormGroup({
-        story: new FormControl<boolean>(false),
+        story: new FormControl<boolean>(true),
         bug: new FormControl<boolean>(false),
         task: new FormControl<boolean>(false)
       }, { validators: atLeastOneChecked() })
@@ -69,40 +82,20 @@ export class FormsHelper {
 
   public static initMainForm(): FormGroup<MainFormControls> {
     return new FormGroup<MainFormControls>({
-      projectName: new FormControl<string>('', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
-        allowedCharactersValidator(/^[a-zA-Z0-9 ]*$/)
-      ]),
-      projectDescription: new FormControl<string>('', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
-        allowedCharactersValidator(/^[a-zA-Z0-9 ]*$/)
-      ]),
-      projectKey: new FormControl<string>('', [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(10),
-        allowedCharactersValidator(/^[a-zA-Z0-9]*$/),
-        whitespaceValidator()
-      ]),
-      atlassianId: new FormControl<string>('', [
-        Validators.required,
-        allowedCharactersValidator(/^[a-zA-Z0-9-:]*$/),
-        Validators.maxLength(50)
-      ]),
-      sprintsCount: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
-      sprintDuration: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
-      projectStartDate: new FormControl<Date>(DateTime.now().toJSDate(), [Validators.required]),
-      epicsCount: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
-      issuesCount: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
+      projectName: new FormControl<string>(''),
+      projectDescription: new FormControl<string>(''),
+      projectKey: new FormControl<string>(''),
+      atlassianId: new FormControl<string>(''),
+      sprintsCount: new FormControl<number>(1),
+      sprintDuration: new FormControl<number>(1),
+      projectStartDate: new FormControl<Date>(DateTime.now().toJSDate()),
+      epicsCount: new FormControl<number>(1),
+      issuesCount: new FormControl<number>(1),
       issuesTypes: new FormGroup({
-        story: new FormControl<boolean>(false),
+        story: new FormControl<boolean>(true),
         bug: new FormControl<boolean>(false),
         task: new FormControl<boolean>(false)
-      }, { validators: atLeastOneChecked() })
+      })
     });
   }
 

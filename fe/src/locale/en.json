@@ -1,13 +1,104 @@
 {
   "home": {
-    "title": "Welcome to the Jira Project Automation App!",
-    "description1": "Configure your new project in a few steps and let the app handle the rest.",
+    "title": "Welcome to the application for automatic creation and population of projects in Jira!",
+    "description1": "Configure your new project in a few steps and let the app take care of the rest.",
     "description2": "The tool allows you to:",
-    "feature1": "Quick generation of projects in Jira",
-    "feature2": "Automatic addition of sprints, epics, and tasks",
-    "feature3": "Assigning tasks to epics and sprints",
-    "feature4": "You can create a new project or use your existing one",
-    "description3": "Simply fill in the basic information in the form, and the app will take care of creating all the necessary elements in Jira",
+    "feature1": "Fast generation of projects in Jira",
+    "feature2": "Automatic addition of sprints, epics, and issues",
+    "feature3": "Assigning issues to epics and sprints",
+    "feature4": "You can create a new project or use your own",
+    "description3": "Simply fill in the basic information in the form, and the app will handle creating all the necessary elements in Jira.",
     "startButton": "Start"
+  },
+  "form": {
+    "project": {
+      "projectLabel": "Project",
+      "projectTitle": "Project",
+      "projectName": "Name",
+      "projectDescription": "Description",
+      "projectUniqueKey": "Unique key",
+      "atlassianUserId": "Atlassian User ID",
+      "validations": {
+        "projectNameRequired": "Please fill in the field",
+        "projectNameMin": "At least 3 characters required",
+        "projectNameMax": "Field can contain up to 50 characters",
+        "projectNameForbidden": "Forbidden characters:",
+        "projectDescriptionRequired": "Please fill in the field",
+        "projectDescriptionMin": "At least 3 characters required",
+        "projectDescriptionMax": "Field can contain up to 50 characters",
+        "projectDescriptionForbidden": "Forbidden characters:",
+        "projectKeyRequired": "Please fill in the field",
+        "projectKeyMin": "At least 2 characters required",
+        "projectKeyMax": "Field can contain up to 10 characters",
+        "projectKeyWhitespace": "Field cannot contain whitespace",
+        "projectKeyForbidden": "Forbidden characters:",
+        "atlassiaUsernIdRequired": "Please fill in the field",
+        "atlUserassianIdMax": "Field can contain up to 50 characters",
+        "atlassianIUserdWhitespace": "Field cannot contain whitespace",
+        "atlassianUserIdForbidden": "Forbidden characters:"
+      }
+    },
+    "sprints": {
+      "sprintsLabel": "Sprints",
+      "sprintsTitle": "Sprints",
+      "sprintsCountLabel": "Number of Sprints",
+      "sprintDurationQuestion": "How long is a sprint in your project?",
+      "sprintDurationOption1": "1 week",
+      "sprintDurationOption2": "2 weeks",
+      "sprintDurationOption3": "3 weeks",
+      "sprintDurationOption4": "4 weeks",
+      "projectStartDateLabel": "Start date of the first sprint",
+      "validations": {
+        "sprintsCountRequired": "Please fill in the field",
+        "sprintsCountMin": "Minimum value is 1",
+        "projectStartDateRequired": "Please fill in the field",
+        "projectStartDateInvalid": "Invalid date"
+      }
+    },
+    "epics": {
+      "epicsLabel": "Epics",
+      "epicsTitle": "Epics",
+      "epicsCountLabel": "Number of epics",
+      "validations": {
+        "epicsCountRequired": "Please fill in the field",
+        "epicsCountMin": "Minimum value is 1"
+      }
+    },
+    "issues": {
+      "issuesLabel": "Issues",
+      "issuesTitle": "Issues",
+      "issuesCountLabel": "Number of issues",
+      "issuesTypesLabel": "Issue type (at least one must be selected)",
+      "issueTypeStory": "Story",
+      "issueTypeBug": "Bug",
+      "issueTypeTask": "Task",
+      "validations": {
+        "issuesCountRequired": "Please fill in the field",
+        "issuesCountMin": "Minimum value is 1",
+        "issuesTypesError": "At least one issue must be selected"
+      }
+    },
+    "summary": {
+      "summaryLabel": "Summary",
+      "summaryTitle": "Summary",
+      "summaryProjectKey": "New project key",
+      "summaryProjectName": "Project name",
+      "summaryProjectDescription": "Project description",
+      "summaryProjectStartDate": "Project start date",
+      "summarySprintsCount": "Number of sprints",
+      "summarySprintDuration": "Sprint duration (in weeks)",
+      "summaryEpicsCount": "Number of epics",
+      "summaryIssuesCount": "Number of issues",
+      "summaryIssuesTypes": "Issue types:",
+      "summaryIssueTypeStory": "Story",
+      "summaryIssueTypeBug": "Bug",
+      "summaryIssueTypeTask": "Task"
+    },
+    "actions": {
+      "nextButton": "Next",
+      "backButton": "Back",
+      "resetButton": "Reset",
+      "submitButton": "Start"
+    }
   }
 }

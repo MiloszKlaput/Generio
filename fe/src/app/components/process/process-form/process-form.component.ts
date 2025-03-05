@@ -24,6 +24,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { JiraPopulateProcessService } from '../../../services/jira-populate-process.service';
 import { ProcessStateService } from '../../../services/process-state.service';
 import { ProcessState } from '../../../enums/process-state.enum';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'process-form',
@@ -48,7 +49,8 @@ import { ProcessState } from '../../../enums/process-state.enum';
     MatStepperModule,
     MatCardModule,
     MatGridListModule,
-    MatRadioModule
+    MatRadioModule,
+    TranslateModule
   ],
   templateUrl: './process-form.component.html',
   styleUrls: ['./process-form.component.scss'],
@@ -56,7 +58,6 @@ import { ProcessState } from '../../../enums/process-state.enum';
 })
 export class ProcessFormComponent implements OnInit, OnDestroy {
   private populateProcessService = inject(JiraPopulateProcessService);
-  private processStateService = inject(ProcessStateService);
   @ViewChild('stepper') stepper!: MatStepper;
   projectForm!: FormGroup<ProjectFormControls>;
   sprintsForm!: FormGroup<SprintsFormControls>;

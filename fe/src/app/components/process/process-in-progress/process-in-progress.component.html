@@ -1,5 +1,7 @@
 <div class="in-progress-container">
   <mat-icon class="loading-icon" aria-hidden="false" aria-label="Loading" fontIcon="loop"></mat-icon>
-  <p class="text">Prosimy o cierpliwość, proces może zająć kilka minut...</p>
+  <p class="text">
+    {{ 'processInProgress.message' | translate }}
+  </p>
   <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </div>

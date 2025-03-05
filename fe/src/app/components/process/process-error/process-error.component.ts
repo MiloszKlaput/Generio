@@ -5,10 +5,11 @@ import { ProcessStateService } from '../../../services/process-state.service';
 import { ProcessState } from '../../../enums/process-state.enum';
 import { Router } from '@angular/router';
 import { ProcessDataService } from '../../../services/process-data.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'process-error',
-  imports: [MatIconModule, MatButtonModule],
+  imports: [MatIconModule, MatButtonModule, TranslateModule],
   templateUrl: './process-error.component.html',
   styleUrl: './process-error.component.scss'
 })

@@ -100,5 +100,17 @@
       "resetButton": "Resetuj",
       "submitButton": "Rozpocznij"
     }
+  },
+  "processError": {
+    "title": "Wystąpił błąd",
+    "tryAgainButton": "Spróbuj ponownie"
+  },
+  "processInProgress": {
+    "message": "Prosimy o cierpliwość, proces może zająć kilka minut..."
+  },
+  "processSuccess": {
+    "title": "Operacja zakończona sukcesem",
+    "message": "Możesz teraz przejść do przeglądu utworzonego projektu.",
+    "goToProjectButton": "Przejdź do projektu"
   }
 }

@@ -100,5 +100,17 @@
       "resetButton": "Reset",
       "submitButton": "Start"
     }
+  },
+  "processError": {
+    "title": "An error has occurred",
+    "tryAgainButton": "Try again"
+  },
+  "processInProgress": {
+    "message": "Please be patient, the process may take a few minutes..."
+  },
+  "processSuccess": {
+    "title": "Operation completed successfully",
+    "message": "You can now proceed to review the created project.",
+    "goToProjectButton": "Go to project"
   }
 }

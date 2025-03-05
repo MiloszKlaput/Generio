@@ -3,9 +3,29 @@
   <h3 class="text">
     {{ 'processSuccess.title' | translate }}
   </h3>
-  <p class="text">
-    {{ 'processSuccess.message' | translate }}
-  </p>
+
+  @if (!hasSavedFile) {
+    <p class="text">
+      {{ 'processSuccess.message' | translate }}
+    </p>
+  }
+
+  @if (hasSavedFile) {
+    <div>
+      <p>
+        {{ 'processSuccess.hasSaveFileMessage' | translate }}
+      </p>
+      <ol>
+        <li>{{ 'processSuccess.guideStep1' | translate }}</li>
+        <li>{{ 'processSuccess.guideStep2' | translate }}</li>
+        <li>{{ 'processSuccess.guideStep3' | translate }}</li>
+        <li>{{ 'processSuccess.guideStep4' | translate }}</li>
+        <li>{{ 'processSuccess.guideStep5' | translate }}</li>
+        <li>{{ 'processSuccess.guideStep6' | translate }}</li>
+      </ol>
+    </div>
+  }
+
   <button type="button" mat-flat-button class="action" (click)="openProject()">
     {{ 'processSuccess.goToProjectButton' | translate }}
   </button>

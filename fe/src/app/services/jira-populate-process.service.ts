@@ -7,7 +7,7 @@ import { MoveToEpicRequest } from '../models/issue/move-to-epic.model';
 import { MoveToSprintRequest } from '../models/issue/move-to-sprint.model';
 import { MainFormControls } from '../types/main-form-controls.type';
 import { DateTime } from 'luxon';
-import { from, switchMap, concatMap, toArray, tap, Observable, catchError, throwError, BehaviorSubject } from 'rxjs';
+import { from, switchMap, concatMap, toArray, tap, Observable, catchError, throwError, BehaviorSubject, takeUntil } from 'rxjs';
 import { BoardIdResponse } from '../models/board/board.model';
 import { WorkflowSimulator } from '../logic/workflow-simulator.logic';
 import { FileDataHelper } from '../helpers/file-data.helper';
@@ -25,7 +25,7 @@ export class JiraPopulateProcessService {
   private apiService = inject(JiraApiService);
   private processStateService = inject(ProcessStateService);
   private processDataService = inject(ProcessDataService);
-
+  private destroyed$ = new BehaviorSubject(false);
   private issues: Issue[] = [];
 
   startProcess(mainFormData: MainFormControls): void {
@@ -41,7 +41,8 @@ export class JiraPopulateProcessService {
         switchMap(() => this.createEpics(mainFormData)),
         switchMap(() => this.createIssues(mainFormData)),
         switchMap(() => this.moveIssuesToEpics()),
-        switchMap(() => this.moveIssuesToSprints())
+        switchMap(() => this.moveIssuesToSprints()),
+        takeUntil(this.destroyed$)
       )
       .subscribe({
         next: () => {
@@ -58,7 +59,9 @@ export class JiraPopulateProcessService {
   }
 
   clearData(): void {
-    this.apiService.deleteProject(this.processDataService.requestData.projectKey).subscribe();
+    this.apiService.deleteProject(this.processDataService.requestData.projectKey)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe();
   }
 
   private handleError(err: any) {
@@ -206,5 +209,12 @@ export class JiraPopulateProcessService {
     link.click();
 
     URL.revokeObjectURL(url);
+
+    this.processDataService.hasSavedFile$.next(true);
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

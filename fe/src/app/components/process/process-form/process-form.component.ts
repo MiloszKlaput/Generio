@@ -102,7 +102,6 @@ export class ProcessFormComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     FormsHelper.mapToMainForm(this.projectForm, this.sprintsForm, this.epicsForm, this.issuesForm, this.mainForm);
-
     this.populateProcessService.startProcess(this.fM);
   }
 

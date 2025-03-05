@@ -12,6 +12,7 @@ export class ProcessDataService {
   requestData!: RequestData;
   responseData!: ResponseData;
   errorMessage$ = new BehaviorSubject<string | null>(null);
+  hasSavedFile$ = new BehaviorSubject<boolean>(false);
 
   initRequestData(formData: MainFormControls): void {
     this.requestData = {

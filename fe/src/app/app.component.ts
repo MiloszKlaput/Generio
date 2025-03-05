@@ -30,10 +30,7 @@ export class AppComponent implements OnInit {
   }
 
   onLogoClick(): void {
-    this.router.navigateByUrl('/', { skipLocationChange: true })
-      .then(() => {
-        this.router.navigate(['/Form'])
-      });
+    this.router.navigateByUrl('/');
   }
 
   onLanguageChange(): void {

@@ -29,10 +29,7 @@ export class ProcessErrorComponent implements OnInit, OnDestroy {
   }
 
   startOver(): void {
-    this.router.navigateByUrl('/', { skipLocationChange: true })
-      .then(() => {
-        this.router.navigate(['/Form'])
-      });
+    this.router.navigate(['/Form']);
   }
 
   ngOnDestroy(): void {

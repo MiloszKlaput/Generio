@@ -20,10 +20,7 @@ export class ProcessSuccessComponent {
 
   openProject(): void {
     window.open(this.getUrl(), '_blank');
-    this.router.navigateByUrl('/', { skipLocationChange: true })
-      .then(() => {
-        this.router.navigate(['/'])
-      });
+    this.router.navigateByUrl('/');
   }
 
   private getUrl(): string {
@@ -31,7 +28,7 @@ export class ProcessSuccessComponent {
     const projectKey = this.processDataService.responseData.projectKey;
     const boardId = this.processDataService.responseData.boardId;
 
-    return `https://${baseUrl}/jira/software/c/projects/${projectKey}/boards/${boardId}`;
+    return `https://${baseUrl}/jira/software/c/projects/${projectKey}/boards/${boardId}/backlog`;
   }
 
   ngOnDestroy(): void {

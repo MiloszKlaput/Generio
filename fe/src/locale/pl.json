@@ -94,11 +94,9 @@
       "summaryIssueTypeBug": "Bug",
       "summaryIssueTypeTask": "Task"
     },
-    "actions": {
-      "nextButton": "Dalej",
-      "backButton": "Wróć",
-      "resetButton": "Resetuj",
-      "submitButton": "Rozpocznij"
+    "fileWarningDialog": {
+      "message": "Wybranie przeszłej daty rozpoczęcia projektu spowoduje wygenerowanie pliku, który musisz samodzielnie zaimportować w Jirze",
+      "closeDialogButton": "Zamknij"
     }
   },
   "processError": {
@@ -111,7 +109,6 @@
   "processSuccess": {
     "title": "Operacja zakończona sukcesem",
     "message": "Możesz teraz przejść do przeglądu utworzonego projektu.",
-    "goToProjectButton": "Przejdź do projektu",
     "hasSaveFileMessage": "W trakcie procesu zakładania projektu, powstał plik .CSV, który należy samodzielnie zaimportować w projekcie w Jira:",
     "guideStep1": "Zaloguj się Jiry",
     "guideStep2": "W Jira Server: Wejdź w Ustawienia > System > Import i eksport > Importowanie z systemu zewnętrznego > CSV",
@@ -119,5 +116,13 @@
     "guideStep4": "Przypisz kolumny z pliku CSV do odpowiadających im pól w Jira. Upewnij się, że dane są poprawnie dopasowane (np. kolumna Summary do pola Podsumowanie).",
     "guideStep5": "Potwierdź ustawienia i rozpocznij proces importu. System wyświetli postęp operacji oraz ewentualne błędy.",
     "guideStep6": "Po zakończeniu importu sprawdź, czy dane zostały poprawnie zaimportowane do wybranego projektu. W razie potrzeby wprowadź korekty i powtórz import."
+  },
+  "actions": {
+    "nextButton": "Dalej",
+    "backButton": "Wróć",
+    "resetButton": "Resetuj",
+    "submitButton": "Rozpocznij",
+    "goToProjectButton": "Przejdź do projektu",
+    "saveFileForImportButton": "Zapisz plik do importu"
   }
 }

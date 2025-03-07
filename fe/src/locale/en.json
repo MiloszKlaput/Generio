@@ -94,11 +94,9 @@
       "summaryIssueTypeBug": "Bug",
       "summaryIssueTypeTask": "Task"
     },
-    "actions": {
-      "nextButton": "Next",
-      "backButton": "Back",
-      "resetButton": "Reset",
-      "submitButton": "Start"
+    "fileWarningDialog": {
+      "message": "Selecting a past project start date will generate a file that you must manually import into Jira",
+      "closeDialogButton": "Close"
     }
   },
   "processError": {
@@ -111,7 +109,6 @@
   "processSuccess": {
     "title": "Operation completed successfully",
     "message": "You can now proceed to review the created project.",
-    "goToProjectButton": "Go to project",
     "hasSaveFileMessage": "During the project setup process, a .CSV file was created that must be imported manually into the Jira project:",
     "guideStep1": "Log in to Jira",
     "guideStep2": "For Jira Server: Go to Settings > System > Import and Export > External System Import > CSV",
@@ -119,5 +116,13 @@
     "guideStep4": "Map the CSV columns to the corresponding fields in Jira. Ensure that the data is correctly matched (e.g., the Summary column to the Summary field).",
     "guideStep5": "Confirm the settings and start the import process. The system will display the progress of the operation and any errors.",
     "guideStep6": "After the import is complete, check if the data has been correctly imported into the selected project. If necessary, make corrections and repeat the import."
+  },
+  "actions": {
+    "nextButton": "Next",
+    "backButton": "Back",
+    "resetButton": "Reset",
+    "submitButton": "Start",
+    "goToProjectButton": "Go to project",
+    "saveFileForImportButton": "Save file for import"
   }
 }

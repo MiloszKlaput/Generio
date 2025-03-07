@@ -5,7 +5,7 @@ import { ProcessState } from '../../enums/process-state.enum';
 import { ProcessErrorComponent } from './process-error/process-error.component';
 import { ProcessInProgressComponent } from './process-in-progress/process-in-progress.component';
 import { ProcessSuccessComponent } from './process-success/process-success.component';
-import { BehaviorSubject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'process-main',
@@ -20,7 +20,7 @@ import { BehaviorSubject, takeUntil } from 'rxjs';
 })
 export class ProcessMainComponent implements OnInit, OnDestroy {
   private processStateService = inject(ProcessStateService);
-  private destroyed$ = new BehaviorSubject(false);
+  private destroyed$ = new Subject<void>();
   state = ProcessState.New;
 
   ProcessState = ProcessState;
@@ -32,7 +32,7 @@ export class ProcessMainComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destroyed$.next(true);
+    this.destroyed$.next();
     this.destroyed$.complete();
   }
 }

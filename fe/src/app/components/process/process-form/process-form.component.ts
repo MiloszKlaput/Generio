@@ -1,9 +1,9 @@
 import { Component, inject, OnDestroy, ViewChild, type OnInit } from '@angular/core';
 import { AbstractControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatNativeDateModule, NativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -25,6 +25,8 @@ import { JiraPopulateProcessService } from '../../../services/jira-populate-proc
 import { ProcessStateService } from '../../../services/process-state.service';
 import { ProcessState } from '../../../enums/process-state.enum';
 import { TranslateModule } from '@ngx-translate/core';
+import { DateTime } from 'luxon';
+import { FileWarningDialogComponent } from '../file-warning-dialog/file-warning-dialog.component';
 
 @Component({
   selector: 'process-form',
@@ -66,6 +68,7 @@ export class ProcessFormComponent implements OnInit, OnDestroy {
   mainForm!: FormGroup<MainFormControls>;
   isInProgress = false;
   isSubmitted = false;
+  dialog = inject(MatDialog);
 
   stepperOrientation$!: Observable<StepperOrientation>;
 
@@ -94,6 +97,16 @@ export class ProcessFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  onDateChange(event: MatDatepickerInputEvent<Date>): void {
+    if (event.value) {
+      const date = DateTime.fromJSDate(event.value);
+
+      if (date.startOf('day') < DateTime.now().startOf('day')) {
+        this.openDialog();
+      }
+    }
+  }
+
   onReset(): void {
     this.projectForm.reset();
     this.initForms();
@@ -111,6 +124,10 @@ export class ProcessFormComponent implements OnInit, OnDestroy {
     this.epicsForm = FormsHelper.initEpicsForm();
     this.issuesForm = FormsHelper.initIssuesForm();
     this.mainForm = FormsHelper.initMainForm();
+  }
+
+  private openDialog(): void {
+    this.dialog.open(FileWarningDialogComponent);
   }
 
   ngOnDestroy(): void {

@@ -6,7 +6,8 @@ import { ProcessState } from '../../../enums/process-state.enum';
 import { ProcessDataService } from '../../../services/process-data.service';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { BehaviorSubject, takeUntil, tap } from 'rxjs';
+import { Subject, takeUntil, tap } from 'rxjs';
+import { FileHelper } from '../../../helpers/file.helper';
 
 @Component({
   selector: 'process-success',
@@ -18,18 +19,28 @@ export class ProcessSuccessComponent implements OnInit {
   private processStateService = inject(ProcessStateService);
   private processDataService = inject(ProcessDataService);
   private router = inject(Router);
-  private destroyed$ = new BehaviorSubject(false);
-  hasSavedFile: boolean = false;
+  private destroyed$ = new Subject<void>();
+  isFileCreated: boolean = false;
+  fileData: string = "";
 
   ngOnInit(): void {
-    this.processDataService.hasSavedFile$
+    this.processDataService.fileData$
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(res => this.hasSavedFile = res);
+      .subscribe(fileData => {
+        if (fileData) {
+          this.fileData = fileData;
+          this.isFileCreated = fileData?.length > 0;
+        }
+      });
   }
 
   openProject(): void {
     window.open(this.getUrl(), '_blank');
     this.router.navigateByUrl('/');
+  }
+
+  onSaveFile(): void {
+    FileHelper.saveToFile(this.fileData);
   }
 
   private getUrl(): string {
@@ -42,7 +53,7 @@ export class ProcessSuccessComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.processStateService.setProcessState(ProcessState.New);
-    this.destroyed$.next(true);
+    this.destroyed$.next();
     this.destroyed$.complete();
   }
 }

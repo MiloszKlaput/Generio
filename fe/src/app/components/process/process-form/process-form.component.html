@@ -113,7 +113,7 @@
 
         <div class="stepper-actions">
           <button mat-flat-button matStepperNext [disabled]="!projectForm.valid">
-            {{ 'form.actions.nextButton' | translate }}
+            {{ 'actions.nextButton' | translate }}
           </button>
         </div>
       </form>
@@ -142,7 +142,7 @@
           }
         </mat-form-field>
 
-        <mat-radio-group formControlName="sprintDuration" class="sprints-duration" aria-label="Wybierz długość sprintu">
+        <mat-radio-group formControlName="sprintDuration" class="sprints-duration">
           <label>
             {{ 'form.sprints.sprintDurationQuestion' | translate }}
           </label>
@@ -164,7 +164,7 @@
           <mat-label>
             {{ 'form.sprints.projectStartDateLabel' | translate }}
           </mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="projectStartDate">
+          <input matInput [matDatepicker]="picker" (dateChange)="onDateChange($event)" formControlName="projectStartDate">
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
           @if ((fs.projectStartDate.errors?.['required'] || fs.projectStartDate.invalid) && fs.projectStartDate.touched) {
@@ -176,10 +176,10 @@
 
         <div class="stepper-actions">
           <button mat-raised-button matStepperPrevious>
-            {{ 'form.actions.backButton' | translate }}
+            {{ 'actions.backButton' | translate }}
           </button>
           <button mat-flat-button matStepperNext [disabled]="!sprintsForm.valid">
-            {{ 'form.actions.nextButton' | translate }}
+            {{ 'actions.nextButton' | translate }}
           </button>
         </div>
       </form>
@@ -210,10 +210,10 @@
 
         <div class="stepper-actions">
           <button mat-raised-button matStepperPrevious>
-            {{ 'form.actions.backButton' | translate }}
+            {{ 'actions.backButton' | translate }}
           </button>
           <button mat-flat-button matStepperNext [disabled]="!epicsForm.valid">
-            {{ 'form.actions.nextButton' | translate }}
+            {{ 'actions.nextButton' | translate }}
           </button>
         </div>
       </form>
@@ -264,10 +264,10 @@
 
         <div class="stepper-actions">
           <button mat-raised-button matStepperPrevious>
-            {{ 'form.actions.backButton' | translate }}
+            {{ 'actions.backButton' | translate }}
           </button>
           <button mat-flat-button matStepperNext [disabled]="!issuesForm.valid">
-            {{ 'form.actions.nextButton' | translate }}
+            {{ 'actions.nextButton' | translate }}
           </button>
         </div>
       </form>
@@ -377,10 +377,10 @@
 
         <div class="summary-actions">
           <button mat-raised-button (click)="onReset()">
-            {{ 'form.actions.resetButton' | translate }}
+            {{ 'actions.resetButton' | translate }}
           </button>
           <button (click)="onSubmit()" mat-flat-button type="submit" [disabled]="!issuesForm.valid">
-            {{ 'form.actions.submitButton' | translate }}
+            {{ 'actions.submitButton' | translate }}
           </button>
         </div>
       </form>

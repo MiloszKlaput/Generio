@@ -10,7 +10,7 @@ import { DateTime } from 'luxon';
 import { from, switchMap, concatMap, toArray, tap, Observable, catchError, throwError, BehaviorSubject, takeUntil } from 'rxjs';
 import { BoardIdResponse } from '../models/board/board.model';
 import { WorkflowSimulator } from '../logic/workflow-simulator.logic';
-import { FileDataHelper } from '../helpers/file-data.helper';
+import { FileHelper } from '../helpers/file.helper';
 import { IssueRequest, IssueResponse, Issue } from '../models/issue/issue.model';
 import { FileData } from '../models/process/file-data.model';
 import { ProcessStateService } from './process-state.service';
@@ -25,7 +25,6 @@ export class JiraPopulateProcessService {
   private apiService = inject(JiraApiService);
   private processStateService = inject(ProcessStateService);
   private processDataService = inject(ProcessDataService);
-  private destroyed$ = new BehaviorSubject(false);
   private issues: Issue[] = [];
 
   startProcess(mainFormData: MainFormControls): void {
@@ -41,8 +40,7 @@ export class JiraPopulateProcessService {
         switchMap(() => this.createEpics(mainFormData)),
         switchMap(() => this.createIssues(mainFormData)),
         switchMap(() => this.moveIssuesToEpics()),
-        switchMap(() => this.moveIssuesToSprints()),
-        takeUntil(this.destroyed$)
+        switchMap(() => this.moveIssuesToSprints())
       )
       .subscribe({
         next: () => {
@@ -59,9 +57,7 @@ export class JiraPopulateProcessService {
   }
 
   clearData(): void {
-    this.apiService.deleteProject(this.processDataService.requestData.projectKey)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe();
+    this.apiService.deleteProject(this.processDataService.requestData.projectKey).subscribe();
   }
 
   private handleError(err: any) {
@@ -194,27 +190,10 @@ export class JiraPopulateProcessService {
 
   private createPastProjectDataFile(): void {
     WorkflowSimulator.simulateWorkflowForAllSprints(this.processDataService.requestData, this.processDataService.responseData, this.issues);
-    const fileData = FileDataHelper.generateFileData(this.processDataService.requestData, this.issues);
-    this.saveToFile(fileData);
-  }
 
-  private saveToFile(fileData: FileData): void {
-    const jsonData = JSON.stringify(fileData, null, 2);
-    const blob = new Blob([jsonData], { type: 'application/json' });
-    const url = window.URL.createObjectURL(blob);
+    const fileData = FileHelper.createFileData(this.processDataService.requestData, this.issues);
+    const csvFileData = FileHelper.formatCsvFileData(fileData);
 
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'jiraProjectImport.json';
-    link.click();
-
-    URL.revokeObjectURL(url);
-
-    this.processDataService.hasSavedFile$.next(true);
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
+    this.processDataService.fileData$.next(csvFileData);
   }
 }

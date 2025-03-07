@@ -6,7 +6,7 @@ import { ProcessState } from '../../../enums/process-state.enum';
 import { Router } from '@angular/router';
 import { ProcessDataService } from '../../../services/process-data.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { BehaviorSubject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'process-error',
@@ -18,7 +18,7 @@ export class ProcessErrorComponent implements OnInit, OnDestroy {
   private processStateService = inject(ProcessStateService);
   private processDataService = inject(ProcessDataService);
   private router = inject(Router);
-  private destroyed$ = new BehaviorSubject(false);
+  private destroyed$ = new Subject<void>();
   errorMessage: string = '';
 
   ngOnInit(): void {
@@ -37,7 +37,7 @@ export class ProcessErrorComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.processStateService.setProcessState(ProcessState.New);
-    this.destroyed$.next(true);
+    this.destroyed$.next();
     this.destroyed$.complete();
   }
 }

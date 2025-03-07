@@ -1,7 +1,7 @@
 @use '../../../../styles/breakpoints' as *;
 @use '../../../../styles/variables' as *;
 
-$icon-mobile: 4rem;
+$icon-mobile: 6rem;
 $icon-desktop: 8rem;
 
 .success-container {
@@ -39,8 +39,17 @@ $icon-desktop: 8rem;
     }
   }
 
-  .action {
-    margin-top: 1rem;
+  .actions {
+    margin-top: 3rem;
     align-self: center;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1.5rem;
+
+    .action {
+      .save-file-icon {
+        margin-right: 0.25rem;
+      }
+    }
   }
 }

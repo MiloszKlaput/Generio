@@ -3,7 +3,6 @@ const express = require('express');
 // allows CORS
 const cors = require('cors');
 
-const testApi = require('./api/test-api.js');
 const createProject = require('./api/create-project.js');
 const getBoardId = require('./api/get-board-id.js');
 const createSprint = require('./api/create-sprint.js');
@@ -27,4 +26,3 @@ app.post('/move-issues-to-sprint', (req, res) => moveIssuesToSprint(req, res));
 app.post('/delete-project', (req, res) => deleteProject(req, res));
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));
-// app.listen(port, (req, res) => testApi(req, res));

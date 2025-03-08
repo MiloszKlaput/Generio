@@ -16,7 +16,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { map, Observable, Subscription } from 'rxjs';
 import { MatStepper, MatStepperModule, StepperOrientation } from '@angular/material/stepper';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { EpicsFormControls, IssuesFormControls, MainFormControls, ProjectFormControls, SprintsFormControls } from '../../../types/main-form-controls.type';
+import { EpicsFormControls, IssuesFormControls, MainFormControls, ProjectFormControls, SprintsFormControls, UserInfoFormControls } from '../../../types/main-form-controls.type';
 import { FormsHelper } from '../../../helpers/forms.helper';
 import { CommonModule } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -59,8 +59,10 @@ import { FileWarningDialogComponent } from '../file-warning-dialog/file-warning-
   standalone: true
 })
 export class ProcessFormComponent implements OnInit, OnDestroy {
+  private breakpointObserver = inject(BreakpointObserver);
   private populateProcessService = inject(JiraPopulateProcessService);
   @ViewChild('stepper') stepper!: MatStepper;
+  userInfoForm!: FormGroup<UserInfoFormControls>;
   projectForm!: FormGroup<ProjectFormControls>;
   sprintsForm!: FormGroup<SprintsFormControls>;
   epicsForm!: FormGroup<EpicsFormControls>;
@@ -74,6 +76,7 @@ export class ProcessFormComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
+  get fu(): UserInfoFormControls { return this.userInfoForm.controls; }
   get fp(): ProjectFormControls { return this.projectForm.controls; }
   get fs(): SprintsFormControls { return this.sprintsForm.controls; }
   get fe(): EpicsFormControls { return this.epicsForm.controls; }
@@ -81,10 +84,11 @@ export class ProcessFormComponent implements OnInit, OnDestroy {
   get fM(): MainFormControls { return this.mainForm.controls; }
 
   constructor() {
-    const breakpointObserver = inject(BreakpointObserver);
-    this.stepperOrientation$ = breakpointObserver
+    this.stepperOrientation$ = this.breakpointObserver
       .observe('(min-width: 960px)')
-      .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
+      .pipe(
+        map(({ matches }) => (matches ? 'horizontal' : 'vertical'))
+      );
   }
 
   ngOnInit(): void {
@@ -114,11 +118,20 @@ export class ProcessFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    FormsHelper.mapToMainForm(this.projectForm, this.sprintsForm, this.epicsForm, this.issuesForm, this.mainForm);
+    FormsHelper.mapToMainForm(
+      this.userInfoForm,
+      this.projectForm,
+      this.sprintsForm,
+      this.epicsForm,
+      this.issuesForm,
+      this.mainForm
+    );
+
     this.populateProcessService.startProcess(this.fM);
   }
 
   private initForms(): void {
+    this.userInfoForm = FormsHelper.initUserInfoForm();
     this.projectForm = FormsHelper.initProjectForm();
     this.sprintsForm = FormsHelper.initSprintsForm();
     this.epicsForm = FormsHelper.initEpicsForm();

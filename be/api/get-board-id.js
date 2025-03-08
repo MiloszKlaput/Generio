@@ -3,20 +3,16 @@ require('dotenv').config();
 
 const apiBaseUrl = process.env.API_BASE_URL;
 const apiAgileUrl = apiBaseUrl + process.env.API_AGILE_URL;
-const apiUserName = process.env.API_USER_NAME;
-const apiKeyValue = process.env.API_KEY_VALUE;
-
-const auth = {
-  username: apiUserName,
-  password: apiKeyValue
-};
 
 async function getBoardId(req, res) {
   try {
     const url = `${apiAgileUrl}/board?projectKeyOrId=${req.query.projectKey}`;
     const config = {
       headers: { 'Content-Type': 'application/json' },
-      auth: auth
+      auth: {
+        username: req.query.userName,
+        password: req.query.apiKey
+      }
     };
 
     const response = await axios.get(url, config);

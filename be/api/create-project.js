@@ -3,21 +3,17 @@ require('dotenv').config();
 
 const apiBaseUrl = process.env.API_BASE_URL;
 const apiRestUrl = apiBaseUrl + process.env.API_REST_URL;
-const apiUserName = process.env.API_USER_NAME;
-const apiKeyValue = process.env.API_KEY_VALUE;
-
-const auth = {
-  username: apiUserName,
-  password: apiKeyValue
-};
 
 async function createProject(req, res) {
   try {
     const url = `${apiRestUrl}/project`;
-    const data = req.body;
+    const data = req.body.project;
     const config = {
       headers: { 'Content-Type': 'application/json' },
-      auth: auth
+      auth: {
+        username: req.body.userName,
+        password: req.body.apiKey
+      }
     };
 
     const response = await axios.post(url, data, config);

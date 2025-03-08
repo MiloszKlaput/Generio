@@ -14,7 +14,7 @@ export class RequestBuilder {
       assigneeType: 'PROJECT_LEAD',
       description: f.projectDescription.value!,
       key: f.projectKey.value!.toUpperCase(),
-      leadAccountId: f.atlassianId.value!,
+      leadAccountId: f.atlassianUserId.value!,
       name: f.projectName.value!,
       projectTemplateKey: 'com.pyxis.greenhopper.jira:gh-simplified-scrum-classic',
       projectTypeKey: 'software',

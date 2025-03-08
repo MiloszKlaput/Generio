@@ -5,10 +5,12 @@ import { SprintResponse } from "../sprint/sprint.model";
 import { IssueRequest } from "../issue/issue.model";
 
 export interface RequestData {
+  atlassianLogin: string;
+  atlassianUserId: string;
+  atlassianApiKey: string;
   projectName: string;
   projectDescription: string;
   projectKey: string;
-  atlassianId: string;
   sprintsCount: number;
   sprintDuration: number;
   projectStartDate: DateTime;

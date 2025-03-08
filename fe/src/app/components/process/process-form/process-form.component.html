@@ -1,6 +1,55 @@
   <div class="stepper-container">
     <mat-horizontal-stepper [orientation]="(stepperOrientation$ | async)!" [linear]="true" #stepper>
 
+      <mat-step [stepControl]="userInfoForm" [label]="'form.userInfo.userInfoLabel' | translate">
+        <form class="form-container" [formGroup]="userInfoForm">
+          <h2>
+            {{ 'form.userInfo.userInfoTitle' | translate }}
+          </h2>
+          <mat-form-field>
+            <mat-label>
+              {{ 'form.userInfo.userInfoLogin' | translate }}
+            </mat-label>
+            <input formControlName="atlassianLogin" matInput (blur)="onBlur(fu.atlassianLogin)" />
+            @if (fu.atlassianLogin.errors?.['required'] && fu.atlassianLogin.touched) {
+              <mat-error>
+                {{ 'form.userInfo.validations.required' | translate }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>
+              {{ 'form.userInfo.userInfoUserId' | translate }}
+            </mat-label>
+            <input formControlName="atlassianUserId" matInput (blur)="onBlur(fu.atlassianUserId)" />
+            @if (fu.atlassianUserId.errors?.['required'] && fu.atlassianUserId.touched) {
+              <mat-error>
+                {{ 'form.userInfo.validations.required' | translate }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>
+              {{ 'form.userInfo.userInfoApiKey' | translate }}
+            </mat-label>
+            <input formControlName="atlassianApiKey" matInput (blur)="onBlur(fu.atlassianApiKey)" />
+            @if (fu.atlassianApiKey.errors?.['required'] && fu.atlassianApiKey.touched) {
+              <mat-error>
+                {{ 'form.userInfo.validations.required' | translate }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <div class="stepper-actions">
+            <button mat-flat-button matStepperNext [disabled]="!userInfoForm.valid">
+              {{ 'actions.nextButton' | translate }}
+            </button>
+          </div>
+        </form>
+      </mat-step>
+
       <mat-step [stepControl]="projectForm" [label]="'form.project.projectLabel' | translate">
         <form class="form-container" [formGroup]="projectForm">
           <h2>
@@ -84,34 +133,10 @@
           }
         </mat-form-field>
 
-        <mat-form-field>
-          <mat-label>
-            {{ 'form.project.atlassianUserId' | translate }}
-          </mat-label>
-          <input formControlName="atlassianId" matInput />
-          @if (fp.atlassianId.errors?.['required'] && fp.atlassianId.touched) {
-            <mat-error>
-              {{ 'form.project.validations.atlassiaUsernIdRequired' | translate }}
-            </mat-error>
-          }
-          @if (fp.atlassianId.errors?.['maxlength'] && fp.atlassianId.touched) {
-            <mat-error>
-              {{ 'form.project.validations.atlUserassianIdMax' | translate }}
-            </mat-error>
-          }
-          @if (fp.atlassianId.errors?.['whitespace'] && fp.atlassianId.touched) {
-            <mat-error>
-              {{ 'form.project.validations.atlassianIUserdWhitespace' | translate }}
-            </mat-error>
-          }
-          @if (fp.atlassianId.errors?.['forbiddenCharacters'] && !fp.atlassianId.errors?.['minlength'] && !fp.atlassianId.errors?.['maxlength'] && !fp.atlassianId.errors?.['whitespace'] && fp.atlassianId.touched) {
-            <mat-error>
-              {{ 'form.project.validations.atlassianUserIdForbidden' | translate }} {{ fp.atlassianId.errors?.['forbiddenCharacters'].join('') }}
-            </mat-error>
-          }
-        </mat-form-field>
-
         <div class="stepper-actions">
+          <button mat-raised-button matStepperPrevious>
+            {{ 'actions.backButton' | translate }}
+          </button>
           <button mat-flat-button matStepperNext [disabled]="!projectForm.valid">
             {{ 'actions.nextButton' | translate }}
           </button>

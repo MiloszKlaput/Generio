@@ -1,11 +1,16 @@
 import { FormControl, FormGroup } from "@angular/forms";
 
 
+export type UserInfoFormControls = {
+  atlassianLogin: FormControl<string | null>;
+  atlassianUserId: FormControl<string | null>;
+  atlassianApiKey: FormControl<string | null>;
+};
+
 export type ProjectFormControls = {
   projectName: FormControl<string | null>;
   projectDescription: FormControl<string | null>;
   projectKey: FormControl<string | null>;
-  atlassianId: FormControl<string | null>;
 };
 
 export type SprintsFormControls = {
@@ -28,10 +33,12 @@ export type IssuesFormControls = {
 };
 
 export type MainFormControls = {
+  atlassianLogin: FormControl<string | null>;
+  atlassianUserId: FormControl<string | null>;
+  atlassianApiKey: FormControl<string | null>;
   projectName: FormControl<string | null>;
   projectDescription: FormControl<string | null>;
   projectKey: FormControl<string | null>;
-  atlassianId: FormControl<string | null>;
   sprintsCount: FormControl<number | null>;
   sprintDuration: FormControl<number | null>;
   projectStartDate: FormControl<Date | null>;

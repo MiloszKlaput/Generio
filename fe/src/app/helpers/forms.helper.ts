@@ -5,13 +5,22 @@ import {
   IssuesFormControls,
   MainFormControls,
   SprintsFormControls,
-  ProjectFormControls
+  ProjectFormControls,
+  UserInfoFormControls
 } from "../types/main-form-controls.type";
 import { atLeastOneChecked } from "../validators/at-least-one-checked.validator";
 import { DateTime } from "luxon";
 import { allowedCharactersValidator } from "../validators/allowed-characters.validator";
 
 export class FormsHelper {
+  public static initUserInfoForm(): FormGroup<UserInfoFormControls> {
+    return new FormGroup<UserInfoFormControls>({
+      atlassianLogin: new FormControl<string>('', [Validators.required, whitespaceValidator()]),
+      atlassianUserId: new FormControl<string>('', [Validators.required, whitespaceValidator()]),
+      atlassianApiKey: new FormControl<string>('', [Validators.required, whitespaceValidator()])
+    });
+  }
+
   public static initProjectForm(): FormGroup<ProjectFormControls> {
     return new FormGroup<ProjectFormControls>({
       projectName: new FormControl<string>('', [
@@ -33,12 +42,6 @@ export class FormsHelper {
         Validators.minLength(2),
         Validators.maxLength(10),
         allowedCharactersValidator(/^[a-zA-Z0-9]*$/),
-        whitespaceValidator()
-      ]),
-      atlassianId: new FormControl<string>('', [
-        Validators.required,
-        allowedCharactersValidator(/^[a-zA-Z0-9-:]*$/),
-        Validators.maxLength(50),
         whitespaceValidator()
       ])
     });
@@ -82,10 +85,12 @@ export class FormsHelper {
 
   public static initMainForm(): FormGroup<MainFormControls> {
     return new FormGroup<MainFormControls>({
+      atlassianLogin: new FormControl<string>(''),
+      atlassianUserId: new FormControl<string>(''),
+      atlassianApiKey: new FormControl<string>(''),
       projectName: new FormControl<string>(''),
       projectDescription: new FormControl<string>(''),
       projectKey: new FormControl<string>(''),
-      atlassianId: new FormControl<string>(''),
       sprintsCount: new FormControl<number>(1),
       sprintDuration: new FormControl<number>(1),
       projectStartDate: new FormControl<Date>(DateTime.now().toJSDate()),
@@ -100,16 +105,19 @@ export class FormsHelper {
   }
 
   public static mapToMainForm(
+    userInfoForm: FormGroup<UserInfoFormControls>,
     projectForm: FormGroup<ProjectFormControls>,
     sprintsForm: FormGroup<SprintsFormControls>,
     epicsForm: FormGroup<EpicsFormControls>,
     issuesForm: FormGroup<IssuesFormControls>,
     mainForm: FormGroup<MainFormControls>) {
     mainForm.patchValue({
+      atlassianLogin: userInfoForm.value.atlassianLogin,
+      atlassianUserId: userInfoForm.value.atlassianUserId,
+      atlassianApiKey: userInfoForm.value.atlassianApiKey,
       projectName: projectForm.value.projectName,
       projectKey: projectForm.value.projectKey,
       projectDescription: projectForm.value.projectDescription,
-      atlassianId: projectForm.value.atlassianId,
       sprintsCount: sprintsForm.value.sprintsCount,
       sprintDuration: sprintsForm.value.sprintDuration ? sprintsForm.value.sprintDuration * 7 : null,
       projectStartDate: sprintsForm.value.projectStartDate,

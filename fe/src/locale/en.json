@@ -11,6 +11,16 @@
     "startButton": "Start"
   },
   "form": {
+    "userInfo": {
+      "userInfoLabel": "User data",
+      "userInfoTitle": "User data",
+      "userInfoLogin": "Atlassian user name",
+      "userInfoUserId": "Atlassian account ID",
+      "userInfoApiKey": "API key",
+      "validations": {
+        "required": "Please fill in the field"
+      }
+    },
     "project": {
       "projectLabel": "Project",
       "projectTitle": "Project",
@@ -101,7 +111,7 @@
   },
   "processError": {
     "title": "An error has occurred",
-    "tryAgainButton": "Try again"
+    "closeButton": "Close"
   },
   "processInProgress": {
     "message": "Please be patient, the process may take a few minutes..."

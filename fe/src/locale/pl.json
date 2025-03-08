@@ -11,6 +11,16 @@
     "startButton": "Rozpocznij"
   },
   "form": {
+    "userInfo": {
+      "userInfoLabel": "Dane użytkownika",
+      "userInfoTitle": "Dane użytkownika",
+      "userInfoLogin": "Nazwa użytkownika Atlassian",
+      "userInfoUserId": "ID konta Atlassian",
+      "userInfoApiKey": "Klucz API",
+      "validations": {
+        "required": "Uzupełnij pole"
+      }
+    },
     "project": {
       "projectLabel": "Projekt",
       "projectTitle": "Projekt",
@@ -101,7 +111,7 @@
   },
   "processError": {
     "title": "Wystąpił błąd",
-    "tryAgainButton": "Spróbuj ponownie"
+    "closeButton": "Zamknij"
   },
   "processInProgress": {
     "message": "Prosimy o cierpliwość, proces może zająć kilka minut..."

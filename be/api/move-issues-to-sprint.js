@@ -3,13 +3,6 @@ require('dotenv').config();
 
 const apiBaseUrl = process.env.API_BASE_URL;
 const apiAgileUrl = apiBaseUrl + process.env.API_AGILE_URL;
-const apiUserName = process.env.API_USER_NAME;
-const apiKeyValue = process.env.API_KEY_VALUE;
-
-const auth = {
-  username: apiUserName,
-  password: apiKeyValue
-};
 
 async function moveIssuesToSprint(req, res) {
   try {
@@ -17,7 +10,10 @@ async function moveIssuesToSprint(req, res) {
     const data = { issues: req.body.issues };
     const config = {
       headers: { 'Content-Type': 'application/json' },
-      auth: auth
+      auth: {
+        username: req.body.userName,
+        password: req.body.apiKey
+      }
     };
 
     const response = await axios.post(url, data, config);

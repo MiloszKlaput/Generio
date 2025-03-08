@@ -16,10 +16,12 @@ export class ProcessDataService {
 
   initRequestData(formData: MainFormControls): void {
     this.requestData = {
+      atlassianLogin: formData.atlassianLogin.value!,
+      atlassianUserId: formData.atlassianUserId.value!,
+      atlassianApiKey: formData.atlassianApiKey.value!,
       projectName: formData.projectName.value!,
       projectDescription: formData.projectDescription.value!,
       projectKey: formData.projectKey.value!,
-      atlassianId: formData.atlassianId.value!,
       sprintsCount: formData.sprintsCount.value!,
       sprintDuration: formData.sprintDuration.value!,
       projectStartDate: DateTime.fromJSDate(formData.projectStartDate.value!),

@@ -4,6 +4,7 @@ import { MainFormControls } from '../types/main-form-controls.type';
 import { DateTime } from 'luxon';
 import { Issue } from '../models/issue/issue.model';
 import { BehaviorSubject } from 'rxjs';
+import { FileData } from '../models/process/file-data.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class ProcessDataService {
   requestData!: RequestData;
   responseData!: ResponseData;
   errorMessage$ = new BehaviorSubject<string | null>(null);
-  fileData$ = new BehaviorSubject<string | null>(null);
+  fileData$ = new BehaviorSubject<FileData | null>(null);
 
   initRequestData(formData: MainFormControls): void {
     this.requestData = {

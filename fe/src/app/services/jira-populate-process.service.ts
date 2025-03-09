@@ -7,15 +7,15 @@ import { MoveToEpicRequest } from '../models/issue/move-to-epic.model';
 import { MoveToSprintRequest } from '../models/issue/move-to-sprint.model';
 import { MainFormControls } from '../types/main-form-controls.type';
 import { DateTime } from 'luxon';
-import { from, switchMap, concatMap, toArray, tap, Observable, catchError, throwError, BehaviorSubject, takeUntil } from 'rxjs';
+import { from, switchMap, concatMap, toArray, tap, Observable, catchError, throwError } from 'rxjs';
 import { BoardIdResponse } from '../models/board/board.model';
 import { WorkflowSimulator } from '../logic/workflow-simulator.logic';
 import { FileHelper } from '../helpers/file.helper';
 import { IssueRequest, IssueResponse, Issue } from '../models/issue/issue.model';
-import { FileData } from '../models/process/file-data.model';
 import { ProcessStateService } from './process-state.service';
 import { ProcessState } from '../enums/process-state.enum';
 import { ProcessDataService } from './process-data.service';
+import { FileData } from '../models/process/file-data.model';
 
 
 @Injectable({
@@ -192,8 +192,6 @@ export class JiraPopulateProcessService {
     WorkflowSimulator.simulateWorkflowForAllSprints(this.processDataService.requestData, this.processDataService.responseData, this.issues);
 
     const fileData = FileHelper.createFileData(this.processDataService.requestData, this.issues);
-    const csvFileData = FileHelper.formatCsvFileData(fileData);
-
-    this.processDataService.fileData$.next(csvFileData);
+    this.processDataService.fileData$.next(fileData);
   }
 }

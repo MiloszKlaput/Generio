@@ -119,13 +119,11 @@
   "processSuccess": {
     "title": "Operacja zakończona sukcesem",
     "message": "Możesz teraz przejść do przeglądu utworzonego projektu.",
-    "hasSaveFileMessage": "W trakcie procesu zakładania projektu, powstał plik .CSV, który należy samodzielnie zaimportować w projekcie w Jira:",
-    "guideStep1": "Zaloguj się Jiry",
-    "guideStep2": "W Jira Server: Wejdź w Ustawienia > System > Import i eksport > Importowanie z systemu zewnętrznego > CSV",
-    "guideStep3": "Wybierz plik CSV",
-    "guideStep4": "Przypisz kolumny z pliku CSV do odpowiadających im pól w Jira. Upewnij się, że dane są poprawnie dopasowane (np. kolumna Summary do pola Podsumowanie).",
-    "guideStep5": "Potwierdź ustawienia i rozpocznij proces importu. System wyświetli postęp operacji oraz ewentualne błędy.",
-    "guideStep6": "Po zakończeniu importu sprawdź, czy dane zostały poprawnie zaimportowane do wybranego projektu. W razie potrzeby wprowadź korekty i powtórz import."
+    "hasSaveFileMessage": "W trakcie procesu zakładania projektu, powstał plik JSON, który należy samodzielnie zaimportować w projekcie w Jira:",
+    "guideStep1": "Zaloguj się do Jira",
+    "guideStep2": "Wejdź w Ustawienia > System > Import i eksport > Importowanie z systemu zewnętrznego > Przełącz na stary interfejs > JSON",
+    "guideStep3": "Wybierz plik JSON",
+    "guideStep4": "Rozpocznij importowanie"
   },
   "actions": {
     "nextButton": "Dalej",

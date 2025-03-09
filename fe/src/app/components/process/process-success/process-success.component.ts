@@ -6,8 +6,9 @@ import { ProcessState } from '../../../enums/process-state.enum';
 import { ProcessDataService } from '../../../services/process-data.service';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { FileHelper } from '../../../helpers/file.helper';
+import { FileData } from '../../../models/process/file-data.model';
 
 @Component({
   selector: 'process-success',
@@ -21,7 +22,7 @@ export class ProcessSuccessComponent implements OnInit {
   private router = inject(Router);
   private destroyed$ = new Subject<void>();
   isFileCreated: boolean = false;
-  fileData: string = "";
+  fileData!: FileData;
 
   ngOnInit(): void {
     this.processDataService.fileData$
@@ -29,7 +30,7 @@ export class ProcessSuccessComponent implements OnInit {
       .subscribe(fileData => {
         if (fileData) {
           this.fileData = fileData;
-          this.isFileCreated = fileData?.length > 0;
+          this.isFileCreated = fileData ? true : false;
         }
       });
   }

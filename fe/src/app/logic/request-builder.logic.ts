@@ -58,13 +58,18 @@ export class RequestBuilder {
   static buildIssuesRequest(f: MainFormControls, projectKey: string): IssueRequest[] {
     const result: IssueRequest[] = [];
     const issuesCount = f.issuesCount.value!;
-    const issueTypeWeights = { story: 0.6, bug: 0.3, task: 0.1 };
 
-    let storyCount = Math.floor(issuesCount * issueTypeWeights.story);
-    let bugCount = Math.floor(issuesCount * issueTypeWeights.bug);
-    let taskCount = Math.floor(issuesCount * issueTypeWeights.task);
+    // Założenie: zakres story 60% - 80% wszystkich issues
+    const storyPercentage = Math.floor(Math.random() * (80 - 60 + 1)) + 60; // 50% - 80%
+    const remainingPercentage = 100 - storyPercentage;
+    // Założenie: taski zajmują minimum 5%
+    const taskPercentage = Math.floor(Math.random() * (remainingPercentage - 5 + 1)) + 5; // 5% do remainingPercentage
+    // Pozostały procent na bugi
+    const bugPercentage = remainingPercentage - taskPercentage;
 
-    storyCount += issuesCount - (storyCount + bugCount + taskCount);
+    const storyCount = Math.floor(issuesCount * (storyPercentage / 100));
+    const bugCount = Math.floor(issuesCount * (bugPercentage / 100));
+    const taskCount = Math.floor(issuesCount * (taskPercentage / 100));
 
     const issueTypes: { type: IssueTypeEnum; count: number }[] = [
       { type: IssueTypeEnum.Story, count: storyCount },
@@ -82,6 +87,7 @@ export class RequestBuilder {
 
     return result;
   }
+
 
   static buildMoveToEpicRequest(epicsIds: number[], issues: Issue[]): MoveToEpicRequest[] {
     let moveToEpicRequestData: MoveToEpicRequest[] = epicsIds.map(epicId => ({ id: epicId, issuesKeys: [] }));

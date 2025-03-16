@@ -39,15 +39,11 @@ export class JiraPopulateProcessService {
         switchMap(() => this.createSprints(mainFormData)),
         switchMap(() => this.createEpics(mainFormData)),
         switchMap(() => this.createIssues(mainFormData)),
-        switchMap(() => this.moveIssuesToEpics()),
-        switchMap(() => this.moveIssuesToSprints())
+        switchMap(() => this.moveIssuesToEpics())
       )
       .subscribe({
         next: () => {
-          if (this.processDataService.requestData.projectStartDate.startOf('day') < DateTime.now().startOf('day')) {
-            this.createPastProjectDataFile();
-          }
-
+          this.simulateBusinessWorkflow();
           this.processStateService.setProcessState(ProcessState.Success);
         },
         error: (err) => {
@@ -183,22 +179,8 @@ export class JiraPopulateProcessService {
     );
   }
 
-  private moveIssuesToSprints(): Observable<any> {
-    const sprintsIds = this.processDataService.responseData.sprints.map((s) => s.data.id);
-    const requests: MoveToSprintRequest[] = RequestBuilder.buildMoveToSprintRequest(sprintsIds, this.issues);
-    this.processDataService.requestData.sprintIssuesAssigment = requests;
-
-    return from(requests).pipe(
-      mergeMap((req: MoveToSprintRequest) => this.apiService.moveIssuesToSprint(req)),
-      toArray(),
-      catchError((err) => {
-        return throwError(() => err);
-      })
-    );
-  }
-
-  private createPastProjectDataFile(): void {
-    WorkflowSimulator.simulateWorkflowForAllSprints(this.processDataService.requestData, this.processDataService.responseData, this.issues);
+  private simulateBusinessWorkflow(): void {
+    WorkflowSimulator.simulateBusinessWorkflow(this.processDataService.requestData, this.processDataService.responseData, this.issues);
 
     const fileData = FileHelper.createFileData(this.processDataService.requestData, this.issues);
     this.processDataService.fileData$.next(fileData);

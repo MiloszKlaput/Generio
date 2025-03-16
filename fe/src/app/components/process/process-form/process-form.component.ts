@@ -1,9 +1,8 @@
 import { Component, inject, ViewChild, type OnInit } from '@angular/core';
 import { AbstractControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatNativeDateModule, NativeDateModule } from '@angular/material/core';
-import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,8 +12,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { map, Observable, Subscription } from 'rxjs';
-import { MatStepper, MatStepperModule, StepperOrientation } from '@angular/material/stepper';
+import { map } from 'rxjs';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { EpicsFormControls, IssuesFormControls, MainFormControls, ProjectFormControls, SprintsFormControls, UserInfoFormControls } from '../../../types/main-form-controls.type';
 import { FormsHelper } from '../../../helpers/forms.helper';
@@ -22,11 +21,7 @@ import { CommonModule } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatRadioModule } from '@angular/material/radio';
 import { JiraPopulateProcessService } from '../../../services/jira-populate-process.service';
-import { ProcessStateService } from '../../../services/process-state.service';
-import { ProcessState } from '../../../enums/process-state.enum';
 import { TranslateModule } from '@ngx-translate/core';
-import { DateTime } from 'luxon';
-import { FileWarningDialogComponent } from '../file-warning-dialog/file-warning-dialog.component';
 
 @Component({
   selector: 'process-form',
@@ -35,7 +30,6 @@ import { FileWarningDialogComponent } from '../file-warning-dialog/file-warning-
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule,
-    MatDialogModule,
     NativeDateModule,
     MatDatepickerModule,
     MatCardModule,
@@ -61,7 +55,6 @@ import { FileWarningDialogComponent } from '../file-warning-dialog/file-warning-
 export class ProcessFormComponent implements OnInit {
   private breakpointObserver = inject(BreakpointObserver);
   private populateProcessService = inject(JiraPopulateProcessService);
-  dialog = inject(MatDialog);
   @ViewChild('stepper') stepper!: MatStepper;
   userInfoForm!: FormGroup<UserInfoFormControls>;
   projectForm!: FormGroup<ProjectFormControls>;
@@ -87,16 +80,6 @@ export class ProcessFormComponent implements OnInit {
   onBlur(control: AbstractControl): void {
     if (control && typeof control.value === 'string') {
       control.setValue(control.value.trim(), { emitEvent: false });
-    }
-  }
-
-  onDateChange(event: MatDatepickerInputEvent<Date>): void {
-    if (event.value) {
-      const date = DateTime.fromJSDate(event.value);
-
-      if (date.startOf('day') < DateTime.now().startOf('day')) {
-        this.openDialog();
-      }
     }
   }
 
@@ -126,9 +109,5 @@ export class ProcessFormComponent implements OnInit {
     this.epicsForm = FormsHelper.initEpicsForm();
     this.issuesForm = FormsHelper.initIssuesForm();
     this.mainForm = FormsHelper.initMainForm();
-  }
-
-  private openDialog(): void {
-    this.dialog.open(FileWarningDialogComponent);
   }
 }

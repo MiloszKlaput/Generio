@@ -201,7 +201,7 @@
           <mat-label>
             {{ 'form.sprints.projectStartDateLabel' | translate }}
           </mat-label>
-          <input matInput [matDatepicker]="picker" (dateChange)="onDateChange($event)" formControlName="projectStartDate">
+          <input matInput [matDatepicker]="picker" formControlName="projectStartDate">
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
           @if ((fs.projectStartDate.errors?.['required'] || fs.projectStartDate.invalid) && fs.projectStartDate.touched) {

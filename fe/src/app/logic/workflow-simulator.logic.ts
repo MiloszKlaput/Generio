@@ -4,7 +4,7 @@ import { Issue } from "../models/issue/issue.model";
 
 
 export class WorkflowSimulator {
-  static simulateWorkflowForAllSprints(requestData: RequestData, responseData: ResponseData, issues: Issue[]): void {
+  static simulateBusinessWorkflow(requestData: RequestData, responseData: ResponseData, issues: Issue[]): void {
     const rejectedChance = 0.05;
     const spilledOverChance = 0.05;
 

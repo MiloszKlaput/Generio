@@ -1,4 +1,4 @@
-@switch (state) {
+@switch (state$ | async) {
   @case (ProcessState.New) {
     <process-form></process-form>
   }

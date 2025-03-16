@@ -15,7 +15,6 @@ import { IssueRequest, IssueResponse, Issue } from '../models/issue/issue.model'
 import { ProcessStateService } from './process-state.service';
 import { ProcessState } from '../enums/process-state.enum';
 import { ProcessDataService } from './process-data.service';
-import { FileData } from '../models/process/file-data.model';
 
 
 @Injectable({

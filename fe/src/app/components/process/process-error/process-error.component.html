@@ -3,7 +3,7 @@
   <h3 class="text">
     {{ 'processError.title' | translate }}
   </h3>
-  <p class="text">{{ errorMessage }}</p>
+  <p class="text">{{ errorMessage$ | async }}</p>
   <button type="button" mat-flat-button class="action" (click)="startOver()">
     {{ 'processError.closeButton' | translate }}
   </button>

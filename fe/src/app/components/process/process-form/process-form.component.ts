@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, ViewChild, type OnInit } from '@angular/core';
+import { Component, inject, ViewChild, type OnInit } from '@angular/core';
 import { AbstractControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -58,9 +58,10 @@ import { FileWarningDialogComponent } from '../file-warning-dialog/file-warning-
   styleUrls: ['./process-form.component.scss'],
   standalone: true
 })
-export class ProcessFormComponent implements OnInit, OnDestroy {
+export class ProcessFormComponent implements OnInit {
   private breakpointObserver = inject(BreakpointObserver);
   private populateProcessService = inject(JiraPopulateProcessService);
+  dialog = inject(MatDialog);
   @ViewChild('stepper') stepper!: MatStepper;
   userInfoForm!: FormGroup<UserInfoFormControls>;
   projectForm!: FormGroup<ProjectFormControls>;
@@ -68,13 +69,9 @@ export class ProcessFormComponent implements OnInit, OnDestroy {
   epicsForm!: FormGroup<EpicsFormControls>;
   issuesForm!: FormGroup<IssuesFormControls>;
   mainForm!: FormGroup<MainFormControls>;
-  isInProgress = false;
-  isSubmitted = false;
-  dialog = inject(MatDialog);
 
-  stepperOrientation$!: Observable<StepperOrientation>;
-
-  subscriptions: Subscription[] = [];
+  stepperOrientation$ = this.breakpointObserver.observe('(min-width: 960px)')
+    .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
 
   get fu(): UserInfoFormControls { return this.userInfoForm.controls; }
   get fp(): ProjectFormControls { return this.projectForm.controls; }
@@ -82,14 +79,6 @@ export class ProcessFormComponent implements OnInit, OnDestroy {
   get fe(): EpicsFormControls { return this.epicsForm.controls; }
   get fi(): IssuesFormControls { return this.issuesForm.controls; }
   get fM(): MainFormControls { return this.mainForm.controls; }
-
-  constructor() {
-    this.stepperOrientation$ = this.breakpointObserver
-      .observe('(min-width: 960px)')
-      .pipe(
-        map(({ matches }) => (matches ? 'horizontal' : 'vertical'))
-      );
-  }
 
   ngOnInit(): void {
     this.initForms();
@@ -141,9 +130,5 @@ export class ProcessFormComponent implements OnInit, OnDestroy {
 
   private openDialog(): void {
     this.dialog.open(FileWarningDialogComponent);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
   }
 }

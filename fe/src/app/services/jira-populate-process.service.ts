@@ -44,6 +44,7 @@ export class JiraPopulateProcessService {
       .subscribe({
         next: () => {
           this.simulateBusinessWorkflow();
+          this.createImportFile();
           this.processStateService.setProcessState(ProcessState.Success);
         },
         error: (err) => {
@@ -181,7 +182,9 @@ export class JiraPopulateProcessService {
 
   private simulateBusinessWorkflow(): void {
     WorkflowSimulator.simulateBusinessWorkflow(this.processDataService.requestData, this.processDataService.responseData, this.issues);
+  }
 
+  private createImportFile(): void {
     const fileData = FileHelper.createFileData(this.processDataService.requestData, this.issues);
     this.processDataService.fileData$.next(fileData);
   }

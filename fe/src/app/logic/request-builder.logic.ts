@@ -84,12 +84,39 @@ export class RequestBuilder {
   }
 
   static buildMoveToEpicRequest(epicsIds: number[], issues: Issue[]): MoveToEpicRequest[] {
-    let moveToEpicRequestData: MoveToEpicRequest[];
-    moveToEpicRequestData = epicsIds.map(epicId => ({ id: epicId, issuesKeys: [] }));
+    let moveToEpicRequestData: MoveToEpicRequest[] = epicsIds.map(epicId => ({ id: epicId, issuesKeys: [] }));
+    const issuesCount = issues.length;
+    const epicsCount = epicsIds.length;
 
-    for (let i = 0; i < issues.length; i++) {
-      const epicIndex = i % epicsIds.length;
-      moveToEpicRequestData[epicIndex].issuesKeys.push(issues[i].key);
+    const issuesAssignedCount = Array(epicsCount).fill(0);
+    let remainingIssues = issuesCount;
+
+    // 1. Losujemy jaką liczbę zadań dostanie epika
+    // 2. Odejmujemy tą liczbę od pozostałej puli
+    // 3. Powtarzamy dla następnej epiki
+    // 4. Ostatnia epika dostaje pozostałe zadania
+    for (let i = 0; i < epicsCount; i++) {
+      if (i === epicsCount - 1) {
+        issuesAssignedCount[i] = remainingIssues;
+      } else {
+        const randomTaskCount = Math.floor(Math.random() * (remainingIssues / 2)) + 1;
+        issuesAssignedCount[i] = randomTaskCount;
+        remainingIssues -= randomTaskCount;
+      }
+    }
+
+    // Dodajemy do epiki taką ilość zadań ile jest jej przypisanej
+    // Stąd ten same index w issuesAssignedCount[i]
+    // issueIndex to index issues z całej kolekcji issues[]
+    // Dlatego po wykonanej iteracji nie jest zerowany
+    let issueIndex = 0;
+    for (let i = 0; i < epicsCount; i++) {
+      for (let j = 0; j < issuesAssignedCount[i]; j++) {
+        if (issueIndex < issuesCount) {
+          moveToEpicRequestData[i].issuesKeys.push(issues[issueIndex].key);
+          issueIndex++;
+        }
+      }
     }
 
     return moveToEpicRequestData;

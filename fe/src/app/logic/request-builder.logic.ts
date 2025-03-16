@@ -1,5 +1,4 @@
 import { DateTime } from "luxon";
-import { IssuePriorityType } from "../models/issue/enums/issue-priority-type.enum";
 import { IssueTypeEnum } from "../models/issue/enums/issue-type.enum";
 import { Issue, IssueRequest } from "../models/issue/issue.model";
 import { MoveToEpicRequest } from "../models/issue/move-to-epic.model";
@@ -114,7 +113,6 @@ export class RequestBuilder {
         project: { key: projectKey },
         summary,
         issuetype: { id: issueType.toString() },
-        priority: { id: `${this.getRandomPriority()}` },
         description: {
           content: [
             {
@@ -133,16 +131,4 @@ export class RequestBuilder {
       }
     };
   }
-
-  private static getRandomPriority(): IssuePriorityType {
-    const priorities = [
-      IssuePriorityType.Highest,
-      IssuePriorityType.High,
-      IssuePriorityType.Medium,
-      IssuePriorityType.Low,
-      IssuePriorityType.Lowest
-    ];
-
-    return priorities[Math.floor(Math.random() * priorities.length)] as IssuePriorityType;
-  };
 }

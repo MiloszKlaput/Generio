@@ -1,4 +1,3 @@
-import { IssuePriority } from "./issue-priority.model";
 import { IssueProject } from "./issue-project.model";
 import { IssueType } from "./issue-type.model";
 
@@ -23,10 +22,8 @@ export interface IssueFields {
   issuetype: IssueType;
   project: IssueProject;
   summary: string;
-  priority: IssuePriority;
   created?: string;
   updated?: string | null;
   status?: string;
-  self?: string;
   resolution?: string;
 }

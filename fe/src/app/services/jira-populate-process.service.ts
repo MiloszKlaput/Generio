@@ -7,7 +7,7 @@ import { MoveToEpicRequest } from '../models/issue/move-to-epic.model';
 import { MoveToSprintRequest } from '../models/issue/move-to-sprint.model';
 import { MainFormControls } from '../types/main-form-controls.type';
 import { DateTime } from 'luxon';
-import { from, switchMap, concatMap, toArray, tap, Observable, catchError, throwError } from 'rxjs';
+import { from, switchMap, mergeMap, toArray, tap, Observable, catchError, throwError } from 'rxjs';
 import { BoardIdResponse } from '../models/board/board.model';
 import { WorkflowSimulator } from '../logic/workflow-simulator.logic';
 import { FileHelper } from '../helpers/file.helper';
@@ -35,6 +35,7 @@ export class JiraPopulateProcessService {
     this.createNewProject(mainFormData)
       .pipe(
         switchMap(() => this.getBoardId()),
+        switchMap(() => this.deleteSprintZero()),
         switchMap(() => this.createSprints(mainFormData)),
         switchMap(() => this.createEpics(mainFormData)),
         switchMap(() => this.createIssues(mainFormData)),
@@ -110,10 +111,19 @@ export class JiraPopulateProcessService {
     );
   }
 
+  private deleteSprintZero(): Observable<any> {
+    const boardId = this.processDataService.responseData.boardId;
+    return this.apiService.deleteSprintZero(boardId).pipe(
+      catchError((err) => {
+        return throwError(() => err);
+      })
+    );
+  }
+
   private createSprints(formData: MainFormControls): Observable<SprintResponse[]> {
     const sprints: SprintRequest[] = RequestBuilder.buildSprintsRequest(formData, this.processDataService.responseData.boardId);
     return from(sprints).pipe(
-      concatMap((sprint: SprintRequest) => this.apiService.createSprint(sprint)),
+      mergeMap((sprint: SprintRequest) => this.apiService.createSprint(sprint)),
       toArray(),
       tap((result: SprintResponse[]) => {
         if (result) {
@@ -165,7 +175,7 @@ export class JiraPopulateProcessService {
     const requests: MoveToEpicRequest[] = RequestBuilder.buildMoveToEpicRequest(this.processDataService.responseData.epicsIds, this.issues);
 
     return from(requests).pipe(
-      concatMap((req: MoveToEpicRequest) => this.apiService.moveIssuesToEpic(req)),
+      mergeMap((req: MoveToEpicRequest) => this.apiService.moveIssuesToEpic(req)),
       toArray(),
       catchError((err) => {
         return throwError(() => err);
@@ -179,7 +189,7 @@ export class JiraPopulateProcessService {
     this.processDataService.requestData.sprintIssuesAssigment = requests;
 
     return from(requests).pipe(
-      concatMap((req: MoveToSprintRequest) => this.apiService.moveIssuesToSprint(req)),
+      mergeMap((req: MoveToSprintRequest) => this.apiService.moveIssuesToSprint(req)),
       toArray(),
       catchError((err) => {
         return throwError(() => err);

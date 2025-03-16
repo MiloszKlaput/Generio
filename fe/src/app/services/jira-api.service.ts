@@ -16,18 +16,6 @@ export class JiraApiService {
   private baseUrl = 'http://localhost:8080/';
   private processDataService = inject(ProcessDataService);
 
-  getBoardId(projectKey: string): Observable<{ data: number }> {
-    const url = this.baseUrl + 'get-board-id';
-    const params = {
-      userName: this.processDataService.requestData.atlassianLogin,
-      apiKey: this.processDataService.requestData.atlassianApiKey,
-      jiraBaseUrl: this.processDataService.requestData.atlassianUserJiraUrl,
-      projectKey
-    }
-
-    return this.http.get<{ data: number }>(url, { params });
-  }
-
   createProject(project: ProjectRequest): Observable<ProjectResponse> {
     const url = this.baseUrl + 'create-project';
     const data = {
@@ -38,6 +26,30 @@ export class JiraApiService {
     };
 
     return this.http.post<ProjectResponse>(url, data);
+  }
+
+  getBoardId(projectKey: string): Observable<{ data: number }> {
+    const url = this.baseUrl + 'get-board-id';
+    const params = {
+      userName: this.processDataService.requestData.atlassianLogin,
+      apiKey: this.processDataService.requestData.atlassianApiKey,
+      jiraBaseUrl: this.processDataService.requestData.atlassianUserJiraUrl,
+      projectKey
+    };
+
+    return this.http.get<{ data: number }>(url, { params });
+  }
+
+  deleteSprintZero(boardId: number): Observable<any> {
+    const url = this.baseUrl + 'delete-sprint-zero';
+    const params = {
+      userName: this.processDataService.requestData.atlassianLogin,
+      apiKey: this.processDataService.requestData.atlassianApiKey,
+      jiraBaseUrl: this.processDataService.requestData.atlassianUserJiraUrl,
+      boardId: boardId.toString()
+    };
+
+    return this.http.get<any>(url, { params });
   }
 
   deleteProject(projectKey: string): Observable<string> {

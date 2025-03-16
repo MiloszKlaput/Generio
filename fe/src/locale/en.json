@@ -17,6 +17,7 @@
       "userInfoLogin": "Atlassian user name",
       "userInfoUserId": "Atlassian account ID",
       "userInfoApiKey": "API key",
+      "atlassianUserJiraUrl": "Base url address of user's Jira (●●●.atlassian.net)",
       "validations": {
         "required": "Please fill in the field"
       }

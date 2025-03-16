@@ -20,6 +20,7 @@ export class ProcessDataService {
       atlassianLogin: formData.atlassianLogin.value!,
       atlassianUserId: formData.atlassianUserId.value!,
       atlassianApiKey: formData.atlassianApiKey.value!,
+      atlassianUserJiraUrl: formData.atlassianUserJiraUrl.value!,
       projectName: formData.projectName.value!,
       projectDescription: formData.projectDescription.value!,
       projectKey: formData.projectKey.value!,

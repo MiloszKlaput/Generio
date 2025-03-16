@@ -17,6 +17,7 @@
       "userInfoLogin": "Nazwa użytkownika Atlassian",
       "userInfoUserId": "ID konta Atlassian",
       "userInfoApiKey": "Klucz API",
+      "atlassianUserJiraUrl": "Bazowy adres url Jiry użytkownika (●●●.atlassian.net)",
       "validations": {
         "required": "Uzupełnij pole"
       }

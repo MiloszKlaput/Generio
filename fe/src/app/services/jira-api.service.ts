@@ -21,6 +21,7 @@ export class JiraApiService {
     const params = {
       userName: this.processDataService.requestData.atlassianLogin,
       apiKey: this.processDataService.requestData.atlassianApiKey,
+      jiraBaseUrl: this.processDataService.requestData.atlassianUserJiraUrl,
       projectKey
     }
 
@@ -32,6 +33,7 @@ export class JiraApiService {
     const data = {
       userName: this.processDataService.requestData.atlassianLogin,
       apiKey: this.processDataService.requestData.atlassianApiKey,
+      jiraBaseUrl: this.processDataService.requestData.atlassianUserJiraUrl,
       project
     };
 
@@ -43,6 +45,7 @@ export class JiraApiService {
     const data = {
       userName: this.processDataService.requestData.atlassianLogin,
       apiKey: this.processDataService.requestData.atlassianApiKey,
+      jiraBaseUrl: this.processDataService.requestData.atlassianUserJiraUrl,
       projectKey
     };
 
@@ -54,6 +57,7 @@ export class JiraApiService {
     const data = {
       userName: this.processDataService.requestData.atlassianLogin,
       apiKey: this.processDataService.requestData.atlassianApiKey,
+      jiraBaseUrl: this.processDataService.requestData.atlassianUserJiraUrl,
       sprint
     };
 
@@ -65,6 +69,7 @@ export class JiraApiService {
     const data = {
       userName: this.processDataService.requestData.atlassianLogin,
       apiKey: this.processDataService.requestData.atlassianApiKey,
+      jiraBaseUrl: this.processDataService.requestData.atlassianUserJiraUrl,
       issues
     };
 
@@ -76,6 +81,7 @@ export class JiraApiService {
     const data = {
       userName: this.processDataService.requestData.atlassianLogin,
       apiKey: this.processDataService.requestData.atlassianApiKey,
+      jiraBaseUrl: this.processDataService.requestData.atlassianUserJiraUrl,
       epicId: moveToEpicData.id,
       issues: moveToEpicData.issuesKeys
     };
@@ -88,6 +94,7 @@ export class JiraApiService {
     const data = {
       userName: this.processDataService.requestData.atlassianLogin,
       apiKey: this.processDataService.requestData.atlassianApiKey,
+      jiraBaseUrl: this.processDataService.requestData.atlassianUserJiraUrl,
       sprintId: moveToSprintData.id,
       issues: moveToSprintData.issuesKeys
     };

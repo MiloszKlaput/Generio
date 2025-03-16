@@ -5,6 +5,7 @@ export type UserInfoFormControls = {
   atlassianLogin: FormControl<string | null>;
   atlassianUserId: FormControl<string | null>;
   atlassianApiKey: FormControl<string | null>;
+  atlassianUserJiraUrl: FormControl<string | null>;
 };
 
 export type ProjectFormControls = {
@@ -36,6 +37,7 @@ export type MainFormControls = {
   atlassianLogin: FormControl<string | null>;
   atlassianUserId: FormControl<string | null>;
   atlassianApiKey: FormControl<string | null>;
+  atlassianUserJiraUrl: FormControl<string | null>;
   projectName: FormControl<string | null>;
   projectDescription: FormControl<string | null>;
   projectKey: FormControl<string | null>;

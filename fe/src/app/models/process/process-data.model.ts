@@ -8,6 +8,7 @@ export interface RequestData {
   atlassianLogin: string;
   atlassianUserId: string;
   atlassianApiKey: string;
+  atlassianUserJiraUrl: string;
   projectName: string;
   projectDescription: string;
   projectKey: string;

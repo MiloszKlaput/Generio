@@ -17,7 +17,8 @@ export class FormsHelper {
     return new FormGroup<UserInfoFormControls>({
       atlassianLogin: new FormControl<string>('', [Validators.required, whitespaceValidator()]),
       atlassianUserId: new FormControl<string>('', [Validators.required, whitespaceValidator()]),
-      atlassianApiKey: new FormControl<string>('', [Validators.required, whitespaceValidator()])
+      atlassianApiKey: new FormControl<string>('', [Validators.required, whitespaceValidator()]),
+      atlassianUserJiraUrl: new FormControl<string>('', [Validators.required, whitespaceValidator()])
     });
   }
 
@@ -88,6 +89,7 @@ export class FormsHelper {
       atlassianLogin: new FormControl<string>(''),
       atlassianUserId: new FormControl<string>(''),
       atlassianApiKey: new FormControl<string>(''),
+      atlassianUserJiraUrl: new FormControl<string>(''),
       projectName: new FormControl<string>(''),
       projectDescription: new FormControl<string>(''),
       projectKey: new FormControl<string>(''),
@@ -115,6 +117,7 @@ export class FormsHelper {
       atlassianLogin: userInfoForm.value.atlassianLogin,
       atlassianUserId: userInfoForm.value.atlassianUserId,
       atlassianApiKey: userInfoForm.value.atlassianApiKey,
+      atlassianUserJiraUrl: userInfoForm.value.atlassianUserJiraUrl,
       projectName: projectForm.value.projectName,
       projectKey: projectForm.value.projectKey,
       projectDescription: projectForm.value.projectDescription,

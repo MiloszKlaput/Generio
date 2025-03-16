@@ -42,6 +42,18 @@
             }
           </mat-form-field>
 
+          <mat-form-field>
+            <mat-label>
+              {{ 'form.userInfo.atlassianUserJiraUrl' | translate }}
+            </mat-label>
+            <input formControlName="atlassianUserJiraUrl" matInput (blur)="onBlur(fu.atlassianUserJiraUrl)" />
+            @if (fu.atlassianUserJiraUrl.errors?.['required'] && fu.atlassianUserJiraUrl.touched) {
+              <mat-error>
+                {{ 'form.userInfo.validations.required' | translate }}
+              </mat-error>
+            }
+          </mat-form-field>
+
           <div class="stepper-actions">
             <button mat-flat-button matStepperNext [disabled]="!userInfoForm.valid">
               {{ 'actions.nextButton' | translate }}

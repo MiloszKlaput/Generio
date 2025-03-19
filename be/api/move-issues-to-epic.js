@@ -5,7 +5,7 @@ const apiAgileUrl = process.env.API_AGILE_URL;
 
 async function moveIssuesToEpic(req, res) {
   try {
-    const url = `https://${req.body.jiraBaseUrl}.atlassian.net${apiAgileUrl}/epic/${req.body.epicId}/issue`;
+    const url = `${req.body.jiraBaseUrl}${apiAgileUrl}/epic/${req.body.epicId}/issue`;
     const data = { issues: req.body.issues };
     const config = {
       headers: { 'Content-Type': 'application/json' },
@@ -19,8 +19,17 @@ async function moveIssuesToEpic(req, res) {
     return res.status(200).json(response.data);
 
   } catch (error) {
-    console.log(error);
-    const errorMessage = error.response.data.errors ?? error.response.data.errorMessages;
+    let errorMessage = '';
+    if (error.response) {
+      errorMessage = error.response.data.errors ?? error.response.data.errorMessages;
+      console.error("Error response: ", errorMessage);
+    } else if (error.request) {
+      errorMessage = 'Wystąpił nieznany błąd.'
+      console.error("No response received: ", error.request);
+    } else {
+      errorMessage = 'Wystąpił nieznany błąd.'
+      console.error("Error during request setup: ", error.message);
+    }
     return res.status(500).json(errorMessage);
   }
 }

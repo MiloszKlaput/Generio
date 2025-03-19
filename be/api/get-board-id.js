@@ -5,7 +5,7 @@ const apiAgileUrl = process.env.API_AGILE_URL;
 
 async function getBoardId(req, res) {
   try {
-    const url = `https://${req.query.jiraBaseUrl}.atlassian.net${apiAgileUrl}/board?projectKeyOrId=${req.query.projectKey}`;
+    const url = `${req.query.jiraBaseUrl}${apiAgileUrl}/board?projectKeyOrId=${req.query.projectKey}`;
     const config = {
       headers: { 'Content-Type': 'application/json' },
       auth: {
@@ -19,8 +19,17 @@ async function getBoardId(req, res) {
     return res.json({ data: response.data.values[0].id });
 
   } catch (error) {
-    console.log(error);
-    const errorMessage = error.response.data.errors ?? error.response.data.errorMessages;
+    let errorMessage = '';
+    if (error.response) {
+      errorMessage = error.response.data.errors ?? error.response.data.errorMessages;
+      console.error("Error response: ", errorMessage);
+    } else if (error.request) {
+      errorMessage = 'Wystąpił nieznany błąd.'
+      console.error("No response received: ", error.request);
+    } else {
+      errorMessage = 'Wystąpił nieznany błąd.'
+      console.error("Error during request setup: ", error.message);
+    }
     return res.status(500).json(errorMessage);
   }
 }

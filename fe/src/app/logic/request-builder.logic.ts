@@ -78,7 +78,11 @@ export class RequestBuilder {
     ];
 
     for (let i = 1; i <= issuesCount; i++) {
-      const issueTypeObject = issueTypes.find(t => t.count > 0)!;
+      const issueTypeObject = issueTypes.find(t => t.count > 0);
+
+      if (!issueTypeObject) {
+        break;
+      }
 
       result.push(this.createIssue(projectKey, `Tytuł zadania ${i}`, issueTypeObject.type));
 

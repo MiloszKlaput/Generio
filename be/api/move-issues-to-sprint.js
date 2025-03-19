@@ -5,7 +5,7 @@ const apiAgileUrl = process.env.API_AGILE_URL;
 
 async function moveIssuesToSprint(req, res) {
   try {
-    const url = `https://${req.body.jiraBaseUrl}.atlassian.net${apiAgileUrl}/sprint/${req.body.sprintId}/issue`;
+    const url = `${req.body.jiraBaseUrl}${apiAgileUrl}/sprint/${req.body.sprintId}/issue`;
     const data = { issues: req.body.issues };
     const config = {
       headers: { 'Content-Type': 'application/json' },
@@ -19,8 +19,17 @@ async function moveIssuesToSprint(req, res) {
     return res.json({ data: response.data });
 
   } catch (error) {
-    console.log(error);
-    const errorMessage = error.response.data.errors ?? error.response.data.errorMessages;
+    let errorMessage = '';
+    if (error.response) {
+      errorMessage = error.response.data.errors ?? error.response.data.errorMessages;
+      console.error("Error response: ", errorMessage);
+    } else if (error.request) {
+      errorMessage = 'Wystąpił nieznany błąd.'
+      console.error("No response received: ", error.request);
+    } else {
+      errorMessage = 'Wystąpił nieznany błąd.'
+      console.error("Error during request setup: ", error.message);
+    }
     return res.status(500).json(errorMessage);
   }
 }

@@ -6,7 +6,7 @@ import { SprintRequest, SprintResponse } from '../models/sprint/sprint.model';
 import { MoveToEpicRequest } from '../models/issue/move-to-epic.model';
 import { MoveToSprintRequest } from '../models/issue/move-to-sprint.model';
 import { MainFormControls } from '../types/main-form-controls.type';
-import { from, switchMap, mergeMap, toArray, tap, Observable, catchError, throwError, concatMap, concat, of } from 'rxjs';
+import { from, mergeMap, toArray, tap, Observable, catchError, throwError, of, concatMap } from 'rxjs';
 import { BoardIdResponse } from '../models/board/board.model';
 import { WorkflowSimulator } from '../logic/workflow-simulator.logic';
 import { FileHelper } from '../helpers/file.helper';
@@ -31,25 +31,26 @@ export class JiraPopulateProcessService {
     this.processDataService.initRequestData(mainFormData);
     this.processDataService.initResponseData();
 
-    concat([
-      this.createNewProject(mainFormData),
-      this.getBoardId(),
-      this.deleteSprintZero(),
-      this.createSprints(mainFormData),
-      this.createEpics(mainFormData),
-      this.createIssues(mainFormData),
-      this.moveIssuesToEpics(),
-      this.simulateBusinessWorkflow(),
-      this.moveIssuesToSprints()
-    ]).subscribe({
-      next: () => {
-        this.createImportFile();
-        this.processStateService.setProcessState(ProcessState.Success);
-      },
-      error: (err) => {
-        this.handleError(err);
-      }
-    });
+    this.createNewProject(mainFormData)
+      .pipe(
+        concatMap(() => this.getBoardId()),
+        concatMap(() => this.deleteSprintZero()),
+        concatMap(() => this.createSprints(mainFormData)),
+        concatMap(() => this.createEpics(mainFormData)),
+        concatMap(() => this.createIssues(mainFormData)),
+        concatMap(() => this.moveIssuesToEpics()),
+        concatMap(() => this.simulateBusinessWorkflow()),
+        concatMap(() => this.moveIssuesToSprints())
+      )
+      .subscribe({
+        next: () => {
+          this.createImportFile();
+          this.processStateService.setProcessState(ProcessState.Success);
+        },
+        error: (err) => {
+          this.handleError(err);
+        }
+      });
   }
 
   clearData(): void {

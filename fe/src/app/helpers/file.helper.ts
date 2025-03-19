@@ -13,7 +13,7 @@ export class FileHelper {
         issueType: issue.fields.issuetype ? issue.fields.issuetype.id : '',
         status: issue.fields.status !== undefined ? issue.fields.status : '',
         resolution: issue.fields.status !== undefined ? issue.fields.resolution! : '',
-        created: issue.fields.created !== undefined ? issue.fields.created : '',
+        created: issue.fields.created !== undefined ? issue.fields.created! : '',
         updated: issue.fields.updated !== undefined ? issue.fields.updated! : ''
       }))
     };

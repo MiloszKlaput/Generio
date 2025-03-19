@@ -6,8 +6,7 @@ import { SprintRequest, SprintResponse } from '../models/sprint/sprint.model';
 import { MoveToEpicRequest } from '../models/issue/move-to-epic.model';
 import { MoveToSprintRequest } from '../models/issue/move-to-sprint.model';
 import { MainFormControls } from '../types/main-form-controls.type';
-import { DateTime } from 'luxon';
-import { from, switchMap, mergeMap, toArray, tap, Observable, catchError, throwError } from 'rxjs';
+import { from, switchMap, mergeMap, toArray, tap, Observable, catchError, throwError, concatMap, concat, of } from 'rxjs';
 import { BoardIdResponse } from '../models/board/board.model';
 import { WorkflowSimulator } from '../logic/workflow-simulator.logic';
 import { FileHelper } from '../helpers/file.helper';
@@ -32,25 +31,25 @@ export class JiraPopulateProcessService {
     this.processDataService.initRequestData(mainFormData);
     this.processDataService.initResponseData();
 
-    this.createNewProject(mainFormData)
-      .pipe(
-        switchMap(() => this.getBoardId()),
-        switchMap(() => this.deleteSprintZero()),
-        switchMap(() => this.createSprints(mainFormData)),
-        switchMap(() => this.createEpics(mainFormData)),
-        switchMap(() => this.createIssues(mainFormData)),
-        switchMap(() => this.moveIssuesToEpics())
-      )
-      .subscribe({
-        next: () => {
-          this.simulateBusinessWorkflow();
-          this.createImportFile();
-          this.processStateService.setProcessState(ProcessState.Success);
-        },
-        error: (err) => {
-          this.handleError(err);
-        }
-      });
+    concat([
+      this.createNewProject(mainFormData),
+      this.getBoardId(),
+      this.deleteSprintZero(),
+      this.createSprints(mainFormData),
+      this.createEpics(mainFormData),
+      this.createIssues(mainFormData),
+      this.moveIssuesToEpics(),
+      this.simulateBusinessWorkflow(),
+      this.moveIssuesToSprints()
+    ]).subscribe({
+      next: () => {
+        this.createImportFile();
+        this.processStateService.setProcessState(ProcessState.Success);
+      },
+      error: (err) => {
+        this.handleError(err);
+      }
+    });
   }
 
   clearData(): void {
@@ -180,8 +179,23 @@ export class JiraPopulateProcessService {
     );
   }
 
-  private simulateBusinessWorkflow(): void {
-    WorkflowSimulator.simulateBusinessWorkflow(this.processDataService.requestData, this.processDataService.responseData, this.issues);
+  private moveIssuesToSprints(): Observable<any> {
+    const requests: MoveToSprintRequest[] = RequestBuilder.buildMoveToSprintRequest(this.processDataService.requestData.sprintIssuesAssigment!);
+
+    return from(requests).pipe(
+      mergeMap((req: MoveToSprintRequest) => this.apiService.moveIssuesToSprint(req)),
+      toArray(),
+      catchError((err) => {
+        return throwError(() => err);
+      })
+    );
+  }
+
+  private simulateBusinessWorkflow(): Observable<{ [key: string]: { sprintId: number, issues: Issue[] } }> {
+    const sprintsAssigments = WorkflowSimulator.simulateBusinessWorkflow(this.processDataService.requestData, this.processDataService.responseData, this.issues);
+    this.processDataService.requestData.sprintIssuesAssigment = sprintsAssigments;
+
+    return of(sprintsAssigments);
   }
 
   private createImportFile(): void {

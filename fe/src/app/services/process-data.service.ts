@@ -34,8 +34,8 @@ export class ProcessDataService {
         bug: formData.issuesTypes.value.bug!,
         task: formData.issuesTypes.value.task!
       },
-      sprintIssuesAssigment: [],
-      issues: []
+      issues: [],
+      sprintIssuesAssigment: null
     };
   }
 

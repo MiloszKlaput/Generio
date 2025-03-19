@@ -128,16 +128,19 @@ export class RequestBuilder {
     return moveToEpicRequestData;
   }
 
-  static buildMoveToSprintRequest(sprintsIds: number[], issues: Issue[]): MoveToSprintRequest[] {
-    let moveToSprintRequestData: MoveToSprintRequest[];
-    moveToSprintRequestData = sprintsIds.map(sprintsId => ({ id: sprintsId, issuesKeys: [] }));
+  static buildMoveToSprintRequest(sprintIssuesAssigment: { [key: string]: { sprintId: number, issues: Issue[] } }): MoveToSprintRequest[] {
+  const moveToSprintRequestData: MoveToSprintRequest[] = [];
 
-    for (let i = 0; i < issues.length; i++) {
-      const sprintIndex = i % sprintsIds.length;
-      moveToSprintRequestData[sprintIndex].issuesKeys.push(issues[i].key);
-    }
+  Object.keys(sprintIssuesAssigment).forEach((sprintKey) => {
+    const sprintData = sprintIssuesAssigment[sprintKey];
 
-    return moveToSprintRequestData;
+    moveToSprintRequestData.push({
+      id: sprintData.sprintId,
+      issuesKeys: sprintData.issues.map(issue => issue.key),
+    });
+  });
+
+  return moveToSprintRequestData;
   }
 
   private static createIssue(projectKey: string, summary: string, issueType: IssueTypeEnum): IssueRequest {

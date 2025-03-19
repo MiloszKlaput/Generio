@@ -1,8 +1,7 @@
 import { DateTime } from "luxon";
 import { IssueResponse } from "../issue/issue-response.model";
-import { MoveToSprintRequest } from "../issue/move-to-sprint.model";
 import { SprintResponse } from "../sprint/sprint.model";
-import { IssueRequest } from "../issue/issue.model";
+import { Issue, IssueRequest } from "../issue/issue.model";
 
 export interface RequestData {
   atlassianLogin: string;
@@ -22,8 +21,8 @@ export interface RequestData {
     bug: boolean;
     task: boolean;
   },
-  sprintIssuesAssigment: MoveToSprintRequest[];
   issues: IssueRequest[];
+  sprintIssuesAssigment: { [key: string]: { sprintId: number, issues: Issue[] } } | null;
 }
 
 export interface ResponseData {

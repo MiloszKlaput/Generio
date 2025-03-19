@@ -22,8 +22,9 @@ export interface IssueFields {
   issuetype: IssueType;
   project: IssueProject;
   summary: string;
-  created?: string;
+  created?: string | null;
   updated?: string | null;
   status?: string;
   resolution?: string;
+  storyPoints?: number;
 }

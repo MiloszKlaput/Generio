@@ -60,16 +60,15 @@ export class RequestBuilder {
     const issuesCount = f.issuesCount.value!;
 
     // Założenie: zakres story 60% - 80% wszystkich issues
-    const storyPercentage = Math.floor(Math.random() * (80 - 60 + 1)) + 60; // 50% - 80%
+    const storyPercentage = Math.floor(Math.random() * (80 - 60 + 1)) + 60;
     const remainingPercentage = 100 - storyPercentage;
     // Założenie: taski zajmują minimum 5%
-    const taskPercentage = Math.floor(Math.random() * (remainingPercentage - 5 + 1)) + 5; // 5% do remainingPercentage
-    // Pozostały procent na bugi
-    const bugPercentage = remainingPercentage - taskPercentage;
+    const taskPercentage = Math.floor(Math.random() * (remainingPercentage - 5 + 1)) + 5;
 
     const storyCount = Math.floor(issuesCount * (storyPercentage / 100));
-    const bugCount = Math.floor(issuesCount * (bugPercentage / 100));
     const taskCount = Math.floor(issuesCount * (taskPercentage / 100));
+    // Pozostałe issues to bugi
+    const bugCount = issuesCount - (storyCount + taskCount);
 
     const issueTypes: { type: IssueTypeEnum; count: number }[] = [
       { type: IssueTypeEnum.Story, count: storyCount },
@@ -133,18 +132,18 @@ export class RequestBuilder {
   }
 
   static buildMoveToSprintRequest(sprintIssuesAssigment: { [key: string]: { sprintId: number, issues: Issue[] } }): MoveToSprintRequest[] {
-  const moveToSprintRequestData: MoveToSprintRequest[] = [];
+    const moveToSprintRequestData: MoveToSprintRequest[] = [];
 
-  Object.keys(sprintIssuesAssigment).forEach((sprintKey) => {
-    const sprintData = sprintIssuesAssigment[sprintKey];
+    Object.keys(sprintIssuesAssigment).forEach((sprintKey) => {
+      const sprintData = sprintIssuesAssigment[sprintKey];
 
-    moveToSprintRequestData.push({
-      id: sprintData.sprintId,
-      issuesKeys: sprintData.issues.map(issue => issue.key),
+      moveToSprintRequestData.push({
+        id: sprintData.sprintId,
+        issuesKeys: sprintData.issues.map(issue => issue.key),
+      });
     });
-  });
 
-  return moveToSprintRequestData;
+    return moveToSprintRequestData;
   }
 
   private static createIssue(projectKey: string, summary: string, issueType: IssueTypeEnum): IssueRequest {

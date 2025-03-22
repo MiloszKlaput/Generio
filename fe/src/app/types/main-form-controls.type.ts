@@ -26,11 +26,6 @@ export type EpicsFormControls = {
 
 export type IssuesFormControls = {
   issuesCount: FormControl<number | null>;
-  issuesTypes: FormGroup<{
-    story: FormControl<boolean | null>,
-    bug: FormControl<boolean | null>,
-    task: FormControl<boolean | null>
-  }>;
 };
 
 export type MainFormControls = {

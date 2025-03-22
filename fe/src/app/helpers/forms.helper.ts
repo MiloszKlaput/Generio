@@ -75,12 +75,7 @@ export class FormsHelper {
       issuesCount: new FormControl<number>(1, [
         Validators.required,
         Validators.min(1)
-      ]),
-      issuesTypes: new FormGroup({
-        story: new FormControl<boolean>(true),
-        bug: new FormControl<boolean>(false),
-        task: new FormControl<boolean>(false)
-      }, { validators: atLeastOneChecked() })
+      ])
     });
   }
 
@@ -125,8 +120,7 @@ export class FormsHelper {
       sprintDuration: sprintsForm.value.sprintDuration ? sprintsForm.value.sprintDuration * 7 : null,
       projectStartDate: sprintsForm.value.projectStartDate,
       epicsCount: epicsForm.value.epicsCount,
-      issuesCount: issuesForm.value.issuesCount,
-      issuesTypes: issuesForm.value.issuesTypes
+      issuesCount: issuesForm.value.issuesCount
     });
   }
 }

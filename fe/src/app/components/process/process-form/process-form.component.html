@@ -279,26 +279,6 @@
           }
         </mat-form-field>
 
-        <mat-label>
-          {{ 'form.issues.issuesTypesLabel' | translate }}
-        </mat-label>
-        <div formGroupName="issuesTypes">
-          <mat-checkbox formControlName="story">
-            {{ 'form.issues.issueTypeStory' | translate }}
-          </mat-checkbox>
-          <mat-checkbox formControlName="bug">
-            {{ 'form.issues.issueTypeBug' | translate }}
-          </mat-checkbox>
-          <mat-checkbox formControlName="task">
-            {{ 'form.issues.issueTypeTask' | translate }}
-          </mat-checkbox>
-        </div>
-        @if (fi.issuesTypes.errors?.['atLeastOneChecked']) {
-          <mat-error>
-            {{ 'form.issues.validations.issuesTypesError' | translate }}
-          </mat-error>
-        }
-
         <div class="stepper-actions">
           <button mat-raised-button matStepperPrevious>
             {{ 'actions.backButton' | translate }}
@@ -395,17 +375,6 @@
               <div class="summary-item">
                 <div>
                   {{ 'form.summary.summaryIssuesTypes' | translate }}
-                </div>
-                <div class="summary-value">
-                  @if (fi.issuesTypes.value.story) {
-                    {{ 'form.summary.summaryIssueTypeStory' | translate }}
-                  }
-                  @if (fi.issuesTypes.value.bug) {
-                    {{ 'form.summary.summaryIssueTypeBug' | translate }}
-                  }
-                  @if (fi.issuesTypes.value.task) {
-                    {{ 'form.summary.summaryIssueTypeTask' | translate }}
-                  }
                 </div>
               </div>
             </div>

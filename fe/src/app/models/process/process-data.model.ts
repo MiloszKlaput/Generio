@@ -16,11 +16,6 @@ export interface RequestData {
   projectStartDate: DateTime;
   epicsCount: number;
   issuesCount: number;
-  issuesTypes: {
-    story: boolean;
-    bug: boolean;
-    task: boolean;
-  },
   issues: IssueRequest[];
   sprintIssuesAssigment: { [key: string]: { sprintId: number, issues: Issue[] } } | null;
 }

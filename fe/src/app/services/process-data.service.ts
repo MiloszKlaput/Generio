@@ -29,11 +29,6 @@ export class ProcessDataService {
       projectStartDate: DateTime.fromJSDate(formData.projectStartDate.value!),
       epicsCount: formData.epicsCount.value!,
       issuesCount: formData.issuesCount.value!,
-      issuesTypes: {
-        story: formData.issuesTypes.value.story!,
-        bug: formData.issuesTypes.value.bug!,
-        task: formData.issuesTypes.value.task!
-      },
       issues: [],
       sprintIssuesAssigment: null
     };

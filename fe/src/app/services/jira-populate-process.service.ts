@@ -181,7 +181,7 @@ export class JiraPopulateProcessService {
   }
 
   private simulateBusinessWorkflow(): Observable<{ [key: string]: { sprintId: number, issues: Issue[] } }> {
-    const sprintsAssigments = WorkflowSimulator.simulateBusinessWorkflow(this.processDataService.requestData, this.processDataService.responseData, this.issues);
+    const sprintsAssigments = WorkflowSimulator.simulateSprintWorkflow(this.processDataService.requestData, this.processDataService.responseData, this.issues);
     this.processDataService.requestData.sprintIssuesAssigment = sprintsAssigments;
 
     return of(sprintsAssigments);

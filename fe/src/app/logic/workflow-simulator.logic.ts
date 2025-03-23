@@ -8,8 +8,9 @@ export class WorkflowSimulator {
   static scrumTeamMembers = 7;
   static scrumTeamMemberMaximumVelocity = 10;
   static sprintCapacity = WorkflowSimulator.scrumTeamMembers * WorkflowSimulator.scrumTeamMemberMaximumVelocity;
+  static maxCarryOverStoryPoints = WorkflowSimulator.sprintCapacity * 0.2;
 
-  static simulateBusinessWorkflow(requestData: RequestData, responseData: ResponseData, issues: Issue[]): { [key: string]: { sprintId: number, issues: Issue[] } } {
+  static simulateSprintWorkflow(requestData: RequestData, responseData: ResponseData, issues: Issue[]): { [key: string]: { sprintId: number, issues: Issue[] } } {
     const projectStartDate = requestData.projectStartDate;
     const sprintDuration = requestData.sprintDuration;
     const sprintsCount = requestData.sprintsCount;
@@ -20,19 +21,30 @@ export class WorkflowSimulator {
     let remainingIssues = [...shuffledIssues];
     let sprintStartDate = projectStartDate;
     let carryOverIssues: Issue[] = [];
+    const today = DateTime.now();
 
     for (let sprint = 0; sprint < sprintsCount; sprint++) {
       let sprintCapacity = WorkflowSimulator.sprintCapacity;
-      let sprintIssues: Issue[] = [...carryOverIssues];
+      let sprintIssues: Issue[] = [];
 
       const carryOverStoryPoints = carryOverIssues.reduce((sum, issue) => sum + (issue.fields.storyPoints || 0), 0);
       sprintCapacity -= carryOverStoryPoints;
-      carryOverIssues = [];
 
       sprintAssignments[sprint.toString()] = { sprintId: sprints[sprint].data.id, issues: [] };
 
       const sprintEndDate = sprintStartDate.plus({ days: sprintDuration });
-      const today = DateTime.now();
+      const isClosed = sprintEndDate.startOf('day') < today.startOf('day');
+      const isActive = sprintStartDate.startOf('day') <= today.startOf('day') && sprintEndDate.startOf('day') > today.startOf('day');
+      const isFuture = sprintStartDate.startOf('day') > today.startOf('day');
+      const daysUntilSprintEnd = sprintEndDate.diff(today, 'days').days;
+
+      for (const issue of carryOverIssues) {
+        issue.fields.status = "Done";
+        issue.fields.resolution = "Done";
+        issue.fields.updated = sprintEndDate.toISO()?.toString(); // do zmiany
+        sprintAssignments[sprint.toString()].issues.push(issue);
+      }
+      carryOverIssues = [];
 
       while (remainingIssues.length > 0 && sprintCapacity > 0) {
         const randomIndex = Math.floor(Math.random() * remainingIssues.length);
@@ -45,17 +57,50 @@ export class WorkflowSimulator {
           // 80% zadań założonych przed rozpoczęciem sprintu
           const createdBeforeSprint = Math.random() < 0.8;
           const createdDate = createdBeforeSprint
-            ? this.randomDateBetween(sprintStartDate.minus({ days: sprintDuration }), sprintStartDate)
+            ? this.randomDateBetween(sprintStartDate.minus({ days: sprintDuration }), sprintStartDate).toISO()?.toString()
             // -3 dni od końca sprintu
-            : this.randomDateBetween(sprintStartDate, sprintStartDate.plus({ days: sprintDuration - 3 }));
+            : this.randomDateBetween(sprintStartDate, sprintEndDate.plus({ days: 3 })).toISO()?.toString();
+          currentIssue.fields.created = createdDate;
 
-          currentIssue.fields.created = createdDate.toISO()?.toString();
-          currentIssue.fields.updated = createdDate.toISO()?.toString();
-          currentIssue.fields.status = "In Progress";
+          if (isClosed) {
+            const completionProbability = this.calculateCompletionProbability(storyPoints, 0.7);
 
-          if (sprintEndDate.startOf('day') < today.startOf('day')) {
-            currentIssue.fields.status = "Done";
-            currentIssue.fields.resolution = "Done";
+            if (Math.random() < completionProbability) {
+              currentIssue.fields.status = "Done";
+              currentIssue.fields.resolution = "Done";
+              currentIssue.fields.updated = this.randomDateBasedOnProbability(sprintEndDate, 0.9 + storyPoints * 0.02).toISO()?.toString();
+            } else {
+              currentIssue.fields.status = "In Progress";
+              currentIssue.fields.resolution = undefined;
+              currentIssue.fields.updated = this.randomDateBasedOnProbability(sprintStartDate, 0.3 + storyPoints * 0.02).toISO()?.toString();
+              carryOverIssues.push(currentIssue);
+            }
+          }
+
+          if (isActive) {
+            const sprintProgress = (sprintDuration - daysUntilSprintEnd) / sprintDuration;
+            const completionProbability = Math.max(0, sprintProgress);
+
+            if (Math.random() < completionProbability) {
+              currentIssue.fields.status = "Done";
+              currentIssue.fields.resolution = "Done";
+              currentIssue.fields.updated = this.randomDateBasedOnProbability(sprintEndDate, 0.7 + storyPoints * 0.02 + sprintProgress * 0.3).toISO()?.toString();
+            } else if (Math.random() < sprintProgress * 0.7) {
+              currentIssue.fields.status = "In Progress";
+              currentIssue.fields.resolution = undefined;
+              currentIssue.fields.updated = this.randomDateBasedOnProbability(today, 0.5 + sprintProgress * 0.4).toISO()?.toString();
+              carryOverIssues.push(currentIssue);
+            } else {
+              currentIssue.fields.status = "To Do";
+              currentIssue.fields.resolution = undefined;
+              currentIssue.fields.updated = createdDate;
+            }
+          }
+
+          if (isFuture) {
+            currentIssue.fields.status = "To Do";
+            currentIssue.fields.updated = createdDate;
+            currentIssue.fields.resolution = undefined;
           }
 
           sprintAssignments[sprint.toString()].issues.push(currentIssue);
@@ -88,8 +133,19 @@ export class WorkflowSimulator {
     if (diff <= 0) {
       return start;
     }
+
     const offset = Math.floor(Math.random() * diff);
     return start.plus({ milliseconds: offset });
+  }
+
+  static randomDateBasedOnProbability(endDate: DateTime, probability: number): DateTime {
+    const daysOffset = Math.floor(probability * endDate.diff(DateTime.now(), 'days').days);
+    return DateTime.now().plus({ days: daysOffset });
+  }
+
+  static calculateCompletionProbability(storyPoints: number, baseProbability: number): number {
+    const penalty = storyPoints * 0.03;
+    return Math.max(0.1, baseProbability - penalty);
   }
 
   private static getRandomStoryPoints(): number {

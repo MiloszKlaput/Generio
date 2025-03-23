@@ -116,14 +116,12 @@ export class RequestBuilder {
   static buildMoveToSprintRequest(sprintIssuesAssigment: { [key: string]: { sprintId: number, issues: Issue[] } }): MoveToSprintRequest[] {
     const moveToSprintRequestData: MoveToSprintRequest[] = [];
 
-    Object.keys(sprintIssuesAssigment).forEach((sprintKey) => {
-      const sprintData = sprintIssuesAssigment[sprintKey];
-
+    for (const [sprintKey, sprintData] of Object.entries(sprintIssuesAssigment)) {
       moveToSprintRequestData.push({
         id: sprintData.sprintId,
         issuesKeys: sprintData.issues.map(issue => issue.key),
       });
-    });
+    }
 
     return moveToSprintRequestData;
   }

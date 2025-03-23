@@ -9,10 +9,16 @@ import { FileData } from '../../../models/process/file-data.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProcessStateService } from '../../../services/process-state.service';
 import { ProcessState } from '../../../enums/process-state.enum';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'process-success',
-  imports: [MatIconModule, MatButtonModule, TranslateModule],
+  imports: [
+    MatIconModule,
+    MatButtonModule,
+    TranslateModule,
+    AsyncPipe
+  ],
   templateUrl: './process-success.component.html',
   styleUrl: './process-success.component.scss'
 })

@@ -19,18 +19,16 @@ async function createIssues(req, res) {
     return res.json(response.data);
 
   } catch (error) {
-    let errorMessage = '';
+    console.error('Error occurred: ', error.message);
+
+    let errorMessage = 'Wystąpił nieznany błąd.';
     if (error.response) {
-      errorMessage = error.response.data.errors ?? error.response.data.errorMessages;
-      console.error("Error response: ", errorMessage);
+      errorMessage = error.response.data?.errors || error.response.data?.errorMessages || error.response.data || errorMessage;
     } else if (error.request) {
-      errorMessage = 'Wystąpił nieznany błąd.'
-      console.error("No response received: ", error.request);
-    } else {
-      errorMessage = 'Wystąpił nieznany błąd.'
-      console.error("Error during request setup: ", error.message);
+      errorMessage = 'Brak odpowiedzi z Jira API.';
     }
-    return res.status(500).json(errorMessage);
+
+    return res.status(500).json({ error: errorMessage });
   }
 }
 

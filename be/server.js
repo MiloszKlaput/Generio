@@ -11,6 +11,7 @@ const moveIssuesToSprint = require('./api/move-issues-to-sprint.js');
 const moveIssuesToEpic = require('./api/move-issues-to-epic.js');
 const deleteProject = require('./api/delete-project.js');
 const deleteSprintZero = require('./api/delete-sprint-zero.js');
+const updateSprint = require('./api/update-sprint.js');
 
 const port = process.env.PORT || 8000;
 
@@ -26,5 +27,6 @@ app.post('/move-issues-to-epic', (req, res) => moveIssuesToEpic(req, res));
 app.post('/move-issues-to-sprint', (req, res) => moveIssuesToSprint(req, res));
 app.post('/delete-project', (req, res) => deleteProject(req, res));
 app.get('/delete-sprint-zero', (req, res) => deleteSprintZero(req, res));
+app.put('/update-sprint', (req, res) => updateSprint(req, res));
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));

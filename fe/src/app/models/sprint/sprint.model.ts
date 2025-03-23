@@ -1,9 +1,17 @@
 export interface SprintRequest {
-  endDate: string;
-  goal: string;
-  name: string;
-  originBoardId: number;
   startDate: string;
+  endDate: string;
+  name: string;
+  goal: string;
+  originBoardId: number;
+}
+
+export interface SprintUpdateRequest {
+  startDate: string;
+  endDate: string;
+  id: number;
+  name: string;
+  state: string; // future / active / close
 }
 
 export interface SprintResponse {

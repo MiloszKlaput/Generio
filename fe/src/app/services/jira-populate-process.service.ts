@@ -2,11 +2,11 @@ import { inject, Injectable } from '@angular/core';
 import { JiraApiService } from './jira-api.service';
 import { RequestBuilder } from '../logic/request-builder.logic';
 import { ProjectRequest, ProjectResponse } from '../models/project/project.model';
-import { SprintRequest, SprintResponse } from '../models/sprint/sprint.model';
+import { SprintRequest, SprintResponse, SprintUpdateRequest } from '../models/sprint/sprint.model';
 import { MoveToEpicRequest } from '../models/issue/move-to-epic.model';
 import { MoveToSprintRequest } from '../models/issue/move-to-sprint.model';
 import { MainFormControls } from '../types/main-form-controls.type';
-import { from, mergeMap, toArray, tap, Observable, catchError, throwError, of, concatMap } from 'rxjs';
+import { from, mergeMap, toArray, tap, Observable, catchError, throwError, of, concatMap, concat } from 'rxjs';
 import { BoardIdResponse } from '../models/board/board.model';
 import { WorkflowSimulator } from '../logic/workflow-simulator.logic';
 import { FileHelper } from '../helpers/file.helper';
@@ -40,7 +40,8 @@ export class JiraPopulateProcessService {
         concatMap(() => this.createIssues(mainFormData)),
         concatMap(() => this.moveIssuesToEpics()),
         concatMap(() => this.simulateBusinessWorkflow()),
-        concatMap(() => this.moveIssuesToSprints())
+        concatMap(() => this.moveIssuesToSprints()),
+        concatMap(() => this.updateSprints())
       )
       .subscribe({
         next: () => {
@@ -150,21 +151,20 @@ export class JiraPopulateProcessService {
     );
   }
 
-  private createIssues(data: MainFormControls): Observable<{ issues: IssueResponse[], errors: any[] }> {
+  private createIssues(data: MainFormControls): Observable<any> {
     const projectKey = this.processDataService.requestData.projectKey;
-    const issuesRequest: IssueRequest[] = RequestBuilder.buildIssuesRequest(data, projectKey);
-    this.processDataService.requestData.issues = issuesRequest;
+    const issuesRequest: IssueRequest[][] = RequestBuilder.buildIssuesRequest(data, projectKey);
+    this.processDataService.requestData.issues = issuesRequest.flat();
 
-    return this.apiService.createIssues(issuesRequest).pipe(
+    return from(issuesRequest).pipe(
+      concatMap((req: IssueRequest[]) => this.apiService.createIssues(req)),
       tap((result: { issues: IssueResponse[], errors: any[] }) => {
         if (result.issues) {
-          this.processDataService.responseData.issues = result.issues;
+          this.processDataService.responseData.issues.push(...result.issues);
           this.issues = this.processDataService.mergeIssues();
         }
       }),
-      catchError((err) => {
-        return throwError(() => err);
-      })
+      toArray()
     );
   }
 
@@ -180,6 +180,13 @@ export class JiraPopulateProcessService {
     );
   }
 
+  private simulateBusinessWorkflow(): Observable<{ [key: string]: { sprintId: number, issues: Issue[] } }> {
+    const sprintsAssigments = WorkflowSimulator.simulateBusinessWorkflow(this.processDataService.requestData, this.processDataService.responseData, this.issues);
+    this.processDataService.requestData.sprintIssuesAssigment = sprintsAssigments;
+
+    return of(sprintsAssigments);
+  }
+
   private moveIssuesToSprints(): Observable<any> {
     const requests: MoveToSprintRequest[] = RequestBuilder.buildMoveToSprintRequest(this.processDataService.requestData.sprintIssuesAssigment!);
 
@@ -192,11 +199,13 @@ export class JiraPopulateProcessService {
     );
   }
 
-  private simulateBusinessWorkflow(): Observable<{ [key: string]: { sprintId: number, issues: Issue[] } }> {
-    const sprintsAssigments = WorkflowSimulator.simulateBusinessWorkflow(this.processDataService.requestData, this.processDataService.responseData, this.issues);
-    this.processDataService.requestData.sprintIssuesAssigment = sprintsAssigments;
+  private updateSprints(): Observable<any> {
+    const requests = RequestBuilder.buildUpdateSprintsRequest(this.processDataService.responseData.sprints);
 
-    return of(sprintsAssigments);
+    return from(requests).pipe(
+      mergeMap((req: SprintUpdateRequest) => this.apiService.updateSprints(req)),
+      toArray()
+    );
   }
 
   private createImportFile(): void {

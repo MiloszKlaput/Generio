@@ -1,5 +1,9 @@
 import { IssueFields } from "./issue-fields.model";
 
+export interface IssueBulkRequest {
+  issueRequests: IssueRequest[];
+}
+
 export interface IssueRequest {
   fields: IssueFields;
 }

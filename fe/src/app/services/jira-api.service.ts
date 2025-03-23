@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';;
 import { Observable } from 'rxjs';
 import { IssueRequest, IssueResponse } from '../models/issue/issue.model';
-import { SprintRequest, SprintResponse } from '../models/sprint/sprint.model';
+import { SprintRequest, SprintResponse, SprintUpdateRequest } from '../models/sprint/sprint.model';
 import { ProjectRequest, ProjectResponse } from '../models/project/project.model';
 import { MoveToEpicRequest } from '../models/issue/move-to-epic.model';
 import { MoveToSprintRequest } from '../models/issue/move-to-sprint.model';
@@ -112,5 +112,21 @@ export class JiraApiService {
     };
 
     return this.http.post<MoveToSprintRequest>(url, data);
+  }
+
+  updateSprints(sprintUpdateRequest: SprintUpdateRequest): Observable<any> {
+    const url = this.baseUrl + 'update-sprint';
+    const data = {
+      userName: this.processDataService.requestData.atlassianLogin,
+      apiKey: this.processDataService.requestData.atlassianApiKey,
+      jiraBaseUrl: this.processDataService.requestData.atlassianUserJiraUrl,
+      sprintId: sprintUpdateRequest.id,
+      state: sprintUpdateRequest.state,
+      name: sprintUpdateRequest.name,
+      startDate: sprintUpdateRequest.startDate,
+      endDate: sprintUpdateRequest.endDate
+    };
+
+    return this.http.put<any>(url, data);
   }
 }

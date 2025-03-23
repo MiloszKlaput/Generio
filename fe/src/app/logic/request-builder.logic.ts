@@ -4,7 +4,7 @@ import { Issue, IssueRequest } from "../models/issue/issue.model";
 import { MoveToEpicRequest } from "../models/issue/move-to-epic.model";
 import { MoveToSprintRequest } from "../models/issue/move-to-sprint.model";
 import { ProjectRequest } from "../models/project/project.model";
-import { SprintRequest } from "../models/sprint/sprint.model";
+import { SprintRequest, SprintResponse, SprintUpdateRequest } from "../models/sprint/sprint.model";
 import { MainFormControls } from "../types/main-form-controls.type";
 
 export class RequestBuilder {
@@ -55,7 +55,7 @@ export class RequestBuilder {
     return result;
   }
 
-  static buildIssuesRequest(f: MainFormControls, projectKey: string): IssueRequest[] {
+  static buildIssuesRequest(f: MainFormControls, projectKey: string): IssueRequest[][] {
     const result: IssueRequest[] = [];
     const issuesCount = f.issuesCount.value!;
 
@@ -84,48 +84,30 @@ export class RequestBuilder {
       }
 
       result.push(this.createIssue(projectKey, `Tytuł zadania ${i}`, issueTypeObject.type));
-
       issueTypeObject.count--;
     }
 
-    return result;
+    const collectionOfResults: IssueRequest[][] = [];
+
+    while (result.length > 20) {
+      collectionOfResults.push(result.splice(0, 20));
+    }
+
+    if (result.length > 0) {
+      collectionOfResults.push(result);
+    }
+
+    return collectionOfResults;
   }
 
 
   static buildMoveToEpicRequest(epicsIds: number[], issues: Issue[]): MoveToEpicRequest[] {
-    let moveToEpicRequestData: MoveToEpicRequest[] = epicsIds.map(epicId => ({ id: epicId, issuesKeys: [] }));
-    const issuesCount = issues.length;
-    const epicsCount = epicsIds.length;
+    const moveToEpicRequestData: MoveToEpicRequest[] = epicsIds.map(epicId => ({ id: epicId, issuesKeys: [] }));
+    const shuffledIssues = issues.sort(() => Math.random() - 0.5);
 
-    const issuesAssignedCount = Array(epicsCount).fill(0);
-    let remainingIssues = issuesCount;
-
-    // 1. Losujemy jaką liczbę zadań dostanie epika
-    // 2. Odejmujemy tą liczbę od pozostałej puli
-    // 3. Powtarzamy dla następnej epiki
-    // 4. Ostatnia epika dostaje pozostałe zadania
-    for (let i = 0; i < epicsCount; i++) {
-      if (i === epicsCount - 1) {
-        issuesAssignedCount[i] = remainingIssues;
-      } else {
-        const randomTaskCount = Math.floor(Math.random() * (remainingIssues / 2)) + 1;
-        issuesAssignedCount[i] = randomTaskCount;
-        remainingIssues -= randomTaskCount;
-      }
-    }
-
-    // Dodajemy do epiki taką ilość zadań ile jest jej przypisanej
-    // Stąd ten same index w issuesAssignedCount[i]
-    // issueIndex to index issues z całej kolekcji issues[]
-    // Dlatego po wykonanej iteracji nie jest zerowany
-    let issueIndex = 0;
-    for (let i = 0; i < epicsCount; i++) {
-      for (let j = 0; j < issuesAssignedCount[i]; j++) {
-        if (issueIndex < issuesCount) {
-          moveToEpicRequestData[i].issuesKeys.push(issues[issueIndex].key);
-          issueIndex++;
-        }
-      }
+    for (const issue of shuffledIssues) {
+      const randomEpicIndex = Math.floor(Math.random() * epicsIds.length);
+      moveToEpicRequestData[randomEpicIndex].issuesKeys.push(issue.key);
     }
 
     return moveToEpicRequestData;
@@ -144,6 +126,37 @@ export class RequestBuilder {
     });
 
     return moveToSprintRequestData;
+  }
+
+  static buildUpdateSprintsRequest(sprints: SprintResponse[]): SprintUpdateRequest[] {
+    const result: SprintUpdateRequest[] = [];
+    const today = DateTime.now();
+
+    for (const sprint of sprints) {
+      let stateData;
+      const isClosed = DateTime.fromISO(sprint.data.endDate).startOf('day') < today.startOf('day');
+      const isActive = DateTime.fromISO(sprint.data.startDate).startOf('day') <= today.startOf('day') && DateTime.fromISO(sprint.data.endDate).startOf('day') > today.startOf('day');
+
+      if (isClosed) {
+        stateData = 'closed';
+      } else if (isActive) {
+        stateData = 'active';
+      } else {
+        stateData = 'future';
+      }
+
+      const sprintData: SprintUpdateRequest = {
+        id: sprint.data.id,
+        state: stateData,
+        name: sprint.data.name,
+        startDate: sprint.data.startDate,
+        endDate: sprint.data.endDate
+      };
+
+      result.push(sprintData);
+    }
+
+    return result;
   }
 
   private static createIssue(projectKey: string, summary: string, issueType: IssueTypeEnum): IssueRequest {

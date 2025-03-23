@@ -16,4 +16,9 @@ export interface IssueFileData {
   created: string;
   updated: string;
   resolution: string;
+  customFieldValues: {
+    fieldName: string,
+    fieldType: string,
+    value: number
+  }[]
 }

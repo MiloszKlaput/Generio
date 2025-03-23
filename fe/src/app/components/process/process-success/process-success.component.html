@@ -4,13 +4,13 @@
     {{ 'processSuccess.title' | translate }}
   </h3>
 
-  @if (!isFileCreated) {
+  @if (!(fileData$ | async)) {
     <p class="text">
       {{ 'processSuccess.message' | translate }}
     </p>
   }
 
-  @if (isFileCreated) {
+  @if (fileData$ | async) {
     <div>
       <p>
         {{ 'processSuccess.hasSaveFileMessage' | translate }}
@@ -25,7 +25,7 @@
   }
 
   <div class="actions">
-    @if (isFileCreated) {
+    @if (fileData$ | async) {
       <button type="button" mat-fab extended class="action" (click)="onSaveFile()">
         <mat-icon class="save-file-icon" fontIcon="file_download"></mat-icon>
         {{ 'actions.saveFileForImportButton' | translate }}

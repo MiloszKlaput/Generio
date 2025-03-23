@@ -14,7 +14,14 @@ export class FileHelper {
         status: issue.fields.status !== undefined ? issue.fields.status : '',
         resolution: issue.fields.status !== undefined ? issue.fields.resolution! : '',
         created: issue.fields.created !== undefined ? issue.fields.created! : '',
-        updated: issue.fields.updated !== undefined ? issue.fields.updated! : ''
+        updated: issue.fields.updated !== undefined ? issue.fields.updated! : '',
+        customFieldValues: [
+          {
+            fieldName: "Story Points",
+            fieldType: "com.atlassian.jira.plugin.system.customfieldtypes:float",
+            value: issue.fields.storyPoints !== undefined ? issue.fields.storyPoints! : 0
+          }
+        ]
       }))
     };
 

@@ -15,11 +15,10 @@ export class WorkflowSimulator {
     const sprintsCount = requestData.sprintsCount;
     const sprints = responseData.sprints;
 
-    let remainingIssues = [...issues];
-    let sprintStartDate = projectStartDate;
-
+    const shuffledIssues = issues.sort(() => Math.random() - 0.5);
     const sprintAssignments: { [key: string]: { sprintId: number, issues: Issue[] } } = {};
-
+    let remainingIssues = [...shuffledIssues];
+    let sprintStartDate = projectStartDate;
     let carryOverIssues: Issue[] = [];
 
     for (let sprint = 0; sprint < sprintsCount; sprint++) {
@@ -27,7 +26,6 @@ export class WorkflowSimulator {
       let sprintIssues: Issue[] = [...carryOverIssues];
 
       const carryOverStoryPoints = carryOverIssues.reduce((sum, issue) => sum + (issue.fields.storyPoints || 0), 0);
-      // pomniejszenie maksymalnych story points o spady
       sprintCapacity -= carryOverStoryPoints;
       carryOverIssues = [];
 
@@ -37,7 +35,8 @@ export class WorkflowSimulator {
       const today = DateTime.now();
 
       while (remainingIssues.length > 0 && sprintCapacity > 0) {
-        const currentIssue = remainingIssues[0];
+        const randomIndex = Math.floor(Math.random() * remainingIssues.length);
+        const currentIssue = remainingIssues[randomIndex];
         const storyPoints = this.getRandomStoryPoints();
 
         if (sprintCapacity >= storyPoints) {
@@ -50,11 +49,11 @@ export class WorkflowSimulator {
             // -3 dni od końca sprintu
             : this.randomDateBetween(sprintStartDate, sprintStartDate.plus({ days: sprintDuration - 3 }));
 
-          currentIssue.fields.created = createdDate.toISO();
-          currentIssue.fields.updated = currentIssue.fields.created;
+          currentIssue.fields.created = createdDate.toISO()?.toString();
+          currentIssue.fields.updated = createdDate.toISO()?.toString();
           currentIssue.fields.status = "In Progress";
 
-          if (sprintEndDate < today) {
+          if (sprintEndDate.startOf('day') < today.startOf('day')) {
             currentIssue.fields.status = "Done";
             currentIssue.fields.resolution = "Done";
           }
@@ -62,7 +61,7 @@ export class WorkflowSimulator {
           sprintAssignments[sprint.toString()].issues.push(currentIssue);
           sprintCapacity -= storyPoints;
           sprintIssues.push(currentIssue);
-          remainingIssues.shift();
+          remainingIssues.splice(randomIndex, 1);
         } else {
           break;
         }
@@ -73,10 +72,10 @@ export class WorkflowSimulator {
       carryOverIssues = sprintIssues.slice(0, maxCarryOverIssues);
 
       // spady ustawiane na In progress
-      carryOverIssues.forEach(issue => {
+      for (const issue of carryOverIssues) {
         issue.fields.status = "In Progress";
         issue.fields.resolution = undefined;
-      });
+      }
 
       sprintStartDate = sprintEndDate;
     }

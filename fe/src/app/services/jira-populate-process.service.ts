@@ -12,35 +12,43 @@ import { ProcessStateService } from './process-state.service';
 import { ProcessState } from '../enums/process-state.enum';
 import { ProcessDataService } from './process-data.service';
 import { ProcessData } from '../models/process/process-data.model';
-import { ChatGptApiService } from './chatgpt-api.service';
+import { GeminiService } from './gemini.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class JiraPopulateProcessService {
   private jiraApiService = inject(JiraApiService);
-  private chatGptApiService = inject(ChatGptApiService);
+  private chatGptApiService = inject(GeminiService);
   private processStateService = inject(ProcessStateService);
   private processDataService = inject(ProcessDataService);
 
   startProcess(
-    atlassianLogin: string,
-    atlassianUserId: string,
-    atlassianApiKey: string,
-    atlassianUserJiraUrl: string,
+    // atlassianLogin: string,
+    // atlassianUserId: string,
+    // atlassianApiKey: string,
+    // atlassianUserJiraUrl: string,
     chatGptApiKey: string,
     chatGptMessage: string): void {
     this.processStateService.setProcessState(ProcessState.InProgress);
     this.processDataService.initProcessData();
-    this.updateProcessData({
-      atlassianLogin,
-      atlassianUserId,
-      atlassianApiKey,
-      atlassianUserJiraUrl
-    });
+    // this.updateProcessData({
+    //   atlassianLogin,
+    //   atlassianUserId,
+    //   atlassianApiKey,
+    //   atlassianUserJiraUrl
+    // });
 
-    this.chatGptApiService.sendMessage(chatGptMessage, chatGptApiKey)
-      .subscribe(res => console.log(res));
+    this.chatGptApiService.generateContent(chatGptMessage, chatGptApiKey)
+      .subscribe(res => {
+        if (res) {
+          const cleanedResponse = res.replace(/```json\s*|\s*```/g, '');
+          const json = JSON.parse(cleanedResponse);
+          console.log(json);
+          this.updateProcessData({ geminiResponse: json });
+          this.processStateService.setProcessState(ProcessState.New);
+        }
+      });
 
     // this.createNewProject()
     //   .pipe(

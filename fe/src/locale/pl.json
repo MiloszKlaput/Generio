@@ -15,8 +15,8 @@
     "userInfoUserId": "ID konta Atlassian",
     "userInfoApiKey": "Klucz API Jira",
     "atlassianUserJiraUrl": "Adres url Jiry użytkownika (*.atlassian.net)",
-    "chatGptApiKey": "Klucz API ChatGPT",
-    "chatGptMessage": "Napisz jaki projekt chcesz stworzyć (np. program do obsługi wypożyczalni kajaków)",
+    "geminiApiKey": "Klucz API Google Gemini",
+    "geminiMessage": "Napisz jaki projekt chcesz stworzyć (np. program do obsługi wypożyczalni kajaków)",
     "validations": {
       "required": "Uzupełnij pole"
     }

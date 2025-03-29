@@ -15,8 +15,8 @@
     "userInfoUserId": "Atlassian account ID",
     "userInfoApiKey": "API key",
     "atlassianUserJiraUrl": "Base url address of user's Jira (*.atlassian.net)",
-    "chatGptApiKey": "ChatGPT API Key",
-    "chatGptMessage": "Write what project you want to create (e.g., a program for managing a kayak rental service)",
+    "geminiApiKey": "Google Gemini API Key",
+    "geminiMessage": "Write what project you want to create (e.g., a program for managing a kayak rental service)",
     "validations": {
       "required": "Please fill in the field"
     }

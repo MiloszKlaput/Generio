@@ -22,4 +22,5 @@ export interface ProcessData {
   boardId: number;
   sprints: SprintResponse[];
   epicsIds: number[];
+  geminiResponse: string;
 }

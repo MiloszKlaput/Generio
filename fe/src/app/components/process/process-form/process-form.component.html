@@ -1,6 +1,6 @@
 <form class="form-container" [formGroup]="form">
 
-  <mat-form-field>
+  <!-- <mat-form-field>
     <mat-label>
       {{ 'form.userInfoLogin' | translate }}
     </mat-label>
@@ -46,14 +46,14 @@
         {{ 'form.validations.required' | translate }}
       </mat-error>
     }
-  </mat-form-field>
+  </mat-form-field> -->
 
   <mat-form-field>
     <mat-label>
-      {{ 'form.chatGptApiKey' | translate }}
+      {{ 'form.geminiApiKey' | translate }}
     </mat-label>
-    <input formControlName="chatGptApiKey" matInput (blur)="onBlur(f.chatGptApiKey)" />
-    @if (f.chatGptApiKey.errors?.['required'] && f.chatGptApiKey.touched) {
+    <input formControlName="geminiApiKey" matInput (blur)="onBlur(f.geminiApiKey)" />
+    @if (f.geminiApiKey.errors?.['required'] && f.geminiApiKey.touched) {
       <mat-error>
         {{ 'form.validations.required' | translate }}
       </mat-error>
@@ -62,22 +62,24 @@
 
   <mat-form-field>
     <mat-label>
-      {{ 'form.chatGptMessage' | translate }}
+      {{ 'form.geminiMessage' | translate }}
     </mat-label>
-    <textarea formControlName="chatGptMessage" matInput (blur)="onBlur(f.chatGptMessage)"></textarea>
-    @if (f.chatGptMessage.errors?.['required'] && f.chatGptMessage.touched) {
+    <textarea formControlName="geminiMessage" matInput (blur)="onBlur(f.geminiMessage)"></textarea>
+    @if (f.geminiMessage.errors?.['required'] && f.geminiMessage.touched) {
       <mat-error>
         {{ 'form.validations.required' | translate }}
       </mat-error>
     }
   </mat-form-field>
 
-  <div class="form-actions">
-    <button mat-raised-button (click)="onReset()">
-      {{ 'actions.resetButton' | translate }}
-    </button>
-    <button (click)="onSubmit()" mat-flat-button type="submit" [disabled]="!form.valid">
-      {{ 'actions.submitButton' | translate }}
-    </button>
-  </div>
+  <button (click)="onSubmit()" mat-flat-button type="submit" [disabled]="!form.valid">
+    {{ 'actions.submitButton' | translate }}
+  </button>
 </form>
+
+<br>
+<br>
+<br>
+<br>
+
+{{ geminiResponse | json }}

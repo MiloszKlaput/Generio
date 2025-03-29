@@ -30,7 +30,8 @@ export class ProcessDataService {
       projectLink: '',
       boardId: 0,
       sprints: [],
-      epicsIds: []
+      epicsIds: [],
+      geminiResponse: ''
     });
   }
 }

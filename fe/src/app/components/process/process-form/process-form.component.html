@@ -1,390 +1,61 @@
-  <div class="stepper-container">
-    <mat-horizontal-stepper [orientation]="(stepperOrientation$ | async)!" [linear]="true" #stepper>
+<form class="form-container" [formGroup]="form">
+  <h2>
+    {{ 'form.userInfo.userInfoTitle' | translate }}
+  </h2>
+  <mat-form-field>
+    <mat-label>
+      {{ 'form.userInfo.userInfoLogin' | translate }}
+    </mat-label>
+    <input formControlName="atlassianLogin" matInput (blur)="onBlur(f.atlassianLogin)" />
+    @if (f.atlassianLogin.errors?.['required'] && f.atlassianLogin.touched) {
+      <mat-error>
+        {{ 'form.userInfo.validations.required' | translate }}
+      </mat-error>
+    }
+  </mat-form-field>
 
-      <mat-step [stepControl]="userInfoForm" [label]="'form.userInfo.userInfoLabel' | translate">
-        <form class="form-container" [formGroup]="userInfoForm">
-          <h2>
-            {{ 'form.userInfo.userInfoTitle' | translate }}
-          </h2>
-          <mat-form-field>
-            <mat-label>
-              {{ 'form.userInfo.userInfoLogin' | translate }}
-            </mat-label>
-            <input formControlName="atlassianLogin" matInput (blur)="onBlur(fu.atlassianLogin)" />
-            @if (fu.atlassianLogin.errors?.['required'] && fu.atlassianLogin.touched) {
-              <mat-error>
-                {{ 'form.userInfo.validations.required' | translate }}
-              </mat-error>
-            }
-          </mat-form-field>
+  <mat-form-field>
+    <mat-label>
+      {{ 'form.userInfo.userInfoUserId' | translate }}
+    </mat-label>
+    <input formControlName="atlassianUserId" matInput (blur)="onBlur(f.atlassianUserId)" />
+    @if (f.atlassianUserId.errors?.['required'] && f.atlassianUserId.touched) {
+      <mat-error>
+        {{ 'form.userInfo.validations.required' | translate }}
+      </mat-error>
+    }
+  </mat-form-field>
 
-          <mat-form-field>
-            <mat-label>
-              {{ 'form.userInfo.userInfoUserId' | translate }}
-            </mat-label>
-            <input formControlName="atlassianUserId" matInput (blur)="onBlur(fu.atlassianUserId)" />
-            @if (fu.atlassianUserId.errors?.['required'] && fu.atlassianUserId.touched) {
-              <mat-error>
-                {{ 'form.userInfo.validations.required' | translate }}
-              </mat-error>
-            }
-          </mat-form-field>
+  <mat-form-field>
+    <mat-label>
+      {{ 'form.userInfo.userInfoApiKey' | translate }}
+    </mat-label>
+    <input formControlName="atlassianApiKey" matInput (blur)="onBlur(f.atlassianApiKey)" />
+    @if (f.atlassianApiKey.errors?.['required'] && f.atlassianApiKey.touched) {
+      <mat-error>
+        {{ 'form.userInfo.validations.required' | translate }}
+      </mat-error>
+    }
+  </mat-form-field>
 
-          <mat-form-field>
-            <mat-label>
-              {{ 'form.userInfo.userInfoApiKey' | translate }}
-            </mat-label>
-            <input formControlName="atlassianApiKey" matInput (blur)="onBlur(fu.atlassianApiKey)" />
-            @if (fu.atlassianApiKey.errors?.['required'] && fu.atlassianApiKey.touched) {
-              <mat-error>
-                {{ 'form.userInfo.validations.required' | translate }}
-              </mat-error>
-            }
-          </mat-form-field>
+  <mat-form-field>
+    <mat-label>
+      {{ 'form.userInfo.atlassianUserJiraUrl' | translate }}
+    </mat-label>
+    <input formControlName="atlassianUserJiraUrl" matInput (blur)="onBlur(f.atlassianUserJiraUrl)" />
+    @if (f.atlassianUserJiraUrl.errors?.['required'] && f.atlassianUserJiraUrl.touched) {
+      <mat-error>
+        {{ 'form.userInfo.validations.required' | translate }}
+      </mat-error>
+    }
+  </mat-form-field>
 
-          <mat-form-field>
-            <mat-label>
-              {{ 'form.userInfo.atlassianUserJiraUrl' | translate }}
-            </mat-label>
-            <input formControlName="atlassianUserJiraUrl" matInput (blur)="onBlur(fu.atlassianUserJiraUrl)" />
-            @if (fu.atlassianUserJiraUrl.errors?.['required'] && fu.atlassianUserJiraUrl.touched) {
-              <mat-error>
-                {{ 'form.userInfo.validations.required' | translate }}
-              </mat-error>
-            }
-          </mat-form-field>
-
-          <div class="stepper-actions">
-            <button mat-flat-button matStepperNext [disabled]="!userInfoForm.valid">
-              {{ 'actions.nextButton' | translate }}
-            </button>
-          </div>
-        </form>
-      </mat-step>
-
-      <mat-step [stepControl]="projectForm" [label]="'form.project.projectLabel' | translate">
-        <form class="form-container" [formGroup]="projectForm">
-          <h2>
-            {{ 'form.project.projectTitle' | translate }}
-          </h2>
-        <mat-form-field>
-          <mat-label>
-            {{ 'form.project.projectName' | translate }}
-          </mat-label>
-          <input formControlName="projectName" matInput (blur)="onBlur(fp.projectName)" />
-          @if (fp.projectName.errors?.['required'] && fp.projectName.touched) {
-            <mat-error>
-              {{ 'form.project.validations.projectNameRequired' | translate }}
-            </mat-error>
-          }
-          @if (fp.projectName.errors?.['minlength'] && fp.projectName.touched) {
-            <mat-error>
-              {{ 'form.project.validations.projectNameMin' | translate }}
-            </mat-error>
-          }
-          @if (fp.projectName.errors?.['maxlength'] && fp.projectName.touched) {
-            <mat-error>
-              {{ 'form.project.validations.projectNameMax' | translate }}
-            </mat-error>
-          }
-          @if (fp.projectName.errors?.['forbiddenCharacters'] && !fp.projectName.errors?.['minlength'] && !fp.projectName.errors?.['maxlength'] && fp.projectName.touched) {
-            <mat-error>
-              {{ 'form.project.validations.projectNameForbidden' | translate }} {{ fp.projectName.errors?.['forbiddenCharacters'].join('') }}
-            </mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field>
-          <mat-label>
-            {{ 'form.project.projectDescription' | translate }}
-          </mat-label>
-          <input formControlName="projectDescription" (blur)="onBlur(fp.projectDescription)" matInput />
-          @if (fp.projectDescription.errors?.['required'] && fp.projectDescription.touched) {
-            <mat-error>
-              {{ 'form.project.validations.projectDescriptionRequired' | translate }}
-            </mat-error>
-          }
-          @if (fp.projectDescription.errors?.['minlength'] && fp.projectDescription.touched) {
-            <mat-error>
-              {{ 'form.project.validations.projectDescriptionMin' | translate }}
-            </mat-error>
-          }
-          @if (fp.projectDescription.errors?.['maxlength'] && fp.projectDescription.touched) {
-            <mat-error>
-              {{ 'form.project.validations.projectDescriptionMax' | translate }}
-            </mat-error>
-          }
-          @if (fp.projectDescription.errors?.['forbiddenCharacters'] && !fp.projectDescription.errors?.['minlength'] && !fp.projectDescription.errors?.['maxlength'] && fp.projectDescription.touched) {
-            <mat-error>
-              {{ 'form.project.validations.projectDescriptionForbidden' | translate }} {{ fp.projectDescription.errors?.['forbiddenCharacters'].join('') }}
-            </mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field>
-          <mat-label>
-            {{ 'form.project.projectUniqueKey' | translate }}
-          </mat-label>
-          <input formControlName="projectKey" matInput (blur)="onBlur(fp.projectKey)" />
-          @if (fp.projectKey.errors?.['required'] && fp.projectKey.touched) {
-            <mat-error>{{ 'form.project.validations.projectKeyRequired' | translate }}</mat-error>
-          }
-          @if (fp.projectKey.errors?.['minlength'] && fp.projectKey.touched) {
-            <mat-error>{{ 'form.project.validations.projectKeyMin' | translate }}</mat-error>
-          }
-          @if (fp.projectKey.errors?.['maxlength'] && fp.projectKey.touched) {
-            <mat-error>{{ 'form.project.validations.projectKeyMax' | translate }}</mat-error>
-          }
-          @if (fp.projectKey.errors?.['whitespace'] && fp.projectKey.touched) {
-            <mat-error>{{ 'form.project.validations.projectKeyWhitespace' | translate }}</mat-error>
-          }
-          @if (fp.projectKey.errors?.['forbiddenCharacters'] && !fp.projectKey.errors?.['whitespace'] && !fp.projectKey.errors?.['minlength'] && !fp.projectKey.errors?.['maxlength'] && fp.projectKey.touched) {
-            <mat-error>
-              {{ 'form.project.validations.projectKeyForbidden' | translate }} {{ fp.projectKey.errors?.['forbiddenCharacters'].join('') }}
-            </mat-error>
-          }
-        </mat-form-field>
-
-        <div class="stepper-actions">
-          <button mat-raised-button matStepperPrevious>
-            {{ 'actions.backButton' | translate }}
-          </button>
-          <button mat-flat-button matStepperNext [disabled]="!projectForm.valid">
-            {{ 'actions.nextButton' | translate }}
-          </button>
-        </div>
-      </form>
-    </mat-step>
-
-    <mat-step [stepControl]="sprintsForm" [label]="'form.sprints.sprintsLabel' | translate">
-      <form class="form-container" [formGroup]="sprintsForm">
-        <h2>
-          {{ 'form.sprints.sprintsTitle' | translate }}
-        </h2>
-
-        <mat-form-field>
-          <mat-label>
-            {{ 'form.sprints.sprintsCountLabel' | translate }}
-          </mat-label>
-          <input type="number" formControlName="sprintsCount" min="1" matInput />
-          @if (fs.sprintsCount.errors?.['required'] && fs.sprintsCount.touched) {
-            <mat-error>
-              {{ 'form.sprints.validations.sprintsCountRequired' | translate }}
-            </mat-error>
-          }
-          @if (fs.sprintsCount.errors?.['min'] && fs.sprintsCount.touched) {
-            <mat-error>
-              {{ 'form.sprints.validations.sprintsCountMin' | translate }}
-            </mat-error>
-          }
-        </mat-form-field>
-
-        <mat-radio-group formControlName="sprintDuration" class="sprints-duration">
-          <label>
-            {{ 'form.sprints.sprintDurationQuestion' | translate }}
-          </label>
-          <mat-radio-button [value]="1">
-            {{ 'form.sprints.sprintDurationOption1' | translate }}
-          </mat-radio-button>
-          <mat-radio-button [value]="2">
-            {{ 'form.sprints.sprintDurationOption2' | translate }}
-          </mat-radio-button>
-          <mat-radio-button [value]="3">
-            {{ 'form.sprints.sprintDurationOption3' | translate }}
-          </mat-radio-button>
-          <mat-radio-button [value]="4">
-            {{ 'form.sprints.sprintDurationOption4' | translate }}
-          </mat-radio-button>
-        </mat-radio-group>
-
-        <mat-form-field>
-          <mat-label>
-            {{ 'form.sprints.projectStartDateLabel' | translate }}
-          </mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="projectStartDate">
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          @if ((fs.projectStartDate.errors?.['required'] || fs.projectStartDate.invalid) && fs.projectStartDate.touched) {
-            <mat-error>
-              {{ 'form.sprints.validations.projectStartDateInvalid' | translate }}
-            </mat-error>
-          }
-        </mat-form-field>
-
-        <div class="stepper-actions">
-          <button mat-raised-button matStepperPrevious>
-            {{ 'actions.backButton' | translate }}
-          </button>
-          <button mat-flat-button matStepperNext [disabled]="!sprintsForm.valid">
-            {{ 'actions.nextButton' | translate }}
-          </button>
-        </div>
-      </form>
-    </mat-step>
-
-    <mat-step [stepControl]="epicsForm" [label]="'form.epics.epicsLabel' | translate">
-      <form class="form-container" [formGroup]="epicsForm">
-        <h2>
-          {{ 'form.epics.epicsTitle' | translate }}
-        </h2>
-
-        <mat-form-field>
-          <mat-label>
-            {{ 'form.epics.epicsTitle' | translate }}
-          </mat-label>
-          <input type="number" formControlName="epicsCount" min="0" matInput />
-          @if (fe.epicsCount.errors?.['required'] && fe.epicsCount.touched) {
-            <mat-error>
-              {{ 'form.epics.validations.epicsCountRequired' | translate }}
-            </mat-error>
-          }
-          @if (fe.epicsCount.errors?.['min'] && fe.epicsCount.touched) {
-            <mat-error>
-              {{ 'form.epics.validations.epicsCountMin' | translate }}
-            </mat-error>
-          }
-        </mat-form-field>
-
-        <div class="stepper-actions">
-          <button mat-raised-button matStepperPrevious>
-            {{ 'actions.backButton' | translate }}
-          </button>
-          <button mat-flat-button matStepperNext [disabled]="!epicsForm.valid">
-            {{ 'actions.nextButton' | translate }}
-          </button>
-        </div>
-      </form>
-    </mat-step>
-
-    <mat-step [stepControl]="issuesForm" [label]="'form.issues.issuesLabel' | translate">
-      <form class="form-container" [formGroup]="issuesForm">
-        <h2>
-          {{ 'form.issues.issuesTitle' | translate }}
-        </h2>
-
-        <mat-form-field>
-          <mat-label>
-            {{ 'form.issues.issuesTitle' | translate }}
-          </mat-label>
-          <input type="number" formControlName="issuesCount" min="0" matInput />
-          @if (fi.issuesCount.errors?.['required'] && fi.issuesCount.touched) {
-            <mat-error>
-              {{ 'form.issues.validations.issuesCountRequired' | translate }}
-            </mat-error>
-          }
-          @if (fi.issuesCount.errors?.['min'] && fi.issuesCount.touched) {
-            <mat-error>
-              {{ 'form.issues.validations.issuesCountMin' | translate }}
-            </mat-error>
-          }
-        </mat-form-field>
-
-        <div class="stepper-actions">
-          <button mat-raised-button matStepperPrevious>
-            {{ 'actions.backButton' | translate }}
-          </button>
-          <button mat-flat-button matStepperNext [disabled]="!issuesForm.valid">
-            {{ 'actions.nextButton' | translate }}
-          </button>
-        </div>
-      </form>
-    </mat-step>
-
-    <mat-step [stepControl]="mainForm" [label]="'form.summary.summaryLabel' | translate">
-      <form class="form-container" [formGroup]="mainForm">
-        <h2>
-          {{ 'form.summary.summaryTitle' | translate }}
-        </h2>
-
-        <mat-card appearance="outlined">
-          <mat-card-content>
-            <div class="summary-section">
-              <div class="summary-item">
-                <div>
-                  {{ 'form.summary.summaryProjectKey' | translate }}
-                </div>
-                <div class="summary-value">
-                  {{ fp.projectKey.value }}
-                </div>
-              </div>
-              <div class="summary-item">
-                <div>
-                  {{ 'form.summary.summaryProjectName' | translate }}
-                </div>
-                <div class="summary-value">
-                  {{ fp.projectName.value }}
-                </div>
-              </div>
-              <div class="summary-item">
-                <div>
-                  {{ 'form.summary.summaryProjectDescription' | translate }}
-                </div>
-                <div class="summary-value">
-                  {{ fp.projectDescription.value }}
-                </div>
-              </div>
-            </div>
-            <mat-divider></mat-divider>
-            <div class="summary-section">
-              <div class="summary-item">
-                <div>
-                  {{ 'form.summary.summaryProjectStartDate' | translate }}
-                </div>
-                <div class="summary-value">
-                  {{ fs.projectStartDate.value | date: 'dd MMM yyyy' }}
-                </div>
-              </div>
-              <div class="summary-item">
-                <div>
-                  {{ 'form.summary.summarySprintsCount' | translate }}
-                </div>
-                <div class="summary-value">
-                  {{ fs.sprintsCount.value }}
-                </div>
-              </div>
-              <div class="summary-item">
-                <div>
-                  {{ 'form.summary.summarySprintDuration' | translate }}
-                </div>
-                <div class="summary-value">
-                  {{ fs.sprintDuration.value }}
-                </div>
-              </div>
-            </div>
-            <mat-divider></mat-divider>
-            <div class="summary-section">
-              <div class="summary-item">
-                <div>
-                  {{ 'form.summary.summaryEpicsCount' | translate }}
-                </div>
-                <div class="summary-value">
-                  {{ fe.epicsCount.value }}
-                </div>
-              </div>
-            </div>
-            <mat-divider></mat-divider>
-            <div class="summary-section">
-              <div class="summary-item">
-                <div>
-                  {{ 'form.summary.summaryIssuesCount' | translate }}
-                </div>
-                <div class="summary-value">
-                  {{ fi.issuesCount.value }}
-                </div>
-              </div>
-            </div>
-          </mat-card-content>
-        </mat-card>
-
-        <div class="summary-actions">
-          <button mat-raised-button (click)="onReset()">
-            {{ 'actions.resetButton' | translate }}
-          </button>
-          <button (click)="onSubmit()" mat-flat-button type="submit" [disabled]="!issuesForm.valid">
-            {{ 'actions.submitButton' | translate }}
-          </button>
-        </div>
-      </form>
-    </mat-step>
-  </mat-horizontal-stepper>
-</div>
+  <div class="form-actions">
+    <button mat-raised-button (click)="onReset()">
+      {{ 'actions.resetButton' | translate }}
+    </button>
+    <button (click)="onSubmit()" mat-flat-button type="submit" [disabled]="!form.valid">
+      {{ 'actions.submitButton' | translate }}
+    </button>
+  </div>
+</form>

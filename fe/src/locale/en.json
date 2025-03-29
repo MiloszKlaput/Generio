@@ -119,12 +119,7 @@
   },
   "processSuccess": {
     "title": "Operation completed successfully",
-    "message": "You can now proceed to review the created project.",
-    "hasSaveFileMessage": "During the project setup process, a JSON file was created that must be imported manually into the Jira project:",
-    "guideStep1": "Log in to Jira",
-    "guideStep2": "Go to Settings > System > Import and Export > Import from external system > Switch to old interface > JSON",
-    "guideStep3": "Select the JSON file",
-    "guideStep4": "Start the import process"
+    "message": "You can now proceed to review the created project."
   },
   "actions": {
     "nextButton": "Next",

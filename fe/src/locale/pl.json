@@ -119,12 +119,7 @@
   },
   "processSuccess": {
     "title": "Operacja zakończona sukcesem",
-    "message": "Możesz teraz przejść do przeglądu utworzonego projektu.",
-    "hasSaveFileMessage": "W trakcie procesu zakładania projektu, powstał plik JSON, który należy samodzielnie zaimportować w projekcie w Jira:",
-    "guideStep1": "Zaloguj się do Jira",
-    "guideStep2": "Wejdź w Ustawienia > System > Import i eksport > Importowanie z systemu zewnętrznego > Przełącz na stary interfejs > JSON",
-    "guideStep3": "Wybierz plik JSON",
-    "guideStep4": "Rozpocznij importowanie"
+    "message": "Możesz teraz przejść do przeglądu utworzonego projektu."
   },
   "actions": {
     "nextButton": "Dalej",

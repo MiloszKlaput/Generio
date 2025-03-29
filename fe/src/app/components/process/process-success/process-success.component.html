@@ -4,36 +4,13 @@
     {{ 'processSuccess.title' | translate }}
   </h3>
 
-  @if (!(fileData$ | async)) {
-    <p class="text">
-      {{ 'processSuccess.message' | translate }}
-    </p>
-  }
-
-  @if (fileData$ | async) {
-    <div>
-      <p>
-        {{ 'processSuccess.hasSaveFileMessage' | translate }}
-      </p>
-      <ol>
-        <li>{{ 'processSuccess.guideStep1' | translate }}</li>
-        <li>{{ 'processSuccess.guideStep2' | translate }}</li>
-        <li>{{ 'processSuccess.guideStep3' | translate }}</li>
-        <li>{{ 'processSuccess.guideStep4' | translate }}</li>
-      </ol>
-    </div>
-  }
+  <p class="text">
+    {{ 'processSuccess.message' | translate }}
+  </p>
 
   <div class="actions">
-    @if (fileData$ | async) {
-      <button type="button" mat-fab extended class="action" (click)="onSaveFile()">
-        <mat-icon class="save-file-icon" fontIcon="file_download"></mat-icon>
-        {{ 'actions.saveFileForImportButton' | translate }}
-      </button>
-    }
     <button type="button" mat-flat-button class="action" (click)="openProject()">
       {{ 'actions.goToProjectButton' | translate }}
     </button>
   </div>
-
 </div>

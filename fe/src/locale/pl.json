@@ -11,103 +11,14 @@
     "startButton": "Rozpocznij"
   },
   "form": {
-    "userInfo": {
-      "userInfoLabel": "Dane użytkownika",
-      "userInfoTitle": "Dane użytkownika",
-      "userInfoLogin": "Nazwa użytkownika Atlassian",
-      "userInfoUserId": "ID konta Atlassian",
-      "userInfoApiKey": "Klucz API",
-      "atlassianUserJiraUrl": "Bazowy adres url Jiry użytkownika (*.atlassian.net)",
-      "validations": {
-        "required": "Uzupełnij pole"
-      }
-    },
-    "project": {
-      "projectLabel": "Projekt",
-      "projectTitle": "Projekt",
-      "projectName": "Nazwa",
-      "projectDescription": "Opis",
-      "projectUniqueKey": "Unikalny klucz",
-      "atlassianUserId": "ID Użytkownika Atlassian",
-      "validations": {
-        "projectNameRequired": "Uzupełnij pole",
-        "projectNameMin": "Wymagane przynajmniej 3 znaki",
-        "projectNameMax": "Pole może mieć maksymalnie 50 znaków",
-        "projectNameForbidden": "Niedozwolone znaki:",
-        "projectDescriptionRequired": "Uzupełnij pole",
-        "projectDescriptionMin": "Wymagane przynajmniej 3 znaki",
-        "projectDescriptionMax": "Pole może mieć maksymalnie 50 znaków",
-        "projectDescriptionForbidden": "Niedozwolone znaki:",
-        "projectKeyRequired": "Uzupełnij pole",
-        "projectKeyMin": "Wymagane przynajmniej 2 znaki",
-        "projectKeyMax": "Pole może mieć maksymalnie 10 znaków",
-        "projectKeyWhitespace": "Pole nie może zawierać pustych znaków",
-        "projectKeyForbidden": "Niedozwolone znaki:",
-        "atlassiaUsernIdRequired": "Uzupełnij pole",
-        "atlUserassianIdMax": "Pole może mieć maksymalnie 50 znaków",
-        "atlassianIUserdWhitespace": "Pole nie może zawierać pustych znaków",
-        "atlassianUserIdForbidden": "Niedozwolone znaki:"
-      }
-    },
-    "sprints": {
-      "sprintsLabel": "Sprinty",
-      "sprintsTitle": "Sprinty",
-      "sprintsCountLabel": "Ilość sprintów",
-      "sprintDurationQuestion": "Ile w twoim projekcie trwa sprint?",
-      "sprintDurationOption1": "1 tydzień",
-      "sprintDurationOption2": "2 tygodnie",
-      "sprintDurationOption3": "3 tygodnie",
-      "sprintDurationOption4": "4 tygodnie",
-      "projectStartDateLabel": "Data startu pierwszego sprintu",
-      "validations": {
-        "sprintsCountRequired": "Uzupełnij pole",
-        "sprintsCountMin": "Minimalna wartość to 1",
-        "projectStartDateRequired": "Uzupełnij pole",
-        "projectStartDateInvalid": "Nieprawidłowa data"
-      }
-    },
-    "epics": {
-      "epicsLabel": "Epiki",
-      "epicsTitle": "Epiki",
-      "epicsCountLabel": "Ilość epik",
-      "validations": {
-        "epicsCountRequired": "Uzupełnij pole",
-        "epicsCountMin": "Minimalna wartość to 1"
-      }
-    },
-    "issues": {
-      "issuesLabel": "Zadania",
-      "issuesTitle": "Zadania",
-      "issuesCountLabel": "Ilość zadań",
-      "issuesTypesLabel": "Rodzaj zadań (przynajmniej jedno musi być zaznaczone)",
-      "issueTypeStory": "Story",
-      "issueTypeBug": "Bug",
-      "issueTypeTask": "Task",
-      "validations": {
-        "issuesCountRequired": "Uzupełnij pole",
-        "issuesCountMin": "Minimalna wartość to 1",
-        "issuesTypesError": "Przynajmniej jedno zadanie musi być zaznaczone"
-      }
-    },
-    "summary": {
-      "summaryLabel": "Podsumowanie",
-      "summaryTitle": "Podsumowanie",
-      "summaryProjectKey": "Klucz nowego projektu",
-      "summaryProjectName": "Nazwa projektu",
-      "summaryProjectDescription": "Opis projektu",
-      "summaryProjectStartDate": "Data rozpoczęcia projektu",
-      "summarySprintsCount": "Ilość sprintów",
-      "summarySprintDuration": "Ile tygodni trwa sprint",
-      "summaryEpicsCount": "Ilość epik",
-      "summaryIssuesCount": "Ilość zadań",
-      "summaryIssuesTypes": "Rodzaje zadań:",
-      "summaryIssueTypeStory": "Story",
-      "summaryIssueTypeBug": "Bug",
-      "summaryIssueTypeTask": "Task"
-    },
-    "fileWarningDialog": {
-      "message": "Wybranie przeszłej daty rozpoczęcia projektu spowoduje wygenerowanie pliku, który musisz samodzielnie zaimportować w Jirze",
-      "closeDialogButton": "Zamknij"
+    "userInfoLogin": "Nazwa użytkownika Atlassian",
+    "userInfoUserId": "ID konta Atlassian",
+    "userInfoApiKey": "Klucz API Jira",
+    "atlassianUserJiraUrl": "Adres url Jiry użytkownika (*.atlassian.net)",
+    "chatGptApiKey": "Klucz API ChatGPT",
+    "chatGptMessage": "Napisz jaki projekt chcesz stworzyć (np. program do obsługi wypożyczalni kajaków)",
+    "validations": {
+      "required": "Uzupełnij pole"
     }
   },
   "processError": {
@@ -122,11 +33,8 @@
     "message": "Możesz teraz przejść do przeglądu utworzonego projektu."
   },
   "actions": {
-    "nextButton": "Dalej",
-    "backButton": "Wróć",
     "resetButton": "Resetuj",
     "submitButton": "Rozpocznij",
-    "goToProjectButton": "Przejdź do projektu",
-    "saveFileForImportButton": "Zapisz plik do importu"
+    "goToProjectButton": "Przejdź do projektu"
   }
 }

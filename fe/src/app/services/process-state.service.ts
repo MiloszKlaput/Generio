@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ProcessState } from '../enums/process-state.enum';
 
-
 @Injectable({
   providedIn: 'root'
 })

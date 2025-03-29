@@ -1,51 +1,73 @@
 <form class="form-container" [formGroup]="form">
-  <h2>
-    {{ 'form.userInfo.userInfoTitle' | translate }}
-  </h2>
+
   <mat-form-field>
     <mat-label>
-      {{ 'form.userInfo.userInfoLogin' | translate }}
+      {{ 'form.userInfoLogin' | translate }}
     </mat-label>
     <input formControlName="atlassianLogin" matInput (blur)="onBlur(f.atlassianLogin)" />
     @if (f.atlassianLogin.errors?.['required'] && f.atlassianLogin.touched) {
       <mat-error>
-        {{ 'form.userInfo.validations.required' | translate }}
+        {{ 'form.validations.required' | translate }}
       </mat-error>
     }
   </mat-form-field>
 
   <mat-form-field>
     <mat-label>
-      {{ 'form.userInfo.userInfoUserId' | translate }}
+      {{ 'form.userInfoUserId' | translate }}
     </mat-label>
     <input formControlName="atlassianUserId" matInput (blur)="onBlur(f.atlassianUserId)" />
     @if (f.atlassianUserId.errors?.['required'] && f.atlassianUserId.touched) {
       <mat-error>
-        {{ 'form.userInfo.validations.required' | translate }}
+        {{ 'form.validations.required' | translate }}
       </mat-error>
     }
   </mat-form-field>
 
   <mat-form-field>
     <mat-label>
-      {{ 'form.userInfo.userInfoApiKey' | translate }}
+      {{ 'form.userInfoApiKey' | translate }}
     </mat-label>
     <input formControlName="atlassianApiKey" matInput (blur)="onBlur(f.atlassianApiKey)" />
     @if (f.atlassianApiKey.errors?.['required'] && f.atlassianApiKey.touched) {
       <mat-error>
-        {{ 'form.userInfo.validations.required' | translate }}
+        {{ 'form.validations.required' | translate }}
       </mat-error>
     }
   </mat-form-field>
 
   <mat-form-field>
     <mat-label>
-      {{ 'form.userInfo.atlassianUserJiraUrl' | translate }}
+      {{ 'form.atlassianUserJiraUrl' | translate }}
     </mat-label>
     <input formControlName="atlassianUserJiraUrl" matInput (blur)="onBlur(f.atlassianUserJiraUrl)" />
     @if (f.atlassianUserJiraUrl.errors?.['required'] && f.atlassianUserJiraUrl.touched) {
       <mat-error>
-        {{ 'form.userInfo.validations.required' | translate }}
+        {{ 'form.validations.required' | translate }}
+      </mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>
+      {{ 'form.chatGptApiKey' | translate }}
+    </mat-label>
+    <input formControlName="chatGptApiKey" matInput (blur)="onBlur(f.chatGptApiKey)" />
+    @if (f.chatGptApiKey.errors?.['required'] && f.chatGptApiKey.touched) {
+      <mat-error>
+        {{ 'form.validations.required' | translate }}
+      </mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>
+      {{ 'form.chatGptMessage' | translate }}
+    </mat-label>
+    <textarea formControlName="chatGptMessage" matInput (blur)="onBlur(f.chatGptMessage)"></textarea>
+    @if (f.chatGptMessage.errors?.['required'] && f.chatGptMessage.touched) {
+      <mat-error>
+        {{ 'form.validations.required' | translate }}
       </mat-error>
     }
   </mat-form-field>

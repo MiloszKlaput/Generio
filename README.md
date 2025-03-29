@@ -1,5 +1,15 @@
 # Generio
 
+<!-- Generio to aplikacja inżynierska napisana w Angularze, integrująca się z OpenAI API w celu automatycznego zakładania projektów w JIRA.
+
+## Technologie:
+- Angular
+- OpenAI API
+- JIRA API
+
+## Licencja
+Projekt korzysta z OpenAI API zgodnie z [warunkami OpenAI](https://openai.com/policies). -->
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.7.
 
 ## Development server

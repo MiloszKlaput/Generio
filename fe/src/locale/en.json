@@ -11,103 +11,14 @@
     "startButton": "Start"
   },
   "form": {
-    "userInfo": {
-      "userInfoLabel": "User data",
-      "userInfoTitle": "User data",
-      "userInfoLogin": "Atlassian user name",
-      "userInfoUserId": "Atlassian account ID",
-      "userInfoApiKey": "API key",
-      "atlassianUserJiraUrl": "Base url address of user's Jira (*.atlassian.net)",
-      "validations": {
-        "required": "Please fill in the field"
-      }
-    },
-    "project": {
-      "projectLabel": "Project",
-      "projectTitle": "Project",
-      "projectName": "Name",
-      "projectDescription": "Description",
-      "projectUniqueKey": "Unique key",
-      "atlassianUserId": "Atlassian User ID",
-      "validations": {
-        "projectNameRequired": "Please fill in the field",
-        "projectNameMin": "At least 3 characters required",
-        "projectNameMax": "Field can contain up to 50 characters",
-        "projectNameForbidden": "Forbidden characters:",
-        "projectDescriptionRequired": "Please fill in the field",
-        "projectDescriptionMin": "At least 3 characters required",
-        "projectDescriptionMax": "Field can contain up to 50 characters",
-        "projectDescriptionForbidden": "Forbidden characters:",
-        "projectKeyRequired": "Please fill in the field",
-        "projectKeyMin": "At least 2 characters required",
-        "projectKeyMax": "Field can contain up to 10 characters",
-        "projectKeyWhitespace": "Field cannot contain whitespace",
-        "projectKeyForbidden": "Forbidden characters:",
-        "atlassiaUsernIdRequired": "Please fill in the field",
-        "atlUserassianIdMax": "Field can contain up to 50 characters",
-        "atlassianIUserdWhitespace": "Field cannot contain whitespace",
-        "atlassianUserIdForbidden": "Forbidden characters:"
-      }
-    },
-    "sprints": {
-      "sprintsLabel": "Sprints",
-      "sprintsTitle": "Sprints",
-      "sprintsCountLabel": "Number of Sprints",
-      "sprintDurationQuestion": "How long is a sprint in your project?",
-      "sprintDurationOption1": "1 week",
-      "sprintDurationOption2": "2 weeks",
-      "sprintDurationOption3": "3 weeks",
-      "sprintDurationOption4": "4 weeks",
-      "projectStartDateLabel": "Start date of the first sprint",
-      "validations": {
-        "sprintsCountRequired": "Please fill in the field",
-        "sprintsCountMin": "Minimum value is 1",
-        "projectStartDateRequired": "Please fill in the field",
-        "projectStartDateInvalid": "Invalid date"
-      }
-    },
-    "epics": {
-      "epicsLabel": "Epics",
-      "epicsTitle": "Epics",
-      "epicsCountLabel": "Number of epics",
-      "validations": {
-        "epicsCountRequired": "Please fill in the field",
-        "epicsCountMin": "Minimum value is 1"
-      }
-    },
-    "issues": {
-      "issuesLabel": "Issues",
-      "issuesTitle": "Issues",
-      "issuesCountLabel": "Number of issues",
-      "issuesTypesLabel": "Issue type (at least one must be selected)",
-      "issueTypeStory": "Story",
-      "issueTypeBug": "Bug",
-      "issueTypeTask": "Task",
-      "validations": {
-        "issuesCountRequired": "Please fill in the field",
-        "issuesCountMin": "Minimum value is 1",
-        "issuesTypesError": "At least one issue must be selected"
-      }
-    },
-    "summary": {
-      "summaryLabel": "Summary",
-      "summaryTitle": "Summary",
-      "summaryProjectKey": "New project key",
-      "summaryProjectName": "Project name",
-      "summaryProjectDescription": "Project description",
-      "summaryProjectStartDate": "Project start date",
-      "summarySprintsCount": "Number of sprints",
-      "summarySprintDuration": "Sprint duration (in weeks)",
-      "summaryEpicsCount": "Number of epics",
-      "summaryIssuesCount": "Number of issues",
-      "summaryIssuesTypes": "Issue types:",
-      "summaryIssueTypeStory": "Story",
-      "summaryIssueTypeBug": "Bug",
-      "summaryIssueTypeTask": "Task"
-    },
-    "fileWarningDialog": {
-      "message": "Selecting a past project start date will generate a file that you must manually import into Jira",
-      "closeDialogButton": "Close"
+    "userInfoLogin": "Atlassian user name",
+    "userInfoUserId": "Atlassian account ID",
+    "userInfoApiKey": "API key",
+    "atlassianUserJiraUrl": "Base url address of user's Jira (*.atlassian.net)",
+    "chatGptApiKey": "ChatGPT API Key",
+    "chatGptMessage": "Write what project you want to create (e.g., a program for managing a kayak rental service)",
+    "validations": {
+      "required": "Please fill in the field"
     }
   },
   "processError": {
@@ -122,11 +33,8 @@
     "message": "You can now proceed to review the created project."
   },
   "actions": {
-    "nextButton": "Next",
-    "backButton": "Back",
     "resetButton": "Reset",
     "submitButton": "Start",
-    "goToProjectButton": "Go to project",
-    "saveFileForImportButton": "Save file for import"
+    "goToProjectButton": "Go to project"
   }
 }

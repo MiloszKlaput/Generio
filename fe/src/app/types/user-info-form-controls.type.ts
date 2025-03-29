@@ -5,4 +5,6 @@ export type ProcessFormControls = {
   atlassianUserId: FormControl<string | null>;
   atlassianApiKey: FormControl<string | null>;
   atlassianUserJiraUrl: FormControl<string | null>;
+  chatGptApiKey: FormControl<string | null>;
+  chatGptMessage: FormControl<string | null>;
 };

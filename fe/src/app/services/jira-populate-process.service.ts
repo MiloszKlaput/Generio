@@ -12,16 +12,24 @@ import { ProcessStateService } from './process-state.service';
 import { ProcessState } from '../enums/process-state.enum';
 import { ProcessDataService } from './process-data.service';
 import { ProcessData } from '../models/process/process-data.model';
+import { ChatGptApiService } from './chatgpt-api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class JiraPopulateProcessService {
-  private apiService = inject(JiraApiService);
+  private jiraApiService = inject(JiraApiService);
+  private chatGptApiService = inject(ChatGptApiService);
   private processStateService = inject(ProcessStateService);
   private processDataService = inject(ProcessDataService);
 
-  startProcess(atlassianLogin: string, atlassianUserId: string, atlassianApiKey: string, atlassianUserJiraUrl: string): void {
+  startProcess(
+    atlassianLogin: string,
+    atlassianUserId: string,
+    atlassianApiKey: string,
+    atlassianUserJiraUrl: string,
+    chatGptApiKey: string,
+    chatGptMessage: string): void {
     this.processStateService.setProcessState(ProcessState.InProgress);
     this.processDataService.initProcessData();
     this.updateProcessData({
@@ -30,6 +38,9 @@ export class JiraPopulateProcessService {
       atlassianApiKey,
       atlassianUserJiraUrl
     });
+
+    this.chatGptApiService.sendMessage(chatGptMessage, chatGptApiKey)
+      .subscribe(res => console.log(res));
 
     // this.createNewProject()
     //   .pipe(
@@ -52,7 +63,7 @@ export class JiraPopulateProcessService {
   }
 
   clearData(): void {
-    this.apiService.deleteProject(this.processDataService.processData$.getValue()!.projectKey).subscribe();
+    this.jiraApiService.deleteProject(this.processDataService.processData$.getValue()!.projectKey).subscribe();
   }
 
   private handleError(err: any) {

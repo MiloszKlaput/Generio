@@ -73,7 +73,10 @@ export class ProcessFormComponent implements OnInit {
       this.f.atlassianLogin.value!,
       this.f.atlassianUserId.value!,
       this.f.atlassianApiKey.value!,
-      this.f.atlassianUserJiraUrl.value!);
+      this.f.atlassianUserJiraUrl.value!,
+      this.f.chatGptApiKey.value!,
+      this.f.chatGptMessage.value!
+    );
   }
 
   onBlur(control: AbstractControl): void {
@@ -92,7 +95,9 @@ export class ProcessFormComponent implements OnInit {
       atlassianLogin: new FormControl<string>('', [Validators.required, whitespaceValidator()]),
       atlassianUserId: new FormControl<string>('', [Validators.required, whitespaceValidator()]),
       atlassianApiKey: new FormControl<string>('', [Validators.required, whitespaceValidator()]),
-      atlassianUserJiraUrl: new FormControl<string>('', [Validators.required, whitespaceValidator()])
+      atlassianUserJiraUrl: new FormControl<string>('', [Validators.required, whitespaceValidator()]),
+      chatGptApiKey: new FormControl<string>('', [Validators.required, whitespaceValidator()]),
+      chatGptMessage: new FormControl<string>('', [Validators.required, whitespaceValidator()]),
     });
   }
 }

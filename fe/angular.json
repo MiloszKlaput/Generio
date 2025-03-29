@@ -8,7 +8,7 @@
     }
   },
   "projects": {
-    "pomelo": {
+    "generio": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -18,7 +18,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/pomelo",
+            "outputPath": "dist/generio",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -64,10 +64,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "pomelo:build:production"
+              "buildTarget": "generio:build:production"
             },
             "development": {
-              "buildTarget": "pomelo:build:development"
+              "buildTarget": "generio:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -75,7 +75,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "pomelo:build"
+            "buildTarget": "generio:build"
           }
         },
         "test": {

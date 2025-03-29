@@ -121,7 +121,7 @@ export class JiraPopulateProcessService {
   private createSprints(formData: MainFormControls): Observable<SprintResponse[]> {
     const sprints: SprintRequest[] = RequestBuilder.buildSprintsRequest(formData, this.processDataService.responseData.boardId);
     return from(sprints).pipe(
-      mergeMap((sprint: SprintRequest) => this.apiService.createSprint(sprint)),
+      concatMap((sprint: SprintRequest) => this.apiService.createSprint(sprint)),
       toArray(),
       tap((result: SprintResponse[]) => {
         if (result) {

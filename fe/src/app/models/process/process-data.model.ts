@@ -1,6 +1,5 @@
-import { DateTime } from "luxon";
 import { Issue } from "../issue/issue.model";
-import { SprintResponse } from "../sprint/sprint.model";
+import { Sprint } from "../sprint/sprint.model";
 
 export interface ProcessData {
   atlassianLogin: string;
@@ -10,17 +9,12 @@ export interface ProcessData {
   projectName: string;
   projectDescription: string;
   projectKey: string;
-  sprintsCount: number;
-  sprintDuration: number;
-  projectStartDate: DateTime;
-  epicsCount: number;
-  issuesCount: number;
-  issues: Issue[];
-  sprintIssuesAssigment: { [key: string]: { sprintId: number, issues: Issue[] } } | null;
   projectId: string;
   projectLink: string;
+  issues: Issue[];
+  sprintIssuesAssigment: { [key: string]: { sprintId: number, issues: Issue[] } } | null;
   boardId: number;
-  sprints: SprintResponse[];
+  sprints: Sprint[];
   epicsIds: number[];
   geminiResponse: string;
 }

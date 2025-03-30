@@ -8,11 +8,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ProcessFormControls } from '../../../types/user-info-form-controls.type';
+import { ProcessFormControls } from '../../../types/process-form-controls.type';
 import { CommonModule } from '@angular/common';
 import { JiraPopulateProcessService } from '../../../services/jira-populate-process.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { ProcessDataService } from '../../../services/process-data.service';
 
 @Component({
   selector: 'process-form',
@@ -37,23 +36,12 @@ import { ProcessDataService } from '../../../services/process-data.service';
 })
 export class ProcessFormComponent implements OnInit {
   private populateProcessService = inject(JiraPopulateProcessService);
-  private processDataService = inject(ProcessDataService);
   form!: FormGroup<ProcessFormControls>;
-  geminiResponse!: string;
 
   get f(): ProcessFormControls { return this.form.controls; }
 
   ngOnInit(): void {
     this.initForm();
-
-    this.processDataService.processData$
-      .subscribe({
-        next: res => {
-          if (res?.geminiResponse.length) {
-            this.geminiResponse = res.geminiResponse;
-          }
-        }
-      });
   }
 
   onSubmit(): void {

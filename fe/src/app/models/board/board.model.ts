@@ -1,3 +1,3 @@
-export interface BoardIdResponse {
-  data: number;
+export interface Board {
+  id: number;
 }

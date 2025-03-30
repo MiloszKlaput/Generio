@@ -1,9 +1,7 @@
-import { IssueProject } from "./issue-project.model";
+import { IssuePriority } from "./issue-priority.model";
 import { IssueType } from "./issue-type.model";
 
 export interface IssueFields {
-  id?: number;
-  key?: string;
   description: {
     content: [
       {
@@ -20,11 +18,7 @@ export interface IssueFields {
     version: 1
   };
   issuetype: IssueType;
-  project: IssueProject;
+  issuepriority: IssuePriority;
   summary: string;
-  created?: string | null;
-  updated?: string | null;
-  status?: string;
-  resolution?: string;
-  storyPoints?: number;
+  created: string;
 }

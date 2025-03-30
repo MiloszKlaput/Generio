@@ -1,13 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { JiraApiService } from './jira-api.service';
 // import { RequestBuilder } from '../logic/request-builder.logic';
-import { ProjectRequest, ProjectResponse } from '../models/project/project.model';
-import { SprintRequest, SprintResponse } from '../models/sprint/sprint.model';
+import { Project } from '../models/project/project.model';
+import { Sprint } from '../models/sprint/sprint.model';
 import { MoveToEpicRequest } from '../models/issue/move-to-epic.model';
 import { MoveToSprintRequest } from '../models/issue/move-to-sprint.model';
 import { from, mergeMap, toArray, tap, Observable, catchError, throwError, concatMap, map } from 'rxjs';
-import { BoardIdResponse } from '../models/board/board.model';
-import { Issue, IssueRequest, IssueResponse } from '../models/issue/issue.model';
+import { Board } from '../models/board/board.model';
+import { Issue } from '../models/issue/issue.model';
 import { ProcessStateService } from './process-state.service';
 import { ProcessState } from '../enums/process-state.enum';
 import { ProcessDataService } from './process-data.service';
@@ -44,8 +44,8 @@ export class JiraPopulateProcessService {
         if (res) {
           const cleanedResponse = res.replace(/```json\s*|\s*```/g, '');
           const json = JSON.parse(cleanedResponse);
-          console.log(json);
           this.updateProcessData({ geminiResponse: json });
+          console.log(json);
           this.processStateService.setProcessState(ProcessState.New);
         }
       });

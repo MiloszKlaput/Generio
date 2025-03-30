@@ -1,12 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';;
 import { Observable } from 'rxjs';
-import { IssueRequest, IssueResponse } from '../models/issue/issue.model';
-import { SprintRequest, SprintResponse, SprintUpdateRequest } from '../models/sprint/sprint.model';
-import { ProjectRequest, ProjectResponse } from '../models/project/project.model';
+import { Sprint } from '../models/sprint/sprint.model';
+import { Project } from '../models/project/project.model';
 import { MoveToEpicRequest } from '../models/issue/move-to-epic.model';
 import { MoveToSprintRequest } from '../models/issue/move-to-sprint.model';
 import { ProcessDataService } from './process-data.service';
+import { Issue } from '../models/issue/issue.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class JiraApiService {
   private baseUrl = 'http://localhost:8080/';
   private processDataService = inject(ProcessDataService);
 
-  createProject(project: ProjectRequest): Observable<ProjectResponse> {
+  createProject(project: Project): Observable<any> {
 
     const url = this.baseUrl + 'create-project';
 
@@ -29,7 +29,7 @@ export class JiraApiService {
       project: project
     };
 
-    return this.http.post<ProjectResponse>(url, data);
+    return this.http.post<any>(url, data);
   }
 
   getBoardId(projectKey: string): Observable<{ data: number }> {
@@ -77,7 +77,7 @@ export class JiraApiService {
     return this.http.post<string>(url, data);
   }
 
-  createSprint(sprint: SprintRequest): Observable<SprintResponse> {
+  createSprint(sprint: Sprint): Observable<any> {
     const url = this.baseUrl + 'create-sprint';
 
     const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!;
@@ -89,10 +89,10 @@ export class JiraApiService {
       sprint: sprint
     };
 
-    return this.http.post<SprintResponse>(url, data);
+    return this.http.post<any>(url, data);
   }
 
-  createIssues(issues: IssueRequest[]): Observable<{ issues: IssueResponse[], errors: any[] }> {
+  createIssues(issues: Issue[]): Observable<{ issues: Issue[], errors: any[] }> {
     const url = this.baseUrl + 'create-issues';
 
     const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!;
@@ -104,7 +104,7 @@ export class JiraApiService {
       issues: issues
     };
 
-    return this.http.post<{ issues: IssueResponse[], errors: any[] }>(url, data);
+    return this.http.post<{ issues: Issue[], errors: any[] }>(url, data);
   }
 
   moveIssuesToEpic(moveToEpicData: MoveToEpicRequest): Observable<MoveToEpicRequest> {

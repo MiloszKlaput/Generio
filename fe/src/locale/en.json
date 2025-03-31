@@ -11,10 +11,10 @@
     "startButton": "Start"
   },
   "form": {
-    "userInfoLogin": "Atlassian user name",
-    "userInfoUserId": "Atlassian account ID",
+    "userInfoLogin": "jira user name",
+    "userInfoUserId": "jira account ID",
     "userInfoApiKey": "API key",
-    "atlassianUserJiraUrl": "Base url address of user's Jira (*.atlassian.net)",
+    "jiraUserJiraUrl": "Base url address of user's Jira (*.jira.net)",
     "geminiApiKey": "Google Gemini API Key",
     "geminiMessage": "Write what project you want to create (e.g., a program for managing a kayak rental service)",
     "validations": {

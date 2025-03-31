@@ -29,11 +29,11 @@ export class ProcessSuccessComponent implements OnDestroy {
   }
 
   private getUrl(): string {
-    const atlassianUserJiraUrl = this.processDataService.processData$.getValue()!.atlassianUserInfo?.atlassianUserJiraUrl;
+    const jiraUserJiraUrl = this.processDataService.processData$.getValue()!.jiraUserInfo?.jiraUserJiraUrl;
     const projectKey = this.processDataService.processData$.getValue()!.project?.key;
     const boardId = this.processDataService.processData$.getValue()!.board?.id;
 
-    return `https://${atlassianUserJiraUrl}/jira/software/c/projects/${projectKey}/boards/${boardId}/backlog`;
+    return `https://${jiraUserJiraUrl}/jira/software/c/projects/${projectKey}/boards/${boardId}/backlog`;
   }
 
   ngOnDestroy(): void {

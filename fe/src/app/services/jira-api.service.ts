@@ -1,12 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';;
 import { Observable } from 'rxjs';
-import { Sprint } from '../models/sprint/sprint.model';
-import { Project } from '../models/project/project.model';
-import { MoveToEpicRequest } from '../models/issue/move-to-epic.model';
-import { MoveToSprintRequest } from '../models/issue/move-to-sprint.model';
+import { Sprint } from '../models/generio/sprint/sprint.model';
+import { Project } from '../models/generio/project/project.model';
+import { MoveToEpicRequest } from '../models/generio/issue/move-to-epic.model';
+import { MoveToSprintRequest } from '../models/generio/issue/move-to-sprint.model';
 import { ProcessDataService } from './process-data.service';
-import { Issue } from '../models/issue/issue.model';
+import { Issue } from '../models/generio/issue/issue.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,12 +20,12 @@ export class JiraApiService {
 
     const url = this.baseUrl + 'create-project';
 
-    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!.atlassianUserInfo!;
+    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.processData$.getValue()!.jiraUserInfo!;
 
     const data = {
-      userName: atlassianLogin,
-      apiKey: atlassianApiKey,
-      jiraBaseUrl: atlassianUserJiraUrl,
+      userName: jiraLogin,
+      apiKey: jiraApiKey,
+      jiraBaseUrl: jiraUserJiraUrl,
       project: project
     };
 
@@ -35,12 +35,12 @@ export class JiraApiService {
   getBoardId(projectKey: string): Observable<{ data: number }> {
     const url = this.baseUrl + 'get-board-id';
 
-    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!.atlassianUserInfo!;
+    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.processData$.getValue()!.jiraUserInfo!;
 
     const params = {
-      userName: atlassianLogin,
-      apiKey: atlassianApiKey,
-      jiraBaseUrl: atlassianUserJiraUrl,
+      userName: jiraLogin,
+      apiKey: jiraApiKey,
+      jiraBaseUrl: jiraUserJiraUrl,
       projectKey: projectKey
     };
 
@@ -50,12 +50,12 @@ export class JiraApiService {
   deleteSprintZero(boardId: number): Observable<any> {
     const url = this.baseUrl + 'delete-sprint-zero';
 
-    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!.atlassianUserInfo!;
+    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.processData$.getValue()!.jiraUserInfo!;
 
     const params = {
-      userName: atlassianLogin,
-      apiKey: atlassianApiKey,
-      jiraBaseUrl: atlassianUserJiraUrl,
+      userName: jiraLogin,
+      apiKey: jiraApiKey,
+      jiraBaseUrl: jiraUserJiraUrl,
       boardId: boardId.toString()
     };
 
@@ -65,12 +65,12 @@ export class JiraApiService {
   deleteProject(projectKey: string): Observable<string> {
     const url = this.baseUrl + 'delete-project';
 
-    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!.atlassianUserInfo!;
+    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.processData$.getValue()!.jiraUserInfo!;
 
     const data = {
-      userName: atlassianLogin,
-      apiKey: atlassianApiKey,
-      jiraBaseUrl: atlassianUserJiraUrl,
+      userName: jiraLogin,
+      apiKey: jiraApiKey,
+      jiraBaseUrl: jiraUserJiraUrl,
       projectKey: projectKey
     };
 
@@ -80,12 +80,12 @@ export class JiraApiService {
   createSprint(sprint: Sprint): Observable<any> {
     const url = this.baseUrl + 'create-sprint';
 
-    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!.atlassianUserInfo!;
+    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.processData$.getValue()!.jiraUserInfo!;
 
     const data = {
-      userName: atlassianLogin,
-      apiKey: atlassianApiKey,
-      jiraBaseUrl: atlassianUserJiraUrl,
+      userName: jiraLogin,
+      apiKey: jiraApiKey,
+      jiraBaseUrl: jiraUserJiraUrl,
       sprint: sprint
     };
 
@@ -95,12 +95,12 @@ export class JiraApiService {
   createIssues(issues: Issue[]): Observable<{ issues: Issue[], errors: any[] }> {
     const url = this.baseUrl + 'create-issues';
 
-    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!.atlassianUserInfo!;
+    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.processData$.getValue()!.jiraUserInfo!;
 
     const data = {
-      userName: atlassianLogin,
-      apiKey: atlassianApiKey,
-      jiraBaseUrl: atlassianUserJiraUrl,
+      userName: jiraLogin,
+      apiKey: jiraApiKey,
+      jiraBaseUrl: jiraUserJiraUrl,
       issues: issues
     };
 
@@ -110,12 +110,12 @@ export class JiraApiService {
   moveIssuesToEpic(moveToEpicData: MoveToEpicRequest): Observable<MoveToEpicRequest> {
     const url = this.baseUrl + 'move-issues-to-epic';
 
-    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!.atlassianUserInfo!;
+    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.processData$.getValue()!.jiraUserInfo!;
 
     const data = {
-      userName: atlassianLogin,
-      apiKey: atlassianApiKey,
-      jiraBaseUrl: atlassianUserJiraUrl,
+      userName: jiraLogin,
+      apiKey: jiraApiKey,
+      jiraBaseUrl: jiraUserJiraUrl,
       epicId: moveToEpicData.id,
       issues: moveToEpicData.issuesKeys
     };
@@ -126,12 +126,12 @@ export class JiraApiService {
   moveIssuesToSprint(moveToSprintData: MoveToSprintRequest): Observable<MoveToSprintRequest> {
     const url = this.baseUrl + 'move-issues-to-sprint';
 
-    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!.atlassianUserInfo!;
+    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.processData$.getValue()!.jiraUserInfo!;
 
     const data = {
-      userName: atlassianLogin,
-      apiKey: atlassianApiKey,
-      jiraBaseUrl: atlassianUserJiraUrl,
+      userName: jiraLogin,
+      apiKey: jiraApiKey,
+      jiraBaseUrl: jiraUserJiraUrl,
       sprintId: moveToSprintData.id,
       issues: moveToSprintData.issuesKeys
     };

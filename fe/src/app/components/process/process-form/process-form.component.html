@@ -4,8 +4,8 @@
     <mat-label>
       {{ 'form.userInfoLogin' | translate }}
     </mat-label>
-    <input formControlName="atlassianLogin" matInput (blur)="onBlur(f.atlassianLogin)" />
-    @if (f.atlassianLogin.errors?.['required'] && f.atlassianLogin.touched) {
+    <input formControlName="jiraLogin" matInput (blur)="onBlur(f.jiraLogin)" />
+    @if (f.jiraLogin.errors?.['required'] && f.jiraLogin.touched) {
       <mat-error>
         {{ 'form.validations.required' | translate }}
       </mat-error>
@@ -16,8 +16,8 @@
     <mat-label>
       {{ 'form.userInfoUserId' | translate }}
     </mat-label>
-    <input formControlName="atlassianUserId" matInput (blur)="onBlur(f.atlassianUserId)" />
-    @if (f.atlassianUserId.errors?.['required'] && f.atlassianUserId.touched) {
+    <input formControlName="jiraUserId" matInput (blur)="onBlur(f.jiraUserId)" />
+    @if (f.jiraUserId.errors?.['required'] && f.jiraUserId.touched) {
       <mat-error>
         {{ 'form.validations.required' | translate }}
       </mat-error>
@@ -28,8 +28,8 @@
     <mat-label>
       {{ 'form.userInfoApiKey' | translate }}
     </mat-label>
-    <input formControlName="atlassianApiKey" matInput (blur)="onBlur(f.atlassianApiKey)" />
-    @if (f.atlassianApiKey.errors?.['required'] && f.atlassianApiKey.touched) {
+    <input formControlName="jiraApiKey" matInput (blur)="onBlur(f.jiraApiKey)" />
+    @if (f.jiraApiKey.errors?.['required'] && f.jiraApiKey.touched) {
       <mat-error>
         {{ 'form.validations.required' | translate }}
       </mat-error>
@@ -38,10 +38,10 @@
 
   <mat-form-field>
     <mat-label>
-      {{ 'form.atlassianUserJiraUrl' | translate }}
+      {{ 'form.jiraUserJiraUrl' | translate }}
     </mat-label>
-    <input formControlName="atlassianUserJiraUrl" matInput (blur)="onBlur(f.atlassianUserJiraUrl)" />
-    @if (f.atlassianUserJiraUrl.errors?.['required'] && f.atlassianUserJiraUrl.touched) {
+    <input formControlName="jiraUserJiraUrl" matInput (blur)="onBlur(f.jiraUserJiraUrl)" />
+    @if (f.jiraUserJiraUrl.errors?.['required'] && f.jiraUserJiraUrl.touched) {
       <mat-error>
         {{ 'form.validations.required' | translate }}
       </mat-error>

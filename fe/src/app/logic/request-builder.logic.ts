@@ -10,17 +10,17 @@
 //   static buildProjectRequest(
 //     projectDescription: string,
 //     projectKey: string,
-//     atlassianUserId: string,
+//     jiraUserId: string,
 //     projectName: string): ProjectRequest {
 //     return {
 //       assigneeType: 'PROJECT_LEAD',
 //       description: projectDescription,
 //       key: projectKey.toUpperCase(),
-//       leadAccountId: atlassianUserId,
+//       leadAccountId: jiraUserId,
 //       name: projectName,
 //       projectTemplateKey: 'com.pyxis.greenhopper.jira:gh-simplified-scrum-classic',
 //       projectTypeKey: 'software',
-//       url: 'http://atlassian.com'
+//       url: 'http://jira.com'
 //     }
 //   }
 

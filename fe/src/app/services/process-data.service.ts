@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ProcessData } from '../models/process/process-data.model';
+import { ProcessData } from '../models/generio/process/process-data.model';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -11,7 +11,7 @@ export class ProcessDataService {
 
   initProcessData(): void {
     this.processData$.next({
-      atlassianUserInfo: undefined,
+      jiraUserInfo: undefined,
       project: undefined,
       board: undefined,
       epics: [],

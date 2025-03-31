@@ -2,17 +2,17 @@ import { DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { JiraApiService } from './jira-api.service';
 // import { RequestBuilder } from '../logic/request-builder.logic';
-import { Project } from '../models/project/project.model';
-import { Sprint } from '../models/sprint/sprint.model';
-import { MoveToEpicRequest } from '../models/issue/move-to-epic.model';
-import { MoveToSprintRequest } from '../models/issue/move-to-sprint.model';
+import { Project } from '../models/generio/project/project.model';
+import { Sprint } from '../models/generio/sprint/sprint.model';
+import { MoveToEpicRequest } from '../models/generio/issue/move-to-epic.model';
+import { MoveToSprintRequest } from '../models/generio/issue/move-to-sprint.model';
 import { from, mergeMap, toArray, tap, Observable, catchError, throwError, concatMap, map } from 'rxjs';
-import { Board } from '../models/board/board.model';
-import { Issue } from '../models/issue/issue.model';
+import { Board } from '../models/generio/board/board.model';
+import { Issue } from '../models/generio/issue/issue.model';
 import { ProcessStateService } from './process-state.service';
 import { ProcessState } from '../enums/process-state.enum';
 import { ProcessDataService } from './process-data.service';
-import { ProcessData } from '../models/process/process-data.model';
+import { ProcessData } from '../models/generio/process/process-data.model';
 import { GeminiService } from './gemini.service';
 
 @Injectable({
@@ -26,19 +26,19 @@ export class JiraPopulateProcessService {
   private destroyRef = inject(DestroyRef);
 
   startProcess(
-    // atlassianLogin: string,
-    // atlassianUserId: string,
-    // atlassianApiKey: string,
-    // atlassianUserJiraUrl: string,
+    // jiraLogin: string,
+    // jiraUserId: string,
+    // jiraApiKey: string,
+    // jiraUserJiraUrl: string,
     geminiApiKey: string,
     geminiMessage: string): void {
     this.processStateService.setProcessState(ProcessState.InProgress);
     this.processDataService.initProcessData();
     // this.updateProcessData({
-    //   atlassianLogin,
-    //   atlassianUserId,
-    //   atlassianApiKey,
-    //   atlassianUserJiraUrl
+    //   jiraLogin,
+    //   jiraUserId,
+    //   jiraApiKey,
+    //   jiraUserJiraUrl
     // });
 
     this.geminiService.generateContent(geminiMessage, geminiApiKey)
@@ -92,8 +92,8 @@ export class JiraPopulateProcessService {
   }
 
   // private createNewProject(): Observable<ProjectResponse> {
-  //   const { projectDescription, projectKey, atlassianUserId, projectName } = this.processDataService.processData$.getValue()!;
-  //   const request: ProjectRequest = RequestBu ilder.buildProjectRequest(projectDescription, projectKey, atlassianUserId, projectName);
+  //   const { projectDescription, projectKey, jiraUserId, projectName } = this.processDataService.processData$.getValue()!;
+  //   const request: ProjectRequest = RequestBu ilder.buildProjectRequest(projectDescription, projectKey, jiraUserId, projectName);
 
   //   this.updateProcessData({
   //     projectDescription: request.description,

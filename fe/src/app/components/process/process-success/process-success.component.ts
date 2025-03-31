@@ -29,7 +29,9 @@ export class ProcessSuccessComponent implements OnDestroy {
   }
 
   private getUrl(): string {
-    const { atlassianUserJiraUrl, projectKey, boardId } = this.processDataService.processData$.getValue()!;
+    const atlassianUserJiraUrl = this.processDataService.processData$.getValue()!.atlassianUserInfo?.atlassianUserJiraUrl;
+    const projectKey = this.processDataService.processData$.getValue()!.project?.key;
+    const boardId = this.processDataService.processData$.getValue()!.board?.id;
 
     return `https://${atlassianUserJiraUrl}/jira/software/c/projects/${projectKey}/boards/${boardId}/backlog`;
   }

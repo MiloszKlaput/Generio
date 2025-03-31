@@ -7,4 +7,5 @@ export interface Sprint {
   name: string;
   goal: string;
   originBoardId: number;
+  issuesGeminiIds: number[];
 }

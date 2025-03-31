@@ -6,13 +6,13 @@ import { from, map, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class GeminiService {
-  generateContent(prompt: string, apiKey: string): Observable<string | null> {
+  generateContent(message: string, apiKey: string): Observable<string | null> {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
-    const promptWithContext =
+    const messageWithContext =
       `
-      ${prompt}.
+      ${message}.
       Użytkownik chce założyć projekt w JIRA poprzez REST API.
       Będzie potrzebował zestawu danych, żeby przesłać je do API.
 
@@ -69,7 +69,7 @@ export class GeminiService {
             description,
             issuepriority,
             created
-            issuesGeminiIdIds: string[]
+            issuesGeminiIds: string[]
           }
         }
       },
@@ -81,7 +81,7 @@ export class GeminiService {
             startDate,
             endDate,
             goal,
-            issuesGeminiIdIds: string[]
+            issuesGeminiIds: string[]
           }
         }
       }
@@ -91,7 +91,7 @@ export class GeminiService {
       Zwróć tylko dane w formacie JSON.
     `;
 
-    const resultPromise = model.generateContent(promptWithContext);
+    const resultPromise = model.generateContent(messageWithContext);
     return from(resultPromise).pipe(
       map(response => response.response?.text() || null)
     );

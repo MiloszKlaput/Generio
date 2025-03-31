@@ -1,4 +1,5 @@
-import { inject, Injectable } from '@angular/core';
+import { DestroyRef, inject, Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { JiraApiService } from './jira-api.service';
 // import { RequestBuilder } from '../logic/request-builder.logic';
 import { Project } from '../models/project/project.model';
@@ -19,17 +20,18 @@ import { GeminiService } from './gemini.service';
 })
 export class JiraPopulateProcessService {
   private jiraApiService = inject(JiraApiService);
-  private chatGptApiService = inject(GeminiService);
+  private geminiService = inject(GeminiService);
   private processStateService = inject(ProcessStateService);
   private processDataService = inject(ProcessDataService);
+  private destroyRef = inject(DestroyRef);
 
   startProcess(
     // atlassianLogin: string,
     // atlassianUserId: string,
     // atlassianApiKey: string,
     // atlassianUserJiraUrl: string,
-    chatGptApiKey: string,
-    chatGptMessage: string): void {
+    geminiApiKey: string,
+    geminiMessage: string): void {
     this.processStateService.setProcessState(ProcessState.InProgress);
     this.processDataService.initProcessData();
     // this.updateProcessData({
@@ -39,13 +41,11 @@ export class JiraPopulateProcessService {
     //   atlassianUserJiraUrl
     // });
 
-    this.chatGptApiService.generateContent(chatGptMessage, chatGptApiKey)
+    this.geminiService.generateContent(geminiMessage, geminiApiKey)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(res => {
         if (res) {
-          const cleanedResponse = res.replace(/```json\s*|\s*```/g, '');
-          const json = JSON.parse(cleanedResponse);
-          this.updateProcessData({ geminiResponse: json });
-          console.log(json);
+          this.handleGeminiResponse(res);
           this.processStateService.setProcessState(ProcessState.New);
         }
       });
@@ -71,13 +71,13 @@ export class JiraPopulateProcessService {
   }
 
   clearData(): void {
-    this.jiraApiService.deleteProject(this.processDataService.processData$.getValue()!.projectKey).subscribe();
+    this.jiraApiService.deleteProject(this.processDataService.processData$.getValue()!.project?.key!).subscribe();
   }
 
   private handleError(err: any) {
     this.setErrorMessage(err);
     this.processStateService.setProcessState(ProcessState.Error);
-    if (!this.processDataService.processData$.getValue()!.projectKey) {
+    if (!this.processDataService.processData$.getValue()!.project?.key) {
       return;
     }
     this.clearData();
@@ -211,5 +211,20 @@ export class JiraPopulateProcessService {
   private updateProcessData(partialData: Partial<ProcessData>): void {
     const currentApiData = this.processDataService.processData$.getValue()!;
     this.processDataService.processData$.next({ ...currentApiData, ...partialData });
+  }
+
+  private handleGeminiResponse(res: string): void {
+    const cleanedResponse = res.replace(/```json\s*|\s*```/g, ''); // taki format zwraca Gemini
+    const json = JSON.parse(cleanedResponse);
+    console.log(json);
+
+    this.updateProcessData({
+      project: json.project,
+      epics: json.epics,
+      issues: json.issues,
+      sprints: json.sprints
+    });
+
+    console.log(this.processDataService.processData$.getValue());
   }
 }

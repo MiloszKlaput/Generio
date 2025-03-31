@@ -20,7 +20,7 @@ export class JiraApiService {
 
     const url = this.baseUrl + 'create-project';
 
-    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!;
+    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!.atlassianUserInfo!;
 
     const data = {
       userName: atlassianLogin,
@@ -35,7 +35,7 @@ export class JiraApiService {
   getBoardId(projectKey: string): Observable<{ data: number }> {
     const url = this.baseUrl + 'get-board-id';
 
-    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!;
+    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!.atlassianUserInfo!;
 
     const params = {
       userName: atlassianLogin,
@@ -50,7 +50,7 @@ export class JiraApiService {
   deleteSprintZero(boardId: number): Observable<any> {
     const url = this.baseUrl + 'delete-sprint-zero';
 
-    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!;
+    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!.atlassianUserInfo!;
 
     const params = {
       userName: atlassianLogin,
@@ -65,7 +65,7 @@ export class JiraApiService {
   deleteProject(projectKey: string): Observable<string> {
     const url = this.baseUrl + 'delete-project';
 
-    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!;
+    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!.atlassianUserInfo!;
 
     const data = {
       userName: atlassianLogin,
@@ -80,7 +80,7 @@ export class JiraApiService {
   createSprint(sprint: Sprint): Observable<any> {
     const url = this.baseUrl + 'create-sprint';
 
-    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!;
+    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!.atlassianUserInfo!;
 
     const data = {
       userName: atlassianLogin,
@@ -95,7 +95,7 @@ export class JiraApiService {
   createIssues(issues: Issue[]): Observable<{ issues: Issue[], errors: any[] }> {
     const url = this.baseUrl + 'create-issues';
 
-    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!;
+    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!.atlassianUserInfo!;
 
     const data = {
       userName: atlassianLogin,
@@ -110,7 +110,7 @@ export class JiraApiService {
   moveIssuesToEpic(moveToEpicData: MoveToEpicRequest): Observable<MoveToEpicRequest> {
     const url = this.baseUrl + 'move-issues-to-epic';
 
-    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!;
+    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!.atlassianUserInfo!;
 
     const data = {
       userName: atlassianLogin,
@@ -126,7 +126,7 @@ export class JiraApiService {
   moveIssuesToSprint(moveToSprintData: MoveToSprintRequest): Observable<MoveToSprintRequest> {
     const url = this.baseUrl + 'move-issues-to-sprint';
 
-    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!;
+    const { atlassianLogin, atlassianApiKey, atlassianUserJiraUrl } = this.processDataService.processData$.getValue()!.atlassianUserInfo!;
 
     const data = {
       userName: atlassianLogin,

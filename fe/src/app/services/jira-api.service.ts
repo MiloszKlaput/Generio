@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';;
 import { Observable } from 'rxjs';
 import { Sprint } from '../models/generio/sprint/sprint.model';
 import { Project } from '../models/generio/project/project.model';
-import { MoveToEpicRequest } from '../models/generio/issue/move-to-epic.model';
-import { MoveToSprintRequest } from '../models/generio/issue/move-to-sprint.model';
+import { MoveToEpicRequest } from '../models/generio/move/move-to-epic.model';
+import { MoveToSprintRequest } from '../models/generio/move/move-to-sprint.model';
 import { ProcessDataService } from './process-data.service';
 import { Issue } from '../models/generio/issue/issue.model';
 

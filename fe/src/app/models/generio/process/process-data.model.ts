@@ -7,9 +7,9 @@ import { Project } from "../project/project.model";
 import { Sprint } from "../sprint/sprint.model";
 
 export interface ProcessData {
-  jiraUserInfo?: JiraUserInfo;
-  project?: Project;
-  board?: Board;
+  jiraUserInfo: JiraUserInfo | null;
+  project: Project | null;
+  board: Board | null;
   epics: Epic[];
   issues: Issue[];
   sprints: Sprint[];

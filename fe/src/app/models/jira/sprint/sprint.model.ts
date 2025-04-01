@@ -1,4 +1,4 @@
-export interface Sprint {
+export interface SprintJiraDTO {
   id: number;
   self: string;
   state: string;

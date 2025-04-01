@@ -1,4 +1,4 @@
-export interface Project {
+export interface ProjectJiraDTO {
   id: string;
   assigneeType: string;
   description: string;

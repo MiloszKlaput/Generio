@@ -7,13 +7,13 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class ProcessDataService {
   processData$ = new BehaviorSubject<ProcessData | null>(null);
-  errorMessage$ = new BehaviorSubject<string>('');
+  errorMessage$ = new BehaviorSubject<string | null>(null);
 
   initProcessData(): void {
     this.processData$.next({
-      jiraUserInfo: undefined,
-      project: undefined,
-      board: undefined,
+      jiraUserInfo: null,
+      project: null,
+      board: null,
       epics: [],
       issues: [],
       sprints: []

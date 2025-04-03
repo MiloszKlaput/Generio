@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { ProcessDataService } from '../../../services/process-data.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ProcessStateService } from '../../../services/process-state.service';
 import { ProcessState } from '../../../enums/process-state.enum';
 
@@ -22,14 +22,10 @@ import { ProcessState } from '../../../enums/process-state.enum';
 export class ProcessErrorComponent implements OnDestroy {
   private processDataService = inject(ProcessDataService);
   private processStateService = inject(ProcessStateService);
-  private router = inject(Router);
   errorMessage$ = this.processDataService.errorMessage$;
 
   startOver(): void {
-    this.router.navigateByUrl('/', { skipLocationChange: true })
-      .then(() => {
-        this.router.navigate(['/Form'])
-      });
+    window.location.reload();
   }
 
   ngOnDestroy(): void {

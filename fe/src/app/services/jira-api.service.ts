@@ -1,12 +1,16 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';;
 import { Observable } from 'rxjs';
-import { Sprint } from '../models/generio/sprint/sprint.model';
-import { Project } from '../models/generio/project/project.model';
-import { MoveToEpicRequest } from '../models/generio/move/move-to-epic.model';
-import { MoveToSprintRequest } from '../models/generio/move/move-to-sprint.model';
 import { ProcessDataService } from './process-data.service';
-import { Issue } from '../models/generio/issue/issue.model';
+import { JiraProjectRequestDTO } from '../models/jira/request/project/jira-project-request.model';
+import { JiraProjectResponseDTO } from '../models/jira/response/project/jira-project-response.model';
+import { JiraBoardResponseDTO } from '../models/jira/response/board/jira-board-response.model';
+import { JiraSprintRequestDTO } from '../models/jira/request/sprint/jira-sprint-request.model';
+import { JiraSprintResponseDTO } from '../models/jira/response/sprint/jira-sprint-response.model';
+import { JiraIssueRequestDTO } from '../models/jira/request/issue/jira-issue-request-dto.model';
+import { JiraIssuesResponseDTO } from '../models/jira/response/issue/jira-issues-response-dto.model';
+import { MoveToEpicRequestDTO } from '../models/jira/request/move/move-to-epic.model';
+import { MoveToSprintRequestDTO } from '../models/jira/request/move/move-to-sprint.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +20,10 @@ export class JiraApiService {
   private baseUrl = 'http://localhost:8080/';
   private processDataService = inject(ProcessDataService);
 
-  createProject(project: Project): Observable<any> {
-
+  createProject(project: JiraProjectRequestDTO): Observable<JiraProjectResponseDTO> {
     const url = this.baseUrl + 'create-project';
 
-    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.processData$.getValue()!.jiraUserInfo!;
+    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.jiraRequestData$.getValue()!.jiraUserInfoRequest!;
 
     const data = {
       userName: jiraLogin,
@@ -29,13 +32,13 @@ export class JiraApiService {
       project: project
     };
 
-    return this.http.post<any>(url, data);
+    return this.http.post<JiraProjectResponseDTO>(url, data);
   }
 
-  getBoardId(projectKey: string): Observable<{ data: number }> {
+  getBoardId(projectKey: string): Observable<JiraBoardResponseDTO> {
     const url = this.baseUrl + 'get-board-id';
 
-    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.processData$.getValue()!.jiraUserInfo!;
+    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.jiraRequestData$.getValue()!.jiraUserInfoRequest!;
 
     const params = {
       userName: jiraLogin,
@@ -44,13 +47,13 @@ export class JiraApiService {
       projectKey: projectKey
     };
 
-    return this.http.get<{ data: number }>(url, { params });
+    return this.http.get<JiraBoardResponseDTO>(url, { params });
   }
 
   deleteSprintZero(boardId: number): Observable<any> {
     const url = this.baseUrl + 'delete-sprint-zero';
 
-    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.processData$.getValue()!.jiraUserInfo!;
+    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.jiraRequestData$.getValue()!.jiraUserInfoRequest!;
 
     const params = {
       userName: jiraLogin,
@@ -65,7 +68,7 @@ export class JiraApiService {
   deleteProject(projectKey: string): Observable<string> {
     const url = this.baseUrl + 'delete-project';
 
-    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.processData$.getValue()!.jiraUserInfo!;
+    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.jiraRequestData$.getValue()!.jiraUserInfoRequest!;
 
     const data = {
       userName: jiraLogin,
@@ -77,10 +80,10 @@ export class JiraApiService {
     return this.http.post<string>(url, data);
   }
 
-  createSprint(sprint: Sprint): Observable<any> {
+  createSprint(sprint: JiraSprintRequestDTO): Observable<JiraSprintResponseDTO> {
     const url = this.baseUrl + 'create-sprint';
 
-    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.processData$.getValue()!.jiraUserInfo!;
+    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.jiraRequestData$.getValue()!.jiraUserInfoRequest!;
 
     const data = {
       userName: jiraLogin,
@@ -89,13 +92,13 @@ export class JiraApiService {
       sprint: sprint
     };
 
-    return this.http.post<any>(url, data);
+    return this.http.post<JiraSprintResponseDTO>(url, data);
   }
 
-  createIssues(issues: Issue[]): Observable<{ issues: Issue[], errors: any[] }> {
+  createIssues(issues: JiraIssueRequestDTO[]): Observable<JiraIssuesResponseDTO> {
     const url = this.baseUrl + 'create-issues';
 
-    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.processData$.getValue()!.jiraUserInfo!;
+    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.jiraRequestData$.getValue()!.jiraUserInfoRequest!;
 
     const data = {
       userName: jiraLogin,
@@ -104,13 +107,13 @@ export class JiraApiService {
       issues: issues
     };
 
-    return this.http.post<{ issues: Issue[], errors: any[] }>(url, data);
+    return this.http.post<JiraIssuesResponseDTO>(url, data);
   }
 
-  moveIssuesToEpic(moveToEpicData: MoveToEpicRequest): Observable<MoveToEpicRequest> {
+  moveIssuesToEpics(moveToEpicData: MoveToEpicRequestDTO): Observable<any> {
     const url = this.baseUrl + 'move-issues-to-epic';
 
-    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.processData$.getValue()!.jiraUserInfo!;
+    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.jiraRequestData$.getValue()!.jiraUserInfoRequest!;
 
     const data = {
       userName: jiraLogin,
@@ -120,13 +123,13 @@ export class JiraApiService {
       issues: moveToEpicData.issuesKeys
     };
 
-    return this.http.post<MoveToEpicRequest>(url, data);
+    return this.http.post<any>(url, data);
   }
 
-  moveIssuesToSprint(moveToSprintData: MoveToSprintRequest): Observable<MoveToSprintRequest> {
+  moveIssuesToSprints(moveToSprintData: MoveToSprintRequestDTO): Observable<any> {
     const url = this.baseUrl + 'move-issues-to-sprint';
 
-    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.processData$.getValue()!.jiraUserInfo!;
+    const { jiraLogin, jiraApiKey, jiraUserJiraUrl } = this.processDataService.jiraRequestData$.getValue()!.jiraUserInfoRequest!;
 
     const data = {
       userName: jiraLogin,
@@ -136,6 +139,6 @@ export class JiraApiService {
       issues: moveToSprintData.issuesKeys
     };
 
-    return this.http.post<MoveToSprintRequest>(url, data);
+    return this.http.post<any>(url, data);
   }
 }

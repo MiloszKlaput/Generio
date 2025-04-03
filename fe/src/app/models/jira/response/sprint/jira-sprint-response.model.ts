@@ -1,11 +1,10 @@
-export interface SprintDTO {
+export interface JiraSprintResponseDTO {
   id: number;
   self: string;
   state: string;
+  name: string;
   startDate: string;
   endDate: string;
-  name: string;
-  goal: string;
   originBoardId: number;
-  issuesIds: number[];
+  goal: string;
 }

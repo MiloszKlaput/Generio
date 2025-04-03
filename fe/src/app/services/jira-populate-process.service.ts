@@ -1,19 +1,21 @@
-import { DestroyRef, inject, Injectable } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { inject, Injectable } from '@angular/core';
 import { JiraApiService } from './jira-api.service';
-// import { RequestBuilder } from '../logic/request-builder.logic';
-import { Project } from '../models/generio/project/project.model';
-import { Sprint } from '../models/generio/sprint/sprint.model';
-import { MoveToEpicRequest } from '../models/generio/move/move-to-epic.model';
-import { MoveToSprintRequest } from '../models/generio/move/move-to-sprint.model';
 import { from, mergeMap, toArray, tap, Observable, catchError, throwError, concatMap, map } from 'rxjs';
-import { Board } from '../models/generio/board/board.model';
-import { Issue } from '../models/generio/issue/issue.model';
 import { ProcessStateService } from './process-state.service';
 import { ProcessState } from '../enums/process-state.enum';
 import { ProcessDataService } from './process-data.service';
-import { ProcessData } from '../models/generio/process/process-data.model';
 import { GeminiService } from './gemini.service';
+import { GeminiResponse } from '../models/gemini/gemini-response.model';
+import { JiraProjectResponseDTO } from '../models/jira/response/project/jira-project-response.model';
+import { JiraRequestDTOMapper } from '../mapper/jira-request-dto-mapper';
+import { JiraBoardResponseDTO } from '../models/jira/response/board/jira-board-response.model';
+import { JiraSprintResponseDTO } from '../models/jira/response/sprint/jira-sprint-response.model';
+import { JiraSprintRequestDTO } from '../models/jira/request/sprint/jira-sprint-request.model';
+import { JiraIssueResponseDTO } from '../models/jira/response/issue/jira-issue-response-dto.model';
+import { JiraIssueRequestDTO } from '../models/jira/request/issue/jira-issue-request-dto.model';
+import { JiraIssuesResponseDTO } from '../models/jira/response/issue/jira-issues-response-dto.model';
+import { MoveToEpicRequestDTO } from '../models/jira/request/move/move-to-epic.model';
+import { MoveToSprintRequestDTO } from '../models/jira/request/move/move-to-sprint.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,61 +25,42 @@ export class JiraPopulateProcessService {
   private geminiService = inject(GeminiService);
   private processStateService = inject(ProcessStateService);
   private processDataService = inject(ProcessDataService);
-  private destroyRef = inject(DestroyRef);
 
-  startProcess(
-    // jiraLogin: string,
-    // jiraUserId: string,
-    // jiraApiKey: string,
-    // jiraUserJiraUrl: string,
-    geminiApiKey: string,
-    geminiMessage: string): void {
+  startProcess(jiraLogin: string, jiraUserId: string, jiraApiKey: string, jiraUserJiraUrl: string, geminiApiKey: string, geminiMessage: string): void {
     this.processStateService.setProcessState(ProcessState.InProgress);
-    this.processDataService.initProcessData();
-    // this.updateProcessData({
-    //   jiraLogin,
-    //   jiraUserId,
-    //   jiraApiKey,
-    //   jiraUserJiraUrl
-    // });
 
-    this.geminiService.generateContent(geminiMessage, geminiApiKey)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(res => {
-        if (res) {
-          this.handleGeminiResponse(res);
-          this.processStateService.setProcessState(ProcessState.New);
+    const jiraUserInfo = { jiraLogin, jiraUserId, jiraApiKey, jiraUserJiraUrl };
+    this.processDataService.updateJiraRequestData({ jiraUserInfoRequest: jiraUserInfo });
+
+    this.createContent(geminiMessage, geminiApiKey)
+      .pipe(
+        concatMap(() => this.createNewProject()),
+        concatMap(() => this.getBoardId()),
+        concatMap(() => this.deleteSprintZero()),
+        concatMap(() => this.createSprints()),
+        concatMap(() => this.createEpics()),
+        concatMap(() => this.createIssues()),
+        concatMap(() => this.moveIssuesToEpics()),
+        concatMap(() => this.moveIssuesToSprints()),
+      )
+      .subscribe({
+        next: () => {
+          this.processStateService.setProcessState(ProcessState.Success);
+        },
+        error: (err) => {
+          this.handleError(err);
         }
       });
-
-    // this.createNewProject()
-    //   .pipe(
-    //     concatMap(() => this.getBoardId()),
-    //     concatMap(() => this.deleteSprintZero()),
-    //     concatMap(() => this.createSprints()),
-    //     concatMap(() => this.createEpics()),
-    //     concatMap(() => this.createIssues()),
-    //     concatMap(() => this.moveIssuesToEpics()),
-    //     concatMap(() => this.moveIssuesToSprints()),
-    //   )
-    //   .subscribe({
-    //     next: () => {
-    //       this.processStateService.setProcessState(ProcessState.Success);
-    //     },
-    //     error: (err) => {
-    //       this.handleError(err);
-    //     }
-    //   });
   }
 
   clearData(): void {
-    this.jiraApiService.deleteProject(this.processDataService.processData$.getValue()!.project?.key!).subscribe();
+    this.jiraApiService.deleteProject(this.processDataService.jiraResponseData$.getValue()!.projectResponse?.key!).subscribe();
   }
 
   private handleError(err: any) {
     this.setErrorMessage(err);
     this.processStateService.setProcessState(ProcessState.Error);
-    if (!this.processDataService.processData$.getValue()!.project?.key) {
+    if (!this.processDataService.jiraResponseData$.getValue()!.projectResponse?.key) {
       return;
     }
     this.clearData();
@@ -91,140 +74,152 @@ export class JiraPopulateProcessService {
     this.processDataService.errorMessage$.next(formatedErrMsg);
   }
 
-  // private createNewProject(): Observable<ProjectResponse> {
-  //   const { projectDescription, projectKey, jiraUserId, projectName } = this.processDataService.processData$.getValue()!;
-  //   const request: ProjectRequest = RequestBu ilder.buildProjectRequest(projectDescription, projectKey, jiraUserId, projectName);
+  private createContent(geminiMessage: string, geminiApiKey: string): Observable<string | null> {
+    return this.geminiService.generateContent(geminiMessage, geminiApiKey).pipe(
+      tap((result: string | null) => {
+        if (result !== null) {
+          this.handleGeminiResponse(result);
+        }
+      })
+    );
+  }
 
-  //   this.updateProcessData({
-  //     projectDescription: request.description,
-  //     projectName: request.name,
-  //     projectKey: request.key
-  //   });
+  private createNewProject(): Observable<JiraProjectResponseDTO> {
+    const geminiProject = this.processDataService.geminiResponseData$.getValue()!.project;
+    const jiraUserId = this.processDataService.jiraRequestData$.getValue()!.jiraUserInfoRequest.jiraUserId;
 
-  //   return this.apiService.createProject(request).pipe(
-  //     tap((result: ProjectResponse) => {
-  //       if (result) {
-  //         this.updateProcessData({
-  //           projectId: result.data.id,
-  //           projectLink: result.data.self,
-  //           projectKey: result.data.key
-  //         });
-  //       }
-  //     })
-  //   );
-  // }
+    const projectRequest = JiraRequestDTOMapper.toProjectRequestDto(geminiProject, jiraUserId);
 
-  // private getBoardId(): Observable<BoardIdResponse> {
-  //   const projectKey = this.processDataService.processData$.getValue()!.projectKey;
+    this.processDataService.updateJiraRequestData({ projectRequest: projectRequest });
 
-  //   return this.apiService.getBoardId(projectKey).pipe(
-  //     tap((result: BoardIdResponse) => {
-  //       if (result) {
-  //         this.updateProcessData({ boardId: result.data });
-  //       }
-  //     })
-  //   );
-  // }
+    return this.jiraApiService.createProject(projectRequest).pipe(
+      tap((result: JiraProjectResponseDTO) => {
+        if (result) {
+          this.processDataService.updateJiraResponseData({ projectResponse: result });
+        }
+      })
+    );
+  }
 
-  // private deleteSprintZero(): Observable<any> {
-  //   const boardId = this.processDataService.processData$.getValue()!.boardId;
+  private getBoardId(): Observable<JiraBoardResponseDTO> {
+    const projectKey = this.processDataService.jiraResponseData$.getValue()!.projectResponse.key;
 
-  //   return this.apiService.deleteSprintZero(boardId);
-  // }
+    return this.jiraApiService.getBoardId(projectKey).pipe(
+      tap((result: JiraBoardResponseDTO) => {
+        if (result) {
+          this.processDataService.updateJiraResponseData({ boardResponse: result });
+        }
+      })
+    );
+  }
 
-  // private createSprints(): Observable<SprintResponse[]> {
-  //   const { boardId, sprintsCount, sprintDuration, projectStartDate } = this.processDataService.processData$.getValue()!
-  //   const sprints: SprintRequest[] = RequestBuilder.buildSprintsRequest(boardId, sprintsCount, sprintDuration, projectStartDate);
+  private deleteSprintZero(): Observable<any> {
+    const boardId = this.processDataService.jiraResponseData$.getValue()!.boardResponse.id;
 
-  //   return from(sprints).pipe(
-  //     concatMap((sprint: SprintRequest) => this.apiService.createSprint(sprint)),
-  //     toArray(),
-  //     tap((result: SprintResponse[]) => {
-  //       if (result) {
-  //         this.updateProcessData({ sprints: result });
-  //       }
-  //     })
-  //   );
-  // }
+    return this.jiraApiService.deleteSprintZero(boardId);
+  }
 
-  // private createEpics(): Observable<{ issues: IssueResponse[], errors: any[] }> {
-  //   const epics: IssueRequest[] = RequestBuilder.buildEpicsRequest();
+  private createSprints(): Observable<JiraSprintResponseDTO[]> {
+    const geminiSprints = this.processDataService.geminiResponseData$.getValue()!.sprints;
+    const boardId = this.processDataService.jiraResponseData$.getValue()!.boardResponse.id;
 
-  //   return this.apiService.createIssues(epics).pipe(
-  //     tap((result: { issues: IssueResponse[], errors: any[] }) => {
-  //       if (result.issues) {
-  //         const epicIds: number[] = [];
-  //         for (const epic of result.issues) {
-  //           epicIds.push(epic.id);
-  //         }
-  //         this.updateProcessData({ epicsIds: epicIds });
-  //       }
-  //     })
-  //   );
-  // }
+    const sprintsRequests: JiraSprintRequestDTO[] = JiraRequestDTOMapper.toSprintsRequestDto(geminiSprints, boardId);
+    this.processDataService.updateJiraRequestData({ sprintsRequests: sprintsRequests });
 
-  // private createIssues(): Observable<any> {
-  //   const issuesRequest: IssueRequest[][] = RequestBuilder.buildIssuesRequest();
+    return from(sprintsRequests).pipe(
+      concatMap((sprint: JiraSprintRequestDTO) => this.jiraApiService.createSprint(sprint)),
+      toArray(),
+      tap((result: JiraSprintResponseDTO[]) => {
+        if (result) {
+          this.processDataService.updateJiraResponseData({ sprintsResponse: result });
+        }
+      })
+    );
+  }
 
-  //   return from(issuesRequest).pipe(
-  //     concatMap((req: IssueRequest[]) => this.apiService.createIssues(req).pipe(
-  //       map((result: { issues: IssueResponse[], errors: any[] }) => {
+  private createEpics(): Observable<JiraIssuesResponseDTO> {
+    const geminiEpics = this.processDataService.geminiResponseData$.getValue()!.epics;
 
-  //         const mergedIssues: Issue[] = result.issues.map((issueRes, index) => ({
-  //           ...issueRes,
-  //           fields: req[index]?.fields
-  //         }));
+    const epicsRequests: JiraIssueRequestDTO[] = JiraRequestDTOMapper.toIssueRequestDto(geminiEpics);
+    this.processDataService.updateJiraRequestData({ epicsRequests: epicsRequests });
 
-  //         this.updateProcessData({ issues: mergedIssues });
+    return this.jiraApiService.createIssues(epicsRequests).pipe(
+      tap((result: JiraIssuesResponseDTO) => {
+        if (result.issues) {
+          this.processDataService.updateJiraResponseData({ epicsResponse: result.issues });
+        }
+      })
+    );
+  }
 
-  //         return mergedIssues;
-  //       })
-  //     )),
-  //     toArray()
-  //   );
-  // }
+  private createIssues(): Observable<JiraIssuesResponseDTO> {
+    const geminiIssues = this.processDataService.geminiResponseData$.getValue()!.issues;
 
-  // private moveIssuesToEpics(): Observable<any> {
-  //   const requests: MoveToEpicRequest[] = RequestBuilder.buildMoveToEpicRequest();
+    const issuesRequests: JiraIssueRequestDTO[] = JiraRequestDTOMapper.toIssueRequestDto(geminiIssues);
+    this.processDataService.updateJiraRequestData({ issuesRequests: issuesRequests });
 
-  //   return from(requests).pipe(
-  //     mergeMap((req: MoveToEpicRequest) => this.apiService.moveIssuesToEpic(req)),
-  //     toArray(),
-  //     catchError((err) => {
-  //       return throwError(() => err);
-  //     })
-  //   );
-  // }
+    return this.jiraApiService.createIssues(issuesRequests).pipe(
+      tap((result: JiraIssuesResponseDTO) => {
+        if (result.issues) {
+          this.processDataService.updateJiraResponseData({ issuesResponse: result.issues });
+        }
+      })
+    );
+  }
 
-  // private moveIssuesToSprints(): Observable<any> {
-  //   const requests: MoveToSprintRequest[] = RequestBuilder.buildMoveToSprintRequest();
+  private moveIssuesToEpics(): Observable<any> {
+    const geminiEpics = this.processDataService.geminiResponseData$.getValue()!.epics;
+    const jiraEpicsRequest = this.processDataService.jiraRequestData$.getValue()!.epicsRequests;
+    const jiraEpicsResponse = this.processDataService.jiraResponseData$.getValue()!.epicsResponse;
+    const jiraIssuesRequest = this.processDataService.jiraRequestData$.getValue()!.issuesRequests;
+    const jiraIssuesResponse = this.processDataService.jiraResponseData$.getValue()!.issuesResponse;
 
-  //   return from(requests).pipe(
-  //     mergeMap((req: MoveToSprintRequest) => this.apiService.moveIssuesToSprint(req)),
-  //     toArray(),
-  //     catchError((err) => {
-  //       return throwError(() => err);
-  //     })
-  //   );
-  // }
+    const moveIssuesToEpicsRequests =  JiraRequestDTOMapper.toMoveIssuesToEpicsRequestDto(geminiEpics, jiraEpicsRequest, jiraEpicsResponse, jiraIssuesRequest, jiraIssuesResponse);
 
-  private updateProcessData(partialData: Partial<ProcessData>): void {
-    const currentApiData = this.processDataService.processData$.getValue()!;
-    this.processDataService.processData$.next({ ...currentApiData, ...partialData });
+    return from(moveIssuesToEpicsRequests).pipe(
+      mergeMap((req: MoveToEpicRequestDTO) => this.jiraApiService.moveIssuesToEpics(req)),
+      toArray(),
+      catchError((err) => {
+        return throwError(() => err);
+      })
+    );
+  }
+
+  private moveIssuesToSprints(): Observable<any> {
+    const geminiSprints = this.processDataService.geminiResponseData$.getValue()!.sprints;
+    const jiraSprintsRequest = this.processDataService.jiraRequestData$.getValue()!.sprintsRequests;
+    const jiraSprintsResponse = this.processDataService.jiraResponseData$.getValue()!.sprintsResponse;
+    const jiraIssuesRequest = this.processDataService.jiraRequestData$.getValue()!.issuesRequests;
+    const jiraIssuesResponse = this.processDataService.jiraResponseData$.getValue()!.issuesResponse;
+
+    const moveIssuesToSprintsRequests =  JiraRequestDTOMapper.toMoveIssuesToSprintsRequestDto(geminiSprints, jiraSprintsRequest, jiraSprintsResponse, jiraIssuesRequest, jiraIssuesResponse);
+
+
+    return from(moveIssuesToSprintsRequests).pipe(
+      mergeMap((req: MoveToSprintRequestDTO) => this.jiraApiService.moveIssuesToSprints(req)),
+      toArray(),
+      catchError((err) => {
+        return throwError(() => err);
+      })
+    );
   }
 
   private handleGeminiResponse(res: string): void {
     const cleanedResponse = res.replace(/```json\s*|\s*```/g, ''); // taki format zwraca Gemini
     const json = JSON.parse(cleanedResponse);
-    console.log(json);
 
-    this.updateProcessData({
+    const geminiResponse: GeminiResponse = {
       project: json.project,
       epics: json.epics,
       issues: json.issues,
       sprints: json.sprints
-    });
+    };
 
-    console.log(this.processDataService.processData$.getValue());
+    this.processDataService.geminiResponseData$.next(geminiResponse);
+
+
+    // TODO usunąć
+    console.log(json);
+    console.log(this.processDataService.geminiResponseData$.getValue());
   }
 }

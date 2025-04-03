@@ -50,10 +50,10 @@ export class ProcessFormComponent implements OnInit {
     }
 
     this.populateProcessService.startProcess(
-      // this.f.jiraLogin.value!,
-      // this.f.jiraUserId.value!,
-      // this.f.jiraApiKey.value!,
-      // this.f.jiraUserJiraUrl.value!,
+      this.f.jiraLogin.value!,
+      this.f.jiraUserId.value!,
+      this.f.jiraApiKey.value!,
+      this.f.jiraUserJiraUrl.value!,
       this.f.geminiApiKey.value!,
       this.f.geminiMessage.value!
     );
@@ -67,10 +67,10 @@ export class ProcessFormComponent implements OnInit {
 
   private initForm(): void {
     this.form = new FormGroup<ProcessFormControls>({
-      // jiraLogin: new FormControl<string>('', [Validators.required]),
-      // jiraUserId: new FormControl<string>('', [Validators.required]),
-      // jiraApiKey: new FormControl<string>('', [Validators.required]),
-      // jiraUserJiraUrl: new FormControl<string>('', [Validators.required]),
+      jiraLogin: new FormControl<string>('', [Validators.required]),
+      jiraUserId: new FormControl<string>('', [Validators.required]),
+      jiraApiKey: new FormControl<string>('', [Validators.required]),
+      jiraUserJiraUrl: new FormControl<string>('', [Validators.required]),
       geminiApiKey: new FormControl<string>('', [Validators.required]),
       geminiMessage: new FormControl<string>('', [Validators.required]),
     });

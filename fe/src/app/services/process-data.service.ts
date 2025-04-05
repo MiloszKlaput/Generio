@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { GeminiResponse } from '../models/gemini/gemini-response.model';
 import { JiraRequestData } from '../models/jira/request/jira-request-data.model';
-import { JiraResponseData } from '../models/jira/response/jira-response-data.mode';
+import { JiraResponseData } from '../models/jira/response/jira-response-data.model';
 
 @Injectable({
   providedIn: 'root'

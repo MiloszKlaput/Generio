@@ -29,9 +29,9 @@ export class ProcessSuccessComponent implements OnDestroy {
   }
 
   private getUrl(): string {
-    const jiraUserJiraUrl = this.processDataService.processData$.getValue()!.jiraUserInfo?.jiraUserJiraUrl;
-    const projectKey = this.processDataService.processData$.getValue()!.project?.key;
-    const boardId = this.processDataService.processData$.getValue()!.board?.id;
+    const jiraUserJiraUrl = this.processDataService.jiraRequestData$.getValue()!.jiraUserInfoRequest.jiraUserJiraUrl;
+    const projectKey = this.processDataService.jiraResponseData$.getValue()!.projectResponse.key;
+    const boardId = this.processDataService.jiraResponseData$.getValue()!.boardResponse.id;
 
     return `https://${jiraUserJiraUrl}/jira/software/c/projects/${projectKey}/boards/${boardId}/backlog`;
   }

@@ -18,16 +18,18 @@ export class GeminiService {
 
       Stwórz JSON z projektem. Wypełnij potrzebne pola.
 
+      Jeżeli Użytkownik nie podał nazwy to stwórz kreatywną nazwę projektu.
+
       Stwórz od jednej do kilku epic. Nadaj im nazwy adekwatne do projektu.
 
       Stwórz odpowiednią a by zrealizować cały projekt ilość zadań (issues).
       Dodaj do epic adekwatne issues.
-      Issue mogą mieć typ: Story, Task
+      Issue mogą mieć typ: Story - 10006, Task - 10007, Epic - 10000. Ustawiaj wartość liczbową.
       Task to zadanie techniczne jak konfiguracja, założenie bazy danych itp.
       Nie powinno być więcej niż 20% tasków w sprincie.
 
       Issue powinny mieć różne priority. Na podstawie nazwy i innych informacji o issue, zdecyj jakie powienien mieć priority.
-      Możliwe typy priority: Highest, High, Medium, Low, Lowest
+      Możliwe typy priority: 1 - Highest, 2 - High, 3 - Medium, 4 - Low, 5 - Lowest. Ustawiaj wartość liczbową.
 
       Jeżeli użytkownik nie podał daty startu projektu, to projekt startuje dzisiaj.
       Sprint trwa 2 tygodnie.
@@ -45,7 +47,6 @@ export class GeminiService {
       },
       "issues":
         {
-          "issue":
           {
             geminiId,
             "fields":
@@ -53,29 +54,54 @@ export class GeminiService {
               issuetype,
               summary,
               description,
-              issuepriority,
-              created
+              priority
+            }
+          },
+          {
+            geminiId,
+            "fields":
+            {
+              issuetype,
+              summary,
+              description,
+              priority
             }
           }
         },
       "epics":
       {
-        "issue":
         {
+          geminiId,
+          issuesGeminiIds: string[],
           "fields":
           {
             issuetype,
             summary,
             description,
-            issuepriority,
-            created
-            issuesGeminiIds: string[]
+            priority
+          }
+        },
+        {
+          geminiId,
+          issuesGeminiIds: string[],
+          "fields":
+          {
+            issuetype,
+            summary,
+            description,
+            priority
           }
         }
       },
       "sprints":
         {
-          "sprint":
+          {
+            name,
+            startDate,
+            endDate,
+            goal,
+            issuesGeminiIds: string[]
+          },
           {
             name,
             startDate,

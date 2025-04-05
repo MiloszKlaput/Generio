@@ -16,7 +16,7 @@ async function deleteProject(req, res) {
     };
 
     const response = await axios.delete(url, config);
-    return res.json({ data: response.data });
+    return res.json(response.data);
 
   } catch (error) {
     console.error('Error occurred: ', error.message);

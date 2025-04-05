@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { JiraApiService } from './jira-api.service';
-import { from, mergeMap, toArray, tap, Observable, catchError, throwError, concatMap, map } from 'rxjs';
+import { from, mergeMap, toArray, tap, Observable, concatMap } from 'rxjs';
 import { ProcessStateService } from './process-state.service';
 import { ProcessState } from '../enums/process-state.enum';
 import { ProcessDataService } from './process-data.service';
@@ -11,7 +11,6 @@ import { JiraRequestDTOMapper } from '../mapper/jira-request-dto-mapper';
 import { JiraBoardResponseDTO } from '../models/jira/response/board/jira-board-response.model';
 import { JiraSprintResponseDTO } from '../models/jira/response/sprint/jira-sprint-response.model';
 import { JiraSprintRequestDTO } from '../models/jira/request/sprint/jira-sprint-request.model';
-import { JiraIssueResponseDTO } from '../models/jira/response/issue/jira-issue-response-dto.model';
 import { JiraIssueRequestDTO } from '../models/jira/request/issue/jira-issue-request-dto.model';
 import { JiraIssuesResponseDTO } from '../models/jira/response/issue/jira-issues-response-dto.model';
 import { MoveToEpicRequestDTO } from '../models/jira/request/move/move-to-epic.model';
@@ -58,8 +57,8 @@ export class JiraPopulateProcessService {
   }
 
   private handleError(err: any) {
-    this.setErrorMessage(err);
     this.processStateService.setProcessState(ProcessState.Error);
+    this.setErrorMessage(err);
     if (!this.processDataService.jiraResponseData$.getValue()!.projectResponse?.key) {
       return;
     }
@@ -67,6 +66,10 @@ export class JiraPopulateProcessService {
   }
 
   private setErrorMessage(err: any): void {
+    console.log(err);
+    if (!err || err.length <= 0) {
+      return;
+    }
     const errMsg = JSON.stringify(err.error, null, 2);
     const formatedErrMsgArr = errMsg.replace(/{|}|"/g, '').split(': ');
     const formatedErrMsg = formatedErrMsgArr[formatedErrMsgArr.length - 1];
@@ -139,8 +142,9 @@ export class JiraPopulateProcessService {
 
   private createEpics(): Observable<JiraIssuesResponseDTO> {
     const geminiEpics = this.processDataService.geminiResponseData$.getValue()!.epics;
+    const projectId = this.processDataService.jiraResponseData$.getValue()!.projectResponse.id.toString();
 
-    const epicsRequests: JiraIssueRequestDTO[] = JiraRequestDTOMapper.toIssueRequestDto(geminiEpics);
+    const epicsRequests: JiraIssueRequestDTO[] = JiraRequestDTOMapper.toIssueRequestDto(geminiEpics, projectId);
     this.processDataService.updateJiraRequestData({ epicsRequests: epicsRequests });
 
     return this.jiraApiService.createIssues(epicsRequests).pipe(
@@ -154,8 +158,9 @@ export class JiraPopulateProcessService {
 
   private createIssues(): Observable<JiraIssuesResponseDTO> {
     const geminiIssues = this.processDataService.geminiResponseData$.getValue()!.issues;
+    const projectId = this.processDataService.jiraResponseData$.getValue()!.projectResponse.id.toString();
 
-    const issuesRequests: JiraIssueRequestDTO[] = JiraRequestDTOMapper.toIssueRequestDto(geminiIssues);
+    const issuesRequests: JiraIssueRequestDTO[] = JiraRequestDTOMapper.toIssueRequestDto(geminiIssues, projectId);
     this.processDataService.updateJiraRequestData({ issuesRequests: issuesRequests });
 
     return this.jiraApiService.createIssues(issuesRequests).pipe(
@@ -174,14 +179,11 @@ export class JiraPopulateProcessService {
     const jiraIssuesRequest = this.processDataService.jiraRequestData$.getValue()!.issuesRequests;
     const jiraIssuesResponse = this.processDataService.jiraResponseData$.getValue()!.issuesResponse;
 
-    const moveIssuesToEpicsRequests =  JiraRequestDTOMapper.toMoveIssuesToEpicsRequestDto(geminiEpics, jiraEpicsRequest, jiraEpicsResponse, jiraIssuesRequest, jiraIssuesResponse);
+    const moveIssuesToEpicsRequests = JiraRequestDTOMapper.toMoveIssuesToEpicsRequestDto(geminiEpics, jiraEpicsRequest, jiraEpicsResponse, jiraIssuesRequest, jiraIssuesResponse);
 
     return from(moveIssuesToEpicsRequests).pipe(
       mergeMap((req: MoveToEpicRequestDTO) => this.jiraApiService.moveIssuesToEpics(req)),
-      toArray(),
-      catchError((err) => {
-        return throwError(() => err);
-      })
+      toArray()
     );
   }
 
@@ -192,15 +194,12 @@ export class JiraPopulateProcessService {
     const jiraIssuesRequest = this.processDataService.jiraRequestData$.getValue()!.issuesRequests;
     const jiraIssuesResponse = this.processDataService.jiraResponseData$.getValue()!.issuesResponse;
 
-    const moveIssuesToSprintsRequests =  JiraRequestDTOMapper.toMoveIssuesToSprintsRequestDto(geminiSprints, jiraSprintsRequest, jiraSprintsResponse, jiraIssuesRequest, jiraIssuesResponse);
+    const moveIssuesToSprintsRequests = JiraRequestDTOMapper.toMoveIssuesToSprintsRequestDto(geminiSprints, jiraSprintsRequest, jiraSprintsResponse, jiraIssuesRequest, jiraIssuesResponse);
 
 
     return from(moveIssuesToSprintsRequests).pipe(
       mergeMap((req: MoveToSprintRequestDTO) => this.jiraApiService.moveIssuesToSprints(req)),
-      toArray(),
-      catchError((err) => {
-        return throwError(() => err);
-      })
+      toArray()
     );
   }
 
@@ -214,12 +213,7 @@ export class JiraPopulateProcessService {
       issues: json.issues,
       sprints: json.sprints
     };
-
+    console.log(geminiResponse);
     this.processDataService.geminiResponseData$.next(geminiResponse);
-
-
-    // TODO usunąć
-    console.log(json);
-    console.log(this.processDataService.geminiResponseData$.getValue());
   }
 }

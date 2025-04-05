@@ -16,7 +16,7 @@ async function getBoardId(req, res) {
 
     const response = await axios.get(url, config);
 
-    return res.json({ data: response.data.values[0].id });
+    return res.json(response.data.values[0]);
 
   } catch (error) {
     console.error('Error occurred: ', error.message);

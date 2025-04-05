@@ -9,6 +9,7 @@ import { MoveToEpicRequestDTO } from "../models/jira/request/move/move-to-epic.m
 import { JiraIssueResponseDTO } from "../models/jira/response/issue/jira-issue-response-dto.model";
 import { MoveToSprintRequestDTO } from "../models/jira/request/move/move-to-sprint.model";
 import { JiraSprintResponseDTO } from "../models/jira/response/sprint/jira-sprint-response.model";
+import { JiraIssueFieldsRequestDTO } from "../models/jira/request/issue/jira-issue-fields-request-dto.model";
 
 export class JiraRequestDTOMapper {
   static toProjectRequestDto(project: GeminiProject, jiraUserId: string): JiraProjectRequestDTO {
@@ -36,38 +37,62 @@ export class JiraRequestDTOMapper {
     });
   }
 
-  static toIssueRequestDto(issues: GeminiIssue[] | GeminiEpic[]): JiraIssueRequestDTO[] {
+  static toIssueRequestDto(issues: GeminiIssue[] | GeminiEpic[], projectId: string): JiraIssueRequestDTO[] {
     return issues.map(issue => {
+      const hiddenTag = `<!-- GEMINI_ID:${issue.geminiId} -->\n`;
       return {
         fields: {
-          created: issue.fields.created,
-          description: issue.fields.description,
-          issuepriority: issue.fields.issuepriority,
-          issuetype: issue.fields.issuetype,
+          description: {
+            type: "doc",
+            version: 1,
+            content: [
+              {
+                type: "paragraph",
+                content: [
+                  {
+                    type: "text",
+                    text: hiddenTag + issue.fields.description
+                  }
+                ]
+              }
+            ]
+          },
+          priority: { id: issue.fields.priority.toString() },
+          issuetype: { id: issue.fields.issuetype.toString() },
           summary: issue.fields.summary,
-          customfield_99999: issue.geminiId
+          project: { id: projectId }
         }
       }
     });
   }
 
-  static toMoveIssuesToEpicsRequestDto(geminiEpics: GeminiEpic[], jiraEpicsRequest: JiraIssueRequestDTO[], jiraEpicsResponse: JiraIssueResponseDTO[], jiraIssuesRequest: JiraIssueRequestDTO[], jiraIssuesResponse: JiraIssueResponseDTO[]): MoveToEpicRequestDTO[] {
+  static toMoveIssuesToEpicsRequestDto(
+    geminiEpics: GeminiEpic[],
+    jiraEpicsRequest: JiraIssueRequestDTO[],
+    jiraEpicsResponse: JiraIssueResponseDTO[],
+    jiraIssuesRequest: JiraIssueRequestDTO[],
+    jiraIssuesResponse: JiraIssueResponseDTO[]
+  ): MoveToEpicRequestDTO[] {
     const result: MoveToEpicRequestDTO[] = [];
 
     for (const geminiEpic of geminiEpics) {
       const geminiEpicId = geminiEpic.geminiId;
 
-      const matchingEpicRequestIndex = jiraEpicsRequest.findIndex((epicReq) => epicReq.fields.customfield_99999 === geminiEpicId);
+      const matchingEpicRequestIndex = jiraEpicsRequest.findIndex((epicRequest) => {
+        const extractedId = JiraRequestDTOMapper.getGeminiId(epicRequest.fields.description);
+        return extractedId === geminiEpicId;
+      });
+
       const matchingEpicResponse = jiraEpicsResponse[matchingEpicRequestIndex];
-      const childGeminiIds = geminiEpic.geminiIssuesIds.map(String);
+      const childGeminiIds = geminiEpic.issuesGeminiIds.map(String);
       const matchingIssueKeys: string[] = [];
 
-      jiraIssuesRequest.forEach((issueReq, idx) => {
-        const geminiId = issueReq.fields.customfield_99999;
-        if (childGeminiIds.includes(geminiId)) {
-          const issueRes = jiraIssuesResponse[idx];
-          if (issueRes?.key) {
-            matchingIssueKeys.push(issueRes.key);
+      jiraIssuesRequest.forEach((issueReq, index) => {
+        const geminiId = JiraRequestDTOMapper.getGeminiId(issueReq.fields.description);
+        if (geminiId && childGeminiIds.includes(geminiId)) {
+          const issueResponse = jiraIssuesResponse[index];
+          if (issueResponse?.key) {
+            matchingIssueKeys.push(issueResponse.key);
           }
         }
       });
@@ -81,28 +106,34 @@ export class JiraRequestDTOMapper {
     return result;
   }
 
-  static toMoveIssuesToSprintsRequestDto(geminiSprints: GeminiSprint[], jiraSprintsRequest: JiraSprintRequestDTO[], jiraSprintsResponse: JiraSprintResponseDTO[], jiraIssuesRequest: JiraIssueRequestDTO[], jiraIssuesResponse: JiraIssueResponseDTO[]): MoveToSprintRequestDTO[] {
+  static toMoveIssuesToSprintsRequestDto(
+    geminiSprints: GeminiSprint[],
+    jiraSprintsRequest: JiraSprintRequestDTO[],
+    jiraSprintsResponse: JiraSprintResponseDTO[],
+    jiraIssuesRequest: JiraIssueRequestDTO[],
+    jiraIssuesResponse: JiraIssueResponseDTO[]
+  ): MoveToSprintRequestDTO[] {
     const result: MoveToSprintRequestDTO[] = [];
 
     for (const geminiSprint of geminiSprints) {
       const matchingSprintRequestIndex = jiraSprintsRequest.findIndex(
-        (sprintReq) =>
-          sprintReq.name === geminiSprint.name &&
-          sprintReq.goal === geminiSprint.goal &&
-          sprintReq.startDate === geminiSprint.startDate &&
-          sprintReq.endDate === geminiSprint.endDate
+        (sprintRequest) =>
+          sprintRequest.name === geminiSprint.name &&
+          sprintRequest.goal === geminiSprint.goal &&
+          sprintRequest.startDate === geminiSprint.startDate &&
+          sprintRequest.endDate === geminiSprint.endDate
       );
 
       const matchingSprintResponse = jiraSprintsResponse[matchingSprintRequestIndex];
       const issueGeminiIds = geminiSprint.issuesGeminiIds.map(String);
       const matchingIssueKeys: string[] = [];
 
-      jiraIssuesRequest.forEach((issueReq, idx) => {
-        const geminiId = issueReq.fields.customfield_99999;
-        if (issueGeminiIds.includes(geminiId)) {
-          const issueRes = jiraIssuesResponse[idx];
-          if (issueRes?.key) {
-            matchingIssueKeys.push(issueRes.key);
+      jiraIssuesRequest.forEach((issueRequest, index) => {
+        const geminiId = JiraRequestDTOMapper.getGeminiId(issueRequest.fields.description);
+        if (geminiId && issueGeminiIds.includes(geminiId)) {
+          const issueResponse = jiraIssuesResponse[index];
+          if (issueResponse?.key) {
+            matchingIssueKeys.push(issueResponse.key);
           }
         }
       });
@@ -114,5 +145,16 @@ export class JiraRequestDTOMapper {
     }
 
     return result;
+  }
+
+
+  static getGeminiId(description: JiraIssueFieldsRequestDTO["description"]): string | null {
+    try {
+      const text = description?.content?.[0]?.content?.[0]?.text ?? "";
+      const match = text.match(/<!--\s*GEMINI_ID:([A-Z0-9\-]+)\s*-->/);
+      return match ? match[1] : null;
+    } catch {
+      return null;
+    }
   }
 }

@@ -1,7 +1,3 @@
-
-import { JiraIssuePriorityRequestDTO } from "./jira-issue-priority-request-dto.model";
-import { JiraIssueTypeRequestDTO } from "./jira-issue-type-request-dto.model";
-
 export interface JiraIssueFieldsRequestDTO {
   description: {
     content: [
@@ -18,9 +14,8 @@ export interface JiraIssueFieldsRequestDTO {
     type: "doc",
     version: 1
   };
-  issuetype: JiraIssueTypeRequestDTO;
-  issuepriority: JiraIssuePriorityRequestDTO;
+  project: { id: string };
+  issuetype: { id: string };
+  priority: { id: string };
   summary: string;
-  created: string;
-  customfield_99999: string; // geminiIssueId
 }

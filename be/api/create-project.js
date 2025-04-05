@@ -17,7 +17,7 @@ async function createProject(req, res) {
 
     const response = await axios.post(url, data, config);
 
-    return res.json({ data: response.data });
+    return res.json(response.data);
 
   } catch (error) {
     console.error('Error occurred: ', error.message);

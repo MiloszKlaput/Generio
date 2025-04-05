@@ -31,6 +31,8 @@ export class GeminiService {
       Issue powinny mieć różne priority. Na podstawie nazwy i innych informacji o issue, zdecyj jakie powienien mieć priority.
       Możliwe typy priority: 1 - Highest, 2 - High, 3 - Medium, 4 - Low, 5 - Lowest. Ustawiaj wartość liczbową.
 
+      Epics i issues powinny mieć adekwatny, w miarę rozbudowany opis(decription). Opisujący co należy zrobić.
+
       Jeżeli użytkownik nie podał daty startu projektu, to projekt startuje dzisiaj.
       Sprint trwa 2 tygodnie.
       Załóż kilka sprintów. Oszacuj ile sprintów potrzeba na zrealizowanie projektu.
@@ -42,7 +44,7 @@ export class GeminiService {
       "project":
       {
         key,
-        name,
+        name (max 30 znaków),
         description
       },
       "issues":
@@ -52,7 +54,7 @@ export class GeminiService {
             "fields":
             {
               issuetype,
-              summary,
+              summary(max 30 znaków),
               description,
               priority
             }
@@ -62,7 +64,7 @@ export class GeminiService {
             "fields":
             {
               issuetype,
-              summary,
+              summary(max 30 znaków),
               description,
               priority
             }
@@ -76,7 +78,7 @@ export class GeminiService {
           "fields":
           {
             issuetype,
-            summary,
+            summary(max 30 znaków),
             description,
             priority
           }
@@ -87,7 +89,7 @@ export class GeminiService {
           "fields":
           {
             issuetype,
-            summary,
+            summary(max 30 znaków),
             description,
             priority
           }
@@ -96,17 +98,17 @@ export class GeminiService {
       "sprints":
         {
           {
-            name,
+            name(max 30 znaków),
             startDate,
             endDate,
-            goal,
+            goal(max 30 znaków),
             issuesGeminiIds: string[]
           },
           {
-            name,
+            name(max 30 znaków),
             startDate,
             endDate,
-            goal,
+            goal(max 30 znaków),
             issuesGeminiIds: string[]
           }
         }

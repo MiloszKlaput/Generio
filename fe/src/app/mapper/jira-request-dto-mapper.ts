@@ -39,7 +39,7 @@ export class JiraRequestDTOMapper {
 
   static toIssueRequestDto(issues: GeminiIssue[] | GeminiEpic[], projectId: string): JiraIssueRequestDTO[] {
     return issues.map(issue => {
-      const hiddenTag = `<!-- GEMINI_ID:${issue.geminiId} -->\n`;
+      const geminiIdTag = `Treść wygenerowana przez Gemini -> GEMINI_ID: ${issue.geminiId}\n\n`;
       return {
         fields: {
           description: {
@@ -51,7 +51,7 @@ export class JiraRequestDTOMapper {
                 content: [
                   {
                     type: "text",
-                    text: hiddenTag + issue.fields.description
+                    text: geminiIdTag + issue.fields.description
                   }
                 ]
               }

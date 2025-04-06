@@ -1,13 +1,15 @@
 {
   "home": {
-    "title": "Welcome to the application for automatic creation and population of projects in Jira!",
-    "description1": "Configure your new project in a few steps and let the app take care of the rest.",
-    "description2": "The tool allows you to:",
-    "feature1": "Fast generation of projects in Jira",
-    "feature2": "Automatic addition of sprints, epics, and issues",
-    "feature3": "Assigning issues to epics and sprints",
-    "feature4": "You can create a new project or use your own",
-    "description3": "Simply fill in the basic information in the form, and the app will handle creating all the necessary elements in Jira.",
+    "title": "Welcome to the application for automatically creating and populating projects in Jira",
+    "description1": "Set up your new project in a few easy steps and let the app take care of the rest.",
+    "description2": "The tool enables:",
+    "feature1": "Quick project generation in Jira",
+    "feature2": "Automatic addition of sprints, epics, and tasks",
+    "feature3": "Assigning tasks to epics and sprints",
+    "description3": "To get started, you need:",
+    "feature4": "Jira account and Jira API key",
+    "feature5": "Google account and Gemini API key",
+    "description4": "Simply provide a description of your project in the form, and the app will take care of the rest, creating all necessary elements in Jira.",
     "startButton": "Start"
   },
   "form": {

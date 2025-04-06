@@ -1,13 +1,15 @@
 {
   "home": {
-    "title": "Witaj w aplikacji do automatycznego tworzenia i wypełniania projektów w Jira!",
+    "title": "Witaj w aplikacji do automatycznego tworzenia i wypełniania projektów w Jira",
     "description1": "Skonfiguruj swój nowy projekt w kilka kroków i pozwól aplikacji zająć się resztą.",
     "description2": "Narzędzie umożliwia:",
     "feature1": "Szybkie generowanie projektów w Jira",
     "feature2": "Automatyczne dodawanie sprintów, epik i zadań",
     "feature3": "Przypisywanie zadań do epik oraz sprintów",
-    "feature4": "Możesz utworzyć nowy lub skorzystać ze swojego projektu",
-    "description3": "Wystarczy, że wypełnisz podstawowe informacje w formularzu, a aplikacja zadba o utworzenie wszystkich niezbędnych elementów w Jira",
+    "description3": "Aby rozpocząć, potrzebujesz:",
+    "feature4": "Konto Jira oraz klucz API Jira",
+    "feature5": "Konto Google oraz klucz API Gemini",
+    "description4": "Wystarczy, że w formularzu podasz opis swojego projektu, a aplikacja zajmie się resztą, tworząc wszystkie niezbędne elementy w Jira.",
     "startButton": "Rozpocznij"
   },
   "form": {

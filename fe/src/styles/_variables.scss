@@ -1,7 +1,10 @@
-$primary: #005cbb;
-$secondary: #d7e3ff;
-$error: #ba1a1a;
+$primary: var(--mat-sys-on-primary);
+$secondary: var(--mat-sys-primary);
+$error: var(--mat-sys-error);
 $success: #0d904f;
 $warning: #ffcc00;
-$font: #44474e;
-$background: #faf9fd;
+$font: var(--mat-sys-on-secondary-container);
+$background: var(--mat-sys-surface-bright);
+
+
+

@@ -31,9 +31,14 @@
               "src/locale"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/azure-blue.css",
+              "src/styles/custom-theme.scss",
               "src/styles/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/styles"
+              ]
+            },
             "scripts": []
           },
           "configurations": {
@@ -91,9 +96,14 @@
               "src/assets"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/azure-blue.css",
+              "src/styles/custom-theme.scss",
               "src/styles/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/styles"
+              ]
+            },
             "scripts": []
           }
         }

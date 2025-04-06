@@ -25,11 +25,13 @@
     width: 100%;
   }
 
-  .form-group-container {
-    width: 100%;
+  .project-title {
+    margin-bottom: 0px;
+  }
 
-    mat-form-field {
-      width: 100%;
-    }
+  .project-hint {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    opacity: 0.9;
   }
 }

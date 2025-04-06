@@ -1,5 +1,7 @@
 <form class="form-container" [formGroup]="form">
 
+  <h2>{{ 'form.jiraHeader' | translate }}</h2>
+
   <mat-form-field>
     <mat-label>
       {{ 'form.userInfoLogin' | translate }}
@@ -48,6 +50,8 @@
     }
   </mat-form-field>
 
+  <h2>{{ 'form.geminiHeader' | translate }}</h2>
+
   <mat-form-field>
     <mat-label>
       {{ 'form.geminiApiKey' | translate }}
@@ -60,11 +64,14 @@
     }
   </mat-form-field>
 
+  <h2 class="project-title">{{ 'form.projectHeader' | translate }}</h2>
+  <span class="project-hint">{{ 'form.projectHint' | translate }}</span>
+
   <mat-form-field>
     <mat-label>
       {{ 'form.geminiMessage' | translate }}
     </mat-label>
-    <textarea formControlName="geminiMessage" matInput (blur)="onBlur(f.geminiMessage)"></textarea>
+    <textarea rows="4" formControlName="geminiMessage" matInput (blur)="onBlur(f.geminiMessage)"></textarea>
     @if (f.geminiMessage.errors?.['required'] && f.geminiMessage.touched) {
       <mat-error>
         {{ 'form.validations.required' | translate }}

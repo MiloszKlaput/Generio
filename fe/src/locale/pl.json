@@ -13,12 +13,16 @@
     "startButton": "Rozpocznij"
   },
   "form": {
-    "userInfoLogin": "Nazwa użytkownika jira",
-    "userInfoUserId": "ID konta jira",
-    "userInfoApiKey": "Klucz API Jira",
-    "jiraUserJiraUrl": "Adres url Jiry użytkownika (*.jira.net)",
-    "geminiApiKey": "Klucz API Google Gemini",
-    "geminiMessage": "Napisz jaki projekt chcesz stworzyć (np. program do obsługi wypożyczalni kajaków)",
+    "jiraHeader": "Jira",
+    "userInfoLogin": "Nazwa użytkownika",
+    "userInfoUserId": "ID konta",
+    "userInfoApiKey": "Klucz API",
+    "jiraUserJiraUrl": "Adres url Jiry użytkownika (*.atlassian.net)",
+    "geminiHeader": "Gemini",
+    "geminiApiKey": "Klucz API",
+    "projectHeader": "Opis projektu",
+    "projectHint": "Opisz jaki program chcesz stworzyć np. \"Panel administracyjny do obsługi magazynu. Program powinien zawieriać autoryzację, konto pracownika, listę towarów, wyszukiwarkę, dodawanie, usuwanie i edycję towarów.\"",
+    "geminiMessage": "Jaki projekt chcesz stworzyć?",
     "validations": {
       "required": "Uzupełnij pole"
     }

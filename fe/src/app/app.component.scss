@@ -14,8 +14,11 @@
     justify-content: space-between;
 
     .logo {
+      font-family: "Montserrat", sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 800;
+      font-style: normal;
       font-size: 2rem;
-      font-weight: 600;
       color: $primary;
       cursor: pointer;
       text-align: center;
@@ -31,11 +34,10 @@
       align-items: center;
       cursor: pointer;
 
-      .language-icon {
-        color: $primary;
+      .flag {
         height: 2rem;
         width: 2rem;
-        font-size: 2rem;
+        border-radius: 50%;
         margin-right: 0.5rem;
       }
 

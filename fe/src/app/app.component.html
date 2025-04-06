@@ -1,7 +1,12 @@
 <nav class="top-menu">
-  <div (click)="onLogoClick()" class="logo">Generio</div>
+  <div (click)="onLogoClick()" class="logo">GENERIO</div>
   <div (click)="onLanguageChange()" class="change-language">
-    <mat-icon class="language-icon" fontIcon="language"></mat-icon>
+    @if (isCurrentLangPl) {
+      <img class="flag" src="../assets/img/en.png" alt="" />
+    }
+    @else {
+      <img class="flag" src="../assets/img/pl.png" alt="" />
+    }
     <span class="language-text">{{ switchToLang }}</span>
   </div>
 </nav>

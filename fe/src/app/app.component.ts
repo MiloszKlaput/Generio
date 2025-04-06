@@ -22,6 +22,10 @@ export class AppComponent implements OnInit {
   currentLang!: string;
   switchToLang!: string;
 
+  get isCurrentLangPl(): boolean {
+    return this.currentLang.toLocaleLowerCase() === 'pl';
+  }
+
   ngOnInit(): void {
     this.currentLang = localStorage.getItem('lang') || 'pl';
     this.translate.setDefaultLang(this.currentLang);

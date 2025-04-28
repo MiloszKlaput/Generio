@@ -21,7 +21,7 @@
     "geminiHeader": "Gemini",
     "geminiApiKey": "Klucz API",
     "projectHeader": "Opis projektu",
-    "projectHint": "Opisz jaki program chcesz stworzyć np. \"Panel administracyjny do obsługi magazynu. Program powinien zawieriać autoryzację, konto pracownika, listę towarów, wyszukiwarkę, dodawanie, usuwanie i edycję towarów.\"",
+    "projectHint": "Opisz jaki program chcesz stworzyć np. \"Panel administracyjny do obsługi magazynu. Program powinien zawierać autoryzację, konto pracownika, listę towarów, wyszukiwarkę, dodawanie, usuwanie i edycję towarów.\"",
     "geminiMessage": "Jaki projekt chcesz stworzyć?",
     "validations": {
       "required": "Uzupełnij pole"

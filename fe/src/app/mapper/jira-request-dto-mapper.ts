@@ -151,7 +151,7 @@ export class JiraRequestDTOMapper {
   static getGeminiId(description: JiraIssueFieldsRequestDTO["description"]): string | null {
     try {
       const text = description?.content?.[0]?.content?.[0]?.text ?? "";
-      const match = text.match(/<!--\s*GEMINI_ID:([A-Z0-9\-]+)\s*-->/);
+      const match = text.match(/GEMINI_ID:\s*([A-Z0-9\-]+)/);
       return match ? match[1] : null;
     } catch {
       return null;

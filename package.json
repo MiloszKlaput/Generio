@@ -1,6 +1,6 @@
 {
-  "name": "pomelo",
-  "version": "1.0.0-alfa",
+  "name": "generio",
+  "version": "1.0.0",
   "scripts": {
     "install:all": "cd be && npm install && cd ../fe && npm install && cd ..",
     "start:all": "concurrently \"cd be && npm run start\" \"cd fe && ng serve --open\"",

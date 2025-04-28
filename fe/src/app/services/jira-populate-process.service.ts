@@ -66,7 +66,7 @@ export class JiraPopulateProcessService {
   }
 
   private setErrorMessage(err: any): void {
-    console.log(err);
+    console.error(err);
     if (!err || err.length <= 0) {
       return;
     }
@@ -204,7 +204,7 @@ export class JiraPopulateProcessService {
   }
 
   private handleGeminiResponse(res: string): void {
-    const cleanedResponse = res.replace(/```json\s*|\s*```/g, ''); // taki format zwraca Gemini
+    const cleanedResponse = res.replace(/```json\s*|\s*```/g, ''); // Gemini returns data formatted like that
     const json = JSON.parse(cleanedResponse);
 
     const geminiResponse: GeminiResponse = {
@@ -213,7 +213,7 @@ export class JiraPopulateProcessService {
       issues: json.issues,
       sprints: json.sprints
     };
-    console.log(geminiResponse);
+
     this.processDataService.geminiResponseData$.next(geminiResponse);
   }
 }

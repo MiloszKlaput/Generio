@@ -1,37 +1,94 @@
 # Generio
 
-<!-- Generio to aplikacja inżynierska napisana w Angularze, integrująca się z OpenAI API w celu automatycznego zakładania projektów w JIRA.
+**Generio** is an open-source application designed to automate the creation of software projects in Jira Cloud.  
+It combines the power of REST APIs with generative AI to build complete, realistic project structures — including epics, tasks, sprints, and backlogs — based on simple user inputs.
 
-## Technologie:
-- Angular
-- OpenAI API
-- JIRA API
+---
 
-## Licencja
-Projekt korzysta z OpenAI API zgodnie z [warunkami OpenAI](https://openai.com/policies). -->
+## Key Features
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.7.
+- Automatic creation of complete Scrum-based projects in Jira.
+- Integration with **Google Gemini** LLM to generate realistic, business-like task descriptions.
+- Support for multi-language UI (**English** and **Polish**).
+- Responsive Web Design (RWD) — optimized for smartphones, tablets, and desktops.
 
-## Development server
+---
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Technologies Used
 
-## Code scaffolding
+- **Frontend:** Angular + Angular Material
+- **Backend:** Node.js + Express.js
+- **External services:** 
+  - Google Gemini API (for prompt processing)
+  - Atlassian Jira REST API and Jira Agile REST API
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+---
 
-## Build
+## Installation
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Follow these steps to run **Generio** locally:
 
-## Running unit tests
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/MiloszKlaput/generio.git
+   cd generio
+   ```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+2. **Install dependencies for both frontend and backend:**
+   ```bash
+   npm run install:all
+   ```
 
-## Running end-to-end tests
+   This command automatically:
+   - Installs backend dependencies in `be/`
+   - Installs frontend dependencies in `fe/`
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+3. **Run the application:**
+   ```bash
+   npm run start:all
+   ```
 
-## Further help
+   This command will:
+   - Start the backend server (`be/`) using Node.js and Express.js
+   - Start the frontend application (`fe/`) using Angular
+   - Automatically open the application in your default browser at `http://localhost:4200/`
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+4. **Requirements:**
+   - Node.js version 18+ recommended
+   - npm version 9+ recommended
+
+---
+
+## Requirements to Use
+
+Before using Generio, make sure you have:
+
+- A **Jira** account and a valid **Jira API key**.
+- A **Google** account and a valid **Google Gemini API key**.
+
+Once your accounts and API keys are ready, simply describe your project idea in the provided form — Generio will automatically generate all necessary project elements in Jira, including:
+
+- Sprints
+- Epics
+- Tasks
+- Assignment of tasks to epics and sprints
+
+Generio streamlines the entire setup process, allowing you to focus on project development instead of manual configuration.
+
+---
+
+## Directory Structure
+
+```
+generio/
+├── be/          # Backend (Node.js + Express.js server)
+├── fe/          # Frontend (Angular application)
+├── package.json # Main package.json for managing both frontend and backend
+└── README.md
+```
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).

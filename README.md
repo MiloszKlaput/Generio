@@ -5,6 +5,18 @@ It combines the power of REST APIs with generative AI to build complete, realist
 
 ---
 
+## Table of Contents
+
+- [Key Features](#key-features)
+- [Preview](#preview)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Requirements to Use](#requirements-to-use)
+- [Directory Structure](#directory-structure)
+- [License](#license)
+
+---
+
 ## Key Features
 
 - Automatic creation of complete Scrum-based projects in Jira.
@@ -71,8 +83,8 @@ Follow these steps to run **Generio** locally:
 
 Before using Generio, make sure you have:
 
-- A **Jira** account and a valid **Jira API key**.
-- A **Google** account and a valid **Google Gemini API key**.
+- A **Jira** account with a valid **Jira API key**.
+- A **Google** account with a valid **Google Gemini API key**.
 
 Once your accounts and API keys are ready, simply describe your project idea in the provided form — Generio will automatically generate all necessary project elements in Jira, including:
 

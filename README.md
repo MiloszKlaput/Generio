@@ -14,6 +14,14 @@ It combines the power of REST APIs with generative AI to build complete, realist
 
 ---
 
+## Preview
+
+Here is a preview of the Generio application:
+
+![Generio Preview](./fe/src/assets/img/preview.png)
+
+---
+
 ## Technologies Used
 
 - **Frontend:** Angular + Angular Material

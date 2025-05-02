@@ -30,14 +30,18 @@ export class GeminiService {
 
     Zasady generowania:
     - Projekt ma być zgodny z metodyką Scrum.
+    - Nazwa projektu powinna być kreatywna.
     - Sprint trwa 2 tygodnie.
-    - Jeśli użytkownik nie podał daty rozpoczęcia, przyjmij datę dzisiejszą.
-    - Oszacuj liczbę sprintów potrzebną do realizacji całego projektu.
-    - Stwórz:
-      - od 1 do kilku epików (epics),
-      - odpowiednią liczbę zadań (issues),
-      - sprinty z przypisanymi zadaniami (bez epików).
-    - Każdy epik ma przypisane zadania.
+    - Przyjmij dzisiejszą datę jako datę startową pierwszego sprintu (jeżeli użytkownik nie podał inaczej).
+    - Załóż, że zespół developerski liczy 7 osób (jeżeli użytkownik nie podał inaczej).
+    - Wygeneruj średnio od 2 do 4 zadań na osobę na cały projekt.
+    - Uwzględnij w sumie 14-28 zadań (issues) w zależności od złożoności projektu.
+    - Rozbij zadania na szczegółowe kroki techniczne i funkcjonalne.
+    - Preferuj większą liczbę mniejszych, konkretnych zadań zamiast małej liczby ogólnych.
+    - Opisy zadań powinny być bogate w kontekst: technologia, sposób implementacji, oczekiwany rezultat.
+    - Rozdziel zadania między epiki i sprinty w sposób równomierny.
+    - Każdy epik ma przypisane co najmniej 2-3 zadania.
+    - Każdy sprint powinien zawierać realistyczną liczbę zadań (6-10).
 
     Typy issue:
     - Story (10006),

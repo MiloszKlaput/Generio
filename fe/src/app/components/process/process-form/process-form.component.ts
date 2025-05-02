@@ -67,12 +67,12 @@ export class ProcessFormComponent implements OnInit {
 
   private initForm(): void {
     this.form = new FormGroup<ProcessFormControls>({
-      jiraLogin: new FormControl<string>('', [Validators.required]),
-      jiraUserId: new FormControl<string>('', [Validators.required]),
-      jiraApiKey: new FormControl<string>('', [Validators.required]),
-      jiraUserJiraUrl: new FormControl<string>('', [Validators.required]),
-      geminiApiKey: new FormControl<string>('', [Validators.required]),
-      geminiMessage: new FormControl<string>('', [Validators.required]),
+      jiraLogin: new FormControl<string>('', [Validators.required, Validators.maxLength(100)]),
+      jiraUserId: new FormControl<string>('', [Validators.required, Validators.maxLength(100)]),
+      jiraApiKey: new FormControl<string>('', [Validators.required, Validators.maxLength(300)]),
+      jiraUserJiraUrl: new FormControl<string>('', [Validators.required, Validators.maxLength(100)]),
+      geminiApiKey: new FormControl<string>('', [Validators.required, Validators.maxLength(300)]),
+      geminiMessage: new FormControl<string>('', [Validators.required, Validators.maxLength(500)]),
     });
   }
 }

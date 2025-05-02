@@ -24,7 +24,8 @@
     "projectHint": "Opisz jaki program chcesz stworzyć np. \"Panel administracyjny do obsługi magazynu. Program powinien zawierać autoryzację, konto pracownika, listę towarów, wyszukiwarkę, dodawanie, usuwanie i edycję towarów.\"",
     "geminiMessage": "Jaki projekt chcesz stworzyć?",
     "validations": {
-      "required": "Uzupełnij pole"
+      "required": "Uzupełnij pole",
+      "maxlength": "Przekroczono maksymalną ilość znaków"
     }
   },
   "processError": {

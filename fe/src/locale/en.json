@@ -21,10 +21,11 @@
     "geminiHeader": "Gemini",
     "geminiApiKey": "API Key",
     "projectHeader": "Project Description",
-   "projectHint": "Describe the program you want to create, e.g. \"An admin panel for warehouse management. The program should include authentication, an employee account, a list of items, a search function, and the ability to add, delete, and edit items.'",
+    "projectHint": "Describe the program you want to create, e.g. \"An admin panel for warehouse management. The program should include authentication, an employee account, a list of items, a search function, and the ability to add, delete, and edit items.'",
     "geminiMessage": "What kind of project do you want to create?",
     "validations": {
-      "required": "This field is required"
+      "required": "This field is required",
+      "maxlength": "Maximum character limit exceeded"
     }
   },
   "processError": {

@@ -12,6 +12,11 @@
         {{ 'form.validations.required' | translate }}
       </mat-error>
     }
+    @if (f.jiraLogin.errors?.['maxlength'] && f.jiraLogin.touched) {
+      <mat-error>
+        {{ 'form.validations.maxlength' | translate }}
+      </mat-error>
+    }
   </mat-form-field>
 
   <mat-form-field>
@@ -22,6 +27,11 @@
     @if (f.jiraUserId.errors?.['required'] && f.jiraUserId.touched) {
       <mat-error>
         {{ 'form.validations.required' | translate }}
+      </mat-error>
+    }
+    @if (f.jiraUserId.errors?.['maxlength'] && f.jiraLogin.touched) {
+      <mat-error>
+        {{ 'form.validations.maxlength' | translate }}
       </mat-error>
     }
   </mat-form-field>
@@ -36,6 +46,11 @@
         {{ 'form.validations.required' | translate }}
       </mat-error>
     }
+    @if (f.jiraApiKey.errors?.['maxlength'] && f.jiraLogin.touched) {
+      <mat-error>
+        {{ 'form.validations.maxlength' | translate }}
+      </mat-error>
+    }
   </mat-form-field>
 
   <mat-form-field>
@@ -46,6 +61,11 @@
     @if (f.jiraUserJiraUrl.errors?.['required'] && f.jiraUserJiraUrl.touched) {
       <mat-error>
         {{ 'form.validations.required' | translate }}
+      </mat-error>
+    }
+    @if (f.jiraUserJiraUrl.errors?.['maxlength'] && f.jiraLogin.touched) {
+      <mat-error>
+        {{ 'form.validations.maxlength' | translate }}
       </mat-error>
     }
   </mat-form-field>
@@ -62,6 +82,11 @@
         {{ 'form.validations.required' | translate }}
       </mat-error>
     }
+    @if (f.geminiApiKey.errors?.['maxlength'] && f.jiraLogin.touched) {
+      <mat-error>
+        {{ 'form.validations.maxlength' | translate }}
+      </mat-error>
+    }
   </mat-form-field>
 
   <h2 class="project-title">{{ 'form.projectHeader' | translate }}</h2>
@@ -75,6 +100,11 @@
     @if (f.geminiMessage.errors?.['required'] && f.geminiMessage.touched) {
       <mat-error>
         {{ 'form.validations.required' | translate }}
+      </mat-error>
+    }
+    @if (f.geminiMessage.errors?.['maxlength'] && f.jiraLogin.touched) {
+      <mat-error>
+        {{ 'form.validations.maxlength' | translate }}
       </mat-error>
     }
   </mat-form-field>

@@ -3,5 +3,5 @@ export interface GeminiSprint  {
   endDate: string;
   name: string;
   goal: string;
-  issuesGeminiIds: number[];
+  issuesGeminiIds: string[];
 }

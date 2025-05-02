@@ -10,116 +10,94 @@ export class GeminiService {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
-    const messageWithContext =
-      `
-      ${message}.
-      Użytkownik chce założyć projekt w JIRA poprzez REST API.
-      Będzie potrzebował zestawu danych, żeby przesłać je do API.
+    const messageWithContext = `
+    Celem tego zadania jest wygenerowanie danych projektu informatycznego do systemu Jira.
 
-      Stwórz JSON z projektem. Wypełnij potrzebne pola.
+    Użytkownik poniżej podał opis projektu, który chce utworzyć. Na jego podstawie należy wygenerować strukturę danych w formacie JSON, zawierającą informacje o projekcie, epikach, zadaniach i sprintach.
 
-      Jeżeli Użytkownik nie podał nazwy to stwórz kreatywną nazwę projektu.
-
-      Stwórz od jednej do kilku epic. Nadaj im nazwy adekwatne do projektu.
-
-      Stwórz odpowiednią a by zrealizować cały projekt ilość zadań (issues).
-      Dodaj do epic adekwatne issues.
-      Issue mogą mieć typ: Story - 10006, Task - 10007, Epic - 10000. Ustawiaj wartość liczbową.
-      Task to zadanie techniczne jak konfiguracja, założenie bazy danych itp.
-      Nie powinno być więcej niż 20% tasków w sprincie.
-
-      Issue powinny mieć różne priority.
-      Na podstawie nazwy i innych informacji o issue, zdecyj jakie powienien mieć priority.
-      Możliwe typy priority: 1 - Highest, 2 - High, 3 - Medium, 4 - Low, 5 - Lowest.
-      Ustawiaj wartość liczbową.
-
-      Epics i issues powinny mieć adekwatny, w miarę rozbudowany opis(decription),
-      opisujący co należy zrobić.
-
-      Jeżeli użytkownik nie podał daty startu projektu, to projekt startuje dzisiaj.
-      Sprint trwa 2 tygodnie.
-      Załóż kilka sprintów. Oszacuj ile sprintów potrzeba na zrealizowanie projektu.
-      Dodaj do tych sprintów id stworzonych issues (bez epiców)
-
-      Proszę o zwrócenie informacji formacie JSON.
-      Informacje powinny zawierać następujące klucze:
-
-      "project":
+    Ważne:
+    - Jeśli opis użytkownika nie przypomina projektu informatycznego (np. jest niepoważny, niezgodny z celem aplikacji lub niezwiązany z IT), nie generuj żadnych danych. Zamiast tego zwróć:
       {
-        key,
-        name (max 30 znaków),
-        description
-      },
-      "issues":
-        {
-          {
-            geminiId,
-            "fields":
-            {
-              issuetype,
-              summary(max 30 znaków),
-              description,
-              priority
-            }
-          },
-          {
-            geminiId,
-            "fields":
-            {
-              issuetype,
-              summary(max 30 znaków),
-              description,
-              priority
-            }
-          }
-        },
-      "epics":
-      {
-        {
-          geminiId,
-          issuesGeminiIds: string[],
-          "fields":
-          {
-            issuetype,
-            summary(max 30 znaków),
-            description,
-            priority
-          }
-        },
-        {
-          geminiId,
-          issuesGeminiIds: string[],
-          "fields":
-          {
-            issuetype,
-            summary(max 30 znaków),
-            description,
-            priority
-          }
-        }
-      },
-      "sprints":
-        {
-          {
-            name(max 30 znaków),
-            startDate,
-            endDate,
-            goal(max 30 znaków),
-            issuesGeminiIds: string[]
-          },
-          {
-            name(max 30 znaków),
-            startDate,
-            endDate,
-            goal(max 30 znaków),
-            issuesGeminiIds: string[]
-          }
-        }
+        "error": "Niepoprawny opis projektu. Spróbuj ponownie."
       }
 
-      Stwórz cały potrzebny zestaw danych.
-      Nie dodawaj redundantnych komentarzy.
-      Zwróć tylko dane w formacie JSON.
+    ---
+
+    Opis projektu od użytkownika:
+    "${message}"
+
+    ---
+
+    Zasady generowania:
+    - Projekt ma być zgodny z metodyką Scrum.
+    - Sprint trwa 2 tygodnie.
+    - Jeśli użytkownik nie podał daty rozpoczęcia, przyjmij datę dzisiejszą.
+    - Oszacuj liczbę sprintów potrzebną do realizacji całego projektu.
+    - Stwórz:
+      - od 1 do kilku epików (epics),
+      - odpowiednią liczbę zadań (issues),
+      - sprinty z przypisanymi zadaniami (bez epików).
+    - Każdy epik ma przypisane zadania.
+
+    Typy issue:
+    - Story (10006),
+    - Task (10007) - zadania techniczne (nie więcej niż 20% sprintu),
+    - Epic (10000).
+
+    Każdy issue powinien zawierać:
+    - summary (max 30 znaków),
+    - description (rozbudowany, opisujący co należy zrobić),
+    - priority (1-Highest do 5-Lowest) — wybierz adekwatnie na podstawie treści.
+
+    Struktura JSON ma zawierać 4 główne bloki:
+
+    1. "project": {
+       "key": string,
+       "name": string (max 30 znaków),
+       "description": string
+    }
+
+    2. "epics": [
+       {
+         "geminiId": string,
+         "issuesGeminiIds": [string],
+         "fields": {
+           "issuetype": number,
+           "summary": string (max 30 znaków),
+           "description": string,
+           "priority": number
+         }
+       },
+       ...
+    ]
+
+    3. "issues": [
+       {
+         "geminiId": string,
+         "fields": {
+           "issuetype": number,
+           "summary": string (max 30 znaków),
+           "description": string,
+           "priority": number
+         }
+       },
+       ...
+    ]
+
+    4. "sprints": [
+       {
+         "name": string (max 30 znaków),
+         "startDate": string(ISO),
+         "endDate": string(ISO),
+         "goal": string (max 30 znaków),
+         "issuesGeminiIds": [string]
+       },
+       ...
+    ]
+
+    ---
+
+    Wygeneruj pełny zestaw danych. Odpowiedź ma zawierać wyłącznie czysty JSON, bez komentarzy, opisu, formatowania Markdown ani kodu.
     `;
 
     const resultPromise = model.generateContent(messageWithContext);

@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { JiraApiService } from './jira-api.service';
-import { from, mergeMap, toArray, tap, Observable, concatMap } from 'rxjs';
+import { from, mergeMap, toArray, tap, Observable, concatMap, of, throwError } from 'rxjs';
 import { ProcessStateService } from './process-state.service';
 import { ProcessState } from '../enums/process-state.enum';
 import { ProcessDataService } from './process-data.service';
@@ -59,29 +59,63 @@ export class JiraPopulateProcessService {
   private handleError(err: any) {
     this.processStateService.setProcessState(ProcessState.Error);
     this.setErrorMessage(err);
-    if (!this.processDataService.jiraResponseData$.getValue()!.projectResponse?.key) {
+
+    const response = this.processDataService.jiraResponseData$.getValue();
+    const hasProjectKey = response?.projectResponse?.key;
+    if (!hasProjectKey) {
       return;
     }
+
     this.clearData();
   }
 
   private setErrorMessage(err: any): void {
-    console.error(err);
-    if (!err || err.length <= 0) {
+    let errorMsg = '';
+
+    if (!err) {
+      this.processDataService.errorMessage$.next(errorMsg);
       return;
     }
-    const errMsg = JSON.stringify(err.error, null, 2);
-    const formatedErrMsgArr = errMsg.replace(/{|}|"/g, '').split(': ');
-    const formatedErrMsg = formatedErrMsgArr[formatedErrMsgArr.length - 1];
 
-    this.processDataService.errorMessage$.next(formatedErrMsg);
+    if (err instanceof Error) {
+      errorMsg = err.message;
+    }
+    else if (err.error) {
+      const rawError = err.error;
+
+      if (typeof rawError === 'string') {
+        errorMsg = rawError;
+      } else if (typeof rawError === 'object') {
+        try {
+          errorMsg = JSON.stringify(rawError, null, 2);
+        } catch {
+          errorMsg = '';
+        }
+      } else {
+        errorMsg = String(rawError);
+      }
+    }
+    else if (typeof err === 'object') {
+      try {
+        errorMsg = JSON.stringify(err, null, 2);
+      } catch {
+        errorMsg = '';
+      }
+    }
+
+    this.processDataService.errorMessage$.next(errorMsg);
   }
 
   private createContent(geminiMessage: string, geminiApiKey: string): Observable<string | null> {
     return this.geminiService.generateContent(geminiMessage, geminiApiKey).pipe(
-      tap((result: string | null) => {
-        if (result !== null) {
-          this.handleGeminiResponse(result);
+      mergeMap((result: string | null) => {
+        try {
+          if (result != null) {
+            this.handleGeminiResponse(result)
+          }
+          return of(result);
+        } catch (error) {
+          return throwError(() => error);
         }
       })
     );
@@ -204,8 +238,12 @@ export class JiraPopulateProcessService {
   }
 
   private handleGeminiResponse(res: string): void {
-    const cleanedResponse = res.replace(/```json\s*|\s*```/g, ''); // Gemini returns data formatted like that
+    const cleanedResponse = res.replace(/```json\s*|\s*```/g, ''); // Gemini generates redundant characters
     const json = JSON.parse(cleanedResponse);
+
+    if (json.error) {
+      throw new Error(json.error);
+    }
 
     const geminiResponse: GeminiResponse = {
       project: json.project,
